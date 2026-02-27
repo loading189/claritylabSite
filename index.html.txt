@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Clarity Lab — Less chaos. More time.</title>
+    <meta name="description" content="I help trades businesses clean up operations so the business runs smoother and the owner can breathe again." />
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+
+  <body class="bg-slate-50 text-slate-900">
+    <main class="mx-auto max-w-3xl px-6 py-14">
+      <!-- Header -->
+      <header class="flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="h-10 w-10 rounded-xl bg-slate-900"></div>
+          <div>
+            <div class="text-sm font-semibold tracking-tight">Clarity Lab</div>
+            <div class="text-xs text-slate-500">Operational help for trades</div>
+          </div>
+        </div>
+
+        <a
+          href="YOUR_CALENDLY_LINK"
+          class="rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-slate-800"
+        >
+          Grab a coffee
+        </a>
+      </header>
+
+      <!-- Hero -->
+      <section class="mt-14">
+        <h1 class="text-4xl font-semibold tracking-tight sm:text-5xl">
+          Less chaos. More time.
+        </h1>
+        <p class="mt-5 text-lg leading-relaxed text-slate-700">
+          I help trades businesses (HVAC, plumbing, electrical) clean up the behind-the-scenes stuff—so the business runs smoother and the owner can breathe again.
+        </p>
+
+        <div class="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+          <a
+            href="YOUR_CALENDLY_LINK"
+            class="inline-flex items-center justify-center rounded-xl bg-slate-900 px-5 py-3 text-base font-semibold text-white shadow-sm hover:bg-slate-800"
+          >
+            Grab a coffee (15 minutes)
+          </a>
+          <div class="text-sm text-slate-500">
+            Fargo area • No pitch • Just a quick conversation
+          </div>
+        </div>
+      </section>
+
+      <!-- Problems -->
+      <section class="mt-14 rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
+        <h2 class="text-xl font-semibold tracking-tight">
+          If any of this sounds familiar, you’re not alone:
+        </h2>
+        <ul class="mt-5 space-y-3 text-slate-700">
+          <li>• Leads slip through the cracks</li>
+          <li>• Estimates go out… and then nothing happens</li>
+          <li>• Scheduling feels like a daily fire drill</li>
+          <li>• Invoicing gets delayed</li>
+          <li>• You’re the one holding everything together</li>
+        </ul>
+      </section>
+
+      <!-- Coffee chat -->
+      <section class="mt-10">
+        <h2 class="text-xl font-semibold tracking-tight">What we’ll do in 15 minutes</h2>
+        <div class="mt-5 grid gap-4 sm:grid-cols-2">
+          <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+            <p class="text-slate-700">You tell me what’s driving you nuts.</p>
+          </div>
+          <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+            <p class="text-slate-700">I ask a few questions about how work flows today.</p>
+          </div>
+          <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+            <p class="text-slate-700">I point out 2–3 places you can simplify fast.</p>
+          </div>
+          <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+            <p class="text-slate-700">If you want help, I outline next steps. If not, you still leave with clarity.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Ways to work together -->
+      <section class="mt-14">
+        <h2 class="text-xl font-semibold tracking-tight">Ways I help</h2>
+        <div class="mt-6 grid gap-4">
+          <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+            <div class="font-semibold">1) Quick Audit (fixed price)</div>
+            <p class="mt-2 text-slate-700">We map your “lead → job → invoice → cash” flow and find the leaks.</p>
+          </div>
+          <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+            <div class="font-semibold">2) Fix & Setup (project)</div>
+            <p class="mt-2 text-slate-700">I implement the changes: follow-up, scheduling flow, invoicing triggers, basic reporting.</p>
+          </div>
+          <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+            <div class="font-semibold">3) Ongoing Support (optional)</div>
+            <p class="mt-2 text-slate-700">Small monthly support for tweaks, improvements, and new workflows as you grow.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- About -->
+      <section class="mt-14 rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
+        <h2 class="text-xl font-semibold tracking-tight">Hi — I’m Chris.</h2>
+        <p class="mt-4 text-slate-700 leading-relaxed">
+          I’ve built businesses from scratch and I know what it feels like to wear every hat. I’m local to Fargo and I like making messy systems simple.
+        </p>
+      </section>
+
+      <!-- Contact -->
+      <section class="mt-14">
+        <div class="rounded-2xl bg-slate-900 p-8 text-white">
+          <h2 class="text-xl font-semibold tracking-tight">Want to talk?</h2>
+          <p class="mt-3 text-white/80">
+            If you’re local, I’ll buy the coffee. If it’s easier, we can do Zoom.
+          </p>
+
+          <div class="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
+            <a
+              href="YOUR_CALENDLY_LINK"
+              class="inline-flex items-center justify-center rounded-xl bg-white px-5 py-3 text-base font-semibold text-slate-900 hover:bg-slate-100"
+            >
+              Book a coffee chat
+            </a>
+            <div class="text-sm text-white/70">
+              Or email: <a class="underline" href="mailto:YOUR_EMAIL">YOUR_EMAIL</a>
+              • Text: <a class="underline" href="tel:YOUR_PHONE">YOUR_PHONE</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <footer class="mt-10 pb-6 text-center text-xs text-slate-500">
+        © <span id="y"></span> Clarity Lab • Fargo, ND
+      </footer>
+    </main>
+
+    <script>
+      document.getElementById("y").textContent = new Date().getFullYear();
+    </script>
+  </body>
+</html>
