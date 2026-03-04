@@ -4,6 +4,7 @@ import { ProcessTimeline } from '@/components/ProcessTimeline';
 import { Section } from '@/components/Section';
 import { TrackOnMount } from '@/components/TrackOnMount';
 import { TrustList } from '@/components/TrustList';
+import { StartIntakeSection } from '@/components/StartIntakeSection';
 
 export const metadata: Metadata = {
   title: 'Process',
@@ -56,6 +57,7 @@ export default function ProcessPage() {
       <Section className="bg-white">
         <Container className="max-w-3xl">
           <TrustList />
+          <StartIntakeSection where="process" />
         </Container>
       </Section>
     </>

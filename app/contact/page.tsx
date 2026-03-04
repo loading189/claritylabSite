@@ -5,6 +5,7 @@ import { Container } from '@/components/Container';
 import { FormEmbed } from '@/components/FormEmbed';
 import { LeadForm } from '@/components/LeadForm';
 import { Section } from '@/components/Section';
+import { StartIntakeSection } from '@/components/StartIntakeSection';
 import { runtimeConfig } from '@/content/runtime';
 import { siteConfig } from '@/content/site';
 
@@ -75,6 +76,8 @@ export default function ContactPage() {
             )}
           </Card>
         </div>
+
+        <StartIntakeSection where="contact" />
       </Container>
     </Section>
   );
