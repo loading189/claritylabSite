@@ -91,3 +91,37 @@ curl -X POST http://localhost:3000/api/resources/request \
   -H 'Content-Type: application/json' \
   -d '{"resource_slug":"ar-recovery-checklist","email":"owner@example.com","name":"Owner","website":""}'
 ```
+
+## Client Vault v1
+
+### Invite and access model
+- Vault routes are `/client/*` and `/admin/*`.
+- v1 is invite-only via Clerk dashboard invites (admin workflow note included in `/admin/clients`).
+- Admin access is determined by `OWNER_EMAIL` (or upstream `x-clerk-role=admin`).
+
+### Upload and report flow
+1. Client uploads a file from `/client/files`.
+2. App requests a short-lived upload URL from `/api/client/files/presign-upload`.
+3. Browser uploads directly to the signed endpoint.
+4. App records metadata in Airtable via `/api/client/files/record`.
+5. Owner receives email notification.
+6. Admin uploads reports in `/admin/clients/[clientId]/upload-report`; client gets notified and downloads from `/client/reports`.
+
+### Storage and security model
+- Files are private and served via short-lived signed URLs (`FILE_URL_TTL_SECONDS`, default 900s).
+- v1 runtime uses a local signed blob handler (`/api/client/files/blob`) so you can keep private access semantics without a custom file server.
+- S3/R2 env vars are included for direct provider migration.
+
+### Airtable schema (required)
+- `Files`: `client_id`, `client_email`, `uploader_role`, `uploader_user_id`, `category`, `filename`, `storage_key`, `mime_type`, `size_bytes`, `created_at`, `note`.
+- `Clients`: `client_id`, `company`, `primary_email`, `status`, `created_at`.
+
+### QA checklist (20 min)
+- Admin sign-in and load `/admin/clients`.
+- Create or invite test client in auth provider.
+- Client uploads file, verify owner email + admin listing.
+- Admin uploads report, verify client email + `/client/reports` listing.
+- Confirm client cannot download another client file.
+- Confirm signed download URLs expire and regenerate.
+- Verify reduced-motion preference disables heavy transforms/animations.
+- Check `/dev/status` for auth/storage/files table/resend states.

@@ -368,3 +368,19 @@ button {
     transform: translate3d(0, 0, 0);
   }
 }
+
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-blob,
+  .table-row-reveal,
+  .sticky-cta-shell,
+  .page-transition {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+  }
+}
+
+.hover-lift {
+  @apply motion-safe-transform transition duration-200 hover:-translate-y-1 hover:shadow-raised active:translate-y-px active:shadow-pressed;
+}
