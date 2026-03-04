@@ -2,8 +2,11 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { Analytics } from '@/components/Analytics';
+import { ChatCrisp } from '@/components/ChatCrisp';
 import { Footer } from '@/components/Footer';
 import { Header } from '@/components/Header';
+import { StickyCTA } from '@/components/StickyCTA';
+import { runtimeConfig } from '@/content/runtime';
 import { siteConfig } from '@/content/site';
 
 const inter = Inter({ subsets: ['latin'], display: 'swap' });
@@ -38,7 +41,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     '@type': 'ProfessionalService',
     name: siteConfig.name,
     description: siteConfig.description,
-    areaServed: siteConfig.location,
+    areaServed: ['Fargo area', 'Surrounding regional service trade markets'],
+    serviceType: ['Operational audits for HVAC, plumbing, electrical, and mechanical businesses'],
     telephone: siteConfig.phone,
     email: siteConfig.email,
     url: siteConfig.url,
@@ -54,7 +58,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <Header />
         <main>{children}</main>
         <Footer />
+        <StickyCTA />
         <Analytics />
+        <ChatCrisp websiteId={runtimeConfig.chat.crispWebsiteId} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }} />
       </body>
     </html>

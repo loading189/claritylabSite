@@ -1,14 +1,17 @@
+import { runtimeConfig } from '@/content/runtime';
+
 export function Analytics() {
-  if (!process.env.NEXT_PUBLIC_ANALYTICS_PROVIDER) {
+  if (!runtimeConfig.analytics.enabled) {
     return null;
   }
 
   return (
     <script
       defer
-      data-provider={process.env.NEXT_PUBLIC_ANALYTICS_PROVIDER}
+      data-provider={runtimeConfig.analytics.provider}
+      data-domain={runtimeConfig.analytics.plausibleDomain || undefined}
       dangerouslySetInnerHTML={{
-        __html: `window.__analyticsProvider='${process.env.NEXT_PUBLIC_ANALYTICS_PROVIDER}'`,
+        __html: `window.__analyticsProvider='${runtimeConfig.analytics.provider}';window.__plausibleDomain='${runtimeConfig.analytics.plausibleDomain}';`,
       }}
     />
   );

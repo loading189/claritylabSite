@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { navItems, siteConfig } from '@/content/site';
+import { runtimeConfig } from '@/content/runtime';
 import { Container } from './Container';
 
 export function Footer() {
@@ -20,7 +21,13 @@ export function Footer() {
             ))}
           </div>
           <p className="mt-4 text-sm text-slate-700">
-            <a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a> • <a href={`tel:${siteConfig.phone}`}>{siteConfig.phone}</a>
+            <a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>
+            {runtimeConfig.site.hasPhone ? (
+              <>
+                {' '}
+                • <a href={`tel:${siteConfig.phone}`}>{siteConfig.phone}</a>
+              </>
+            ) : null}
           </p>
         </div>
       </Container>
