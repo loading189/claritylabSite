@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import { Container } from '@/components/Container';
 import { OfferCard } from '@/components/OfferCard';
+import { Reveal } from '@/components/Reveal';
 import { Section } from '@/components/Section';
 import { TrustList } from '@/components/TrustList';
 import { StartIntakeSection } from '@/components/StartIntakeSection';
@@ -112,15 +113,19 @@ export default function WorkWithMePage() {
     <>
       <Section>
         <Container className="max-w-5xl">
-          <h1 className="text-4xl font-semibold tracking-tight text-text">
-            Work With Me
-          </h1>
-          <p className="mt-4 max-w-3xl text-muted">
+          <Reveal>
+            <h1 className="text-4xl font-semibold tracking-tight text-text">
+              Work With Me
+            </h1>
+          </Reveal>
+          <Reveal delay={80}>
+            <p className="mt-4 max-w-3xl text-muted">
             If you want clarity without a long pitch process, start with the
             offer that matches where your business is right now. Every
             engagement is built around practical fixes your team can actually
             run.
-          </p>
+            </p>
+          </Reveal>
         </Container>
       </Section>
 

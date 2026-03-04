@@ -47,13 +47,13 @@ export function Header() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`rounded-button px-3 py-2 text-sm no-underline transition ${
+                className={`nav-link rounded-button px-3 py-2 text-sm no-underline transition ${
                   active
                     ? 'bg-accent/15 font-semibold text-accent shadow-soft'
                     : 'text-muted hover:bg-surfaceRaised hover:text-text'
                 }`}
               >
-                {item.label}
+                <span>{item.label}</span>
               </Link>
             );
           })}

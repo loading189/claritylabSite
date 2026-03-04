@@ -4,6 +4,7 @@ import { Analytics } from '@/components/Analytics';
 import { ChatCrisp } from '@/components/ChatCrisp';
 import { Footer } from '@/components/Footer';
 import { Header } from '@/components/Header';
+import { PageTransition } from '@/components/PageTransition';
 import { StickyCTA } from '@/components/StickyCTA';
 import { runtimeConfig } from '@/content/runtime';
 import { siteConfig } from '@/content/site';
@@ -60,7 +61,7 @@ export default function RootLayout({
       <body>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         <Header />
-        <main>{children}</main>
+        <main><PageTransition>{children}</PageTransition></main>
         <Footer />
         <StickyCTA />
         <Analytics />
