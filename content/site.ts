@@ -17,7 +17,9 @@ export const siteConfig = {
 
 export const navItems = [
   { label: 'Home', href: '/' },
+  { label: 'Work With Me', href: '/work-with-me' },
   { label: 'Audit', href: '/audit' },
+  { label: 'Process', href: '/process' },
   { label: 'Insights', href: '/insights' },
   { label: 'Sample Report', href: '/sample-report' },
   { label: 'Case Studies', href: '/case-studies' },
