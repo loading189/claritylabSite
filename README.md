@@ -36,3 +36,12 @@ curl -X POST http://localhost:3000/api/newsletter/subscribe \
 - Secrets (`AIRTABLE_API_KEY`, `RESEND_API_KEY`, `NEWSLETTER_API_KEY`) are server-only and never exposed to the browser.
 - Lead capture uses lightweight in-memory rate limiting + honeypot protection.
 - If Airtable or Resend is not configured, endpoints still return graceful success and fallback messaging.
+
+## How to publish an insight
+
+1. Copy `content/templates/insight-template.mdx` to `content/insights/<your-slug>.mdx`.
+2. Update frontmatter (`title`, `description`, `date`, `tags`, `published`, `type`, `cta`).
+3. Write the content in plain Markdown + optional helper blocks (`<Callout />`, `<Stat />`, `<Table />`, `<MiniCTA />`).
+4. Add practical operator-focused tags (for filtering and related posts).
+5. Set `published: true` when ready to go live.
+6. Commit and push to GitLab. Vercel deploys automatically.

@@ -1,0 +1,145 @@
+import { Metadata } from 'next';
+import Link from 'next/link';
+import { notFound } from 'next/navigation';
+import { Badge } from '@/components/Badge';
+import { Container } from '@/components/Container';
+import { Section } from '@/components/Section';
+import { TrackOnMount } from '@/components/TrackOnMount';
+import { AuthorBlock, MiniCTA } from '@/components/mdx/blocks';
+import { MdxContent } from '@/components/mdx/mdx-content';
+import { TrackEventLink } from '@/components/mdx/track-event-link';
+import { siteConfig } from '@/content/site';
+import {
+  getAllInsights,
+  getInsightBySlug,
+  getRelatedInsights,
+} from '@/lib/content/insights';
+
+export async function generateStaticParams() {
+  return getAllInsights().map((post) => ({ slug: post.slug }));
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { slug: string };
+}): Promise<Metadata> {
+  const post = getInsightBySlug(params.slug);
+  if (!post) return {};
+
+  const canonical =
+    post.canonicalUrl || `${siteConfig.url}/insights/${post.slug}`;
+
+  return {
+    title: post.title,
+    description: post.description,
+    alternates: { canonical },
+    openGraph: {
+      type: 'article',
+      title: post.title,
+      description: post.description,
+      url: canonical,
+      images: [`/insights/${post.slug}/opengraph-image`],
+      publishedTime: post.date,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: post.title,
+      description: post.description,
+      images: [`/insights/${post.slug}/opengraph-image`],
+    },
+  };
+}
+
+export default function InsightDetailPage({
+  params,
+}: {
+  params: { slug: string };
+}) {
+  const post = getInsightBySlug(params.slug);
+
+  if (!post) {
+    notFound();
+  }
+
+  const related = getRelatedInsights(post, 3);
+  const articleSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: post.title,
+    description: post.description,
+    datePublished: post.date,
+    author: {
+      '@type': 'Person',
+      name: siteConfig.founder,
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: siteConfig.name,
+      url: siteConfig.url,
+    },
+    mainEntityOfPage:
+      post.canonicalUrl || `${siteConfig.url}/insights/${post.slug}`,
+  };
+
+  return (
+    <Section>
+      <TrackOnMount eventName="insight_view" props={{ slug: post.slug }} />
+      <Container className="max-w-3xl">
+        <div className="flex flex-wrap gap-2">
+          {post.tags.map((tag) => (
+            <Badge key={tag}>{tag}</Badge>
+          ))}
+        </div>
+        <h1 className="mt-5 text-4xl font-semibold tracking-tight text-slate-900">
+          {post.title}
+        </h1>
+        <p className="mt-4 text-slate-700">{post.description}</p>
+        <p className="mt-4 text-sm text-slate-500">
+          Published {post.date} · {post.readingTime} min read
+        </p>
+
+        <article className="mt-8">
+          <MdxContent content={post.content} slug={post.slug} />
+        </article>
+
+        <AuthorBlock />
+        <MiniCTA cta={post.cta} slug={post.slug} />
+
+        {related.length > 0 && (
+          <div className="mt-12">
+            <h2 className="text-xl font-semibold text-slate-900">
+              Related insights
+            </h2>
+            <div className="mt-3 space-y-2">
+              {related.map((item) => (
+                <Link
+                  key={item.slug}
+                  href={`/insights/${item.slug}`}
+                  className="block text-sm font-semibold no-underline"
+                >
+                  {item.title} →
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
+      </Container>
+
+      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-slate-200 bg-white p-3 md:hidden">
+        <TrackEventLink
+          href={siteConfig.calendlyUrl}
+          eventName="insight_cta_click"
+          props={{ slug: post.slug, cta_type: 'book' }}
+          className="block rounded-lg bg-slate-900 px-4 py-3 text-center text-sm font-semibold text-white no-underline"
+        >
+          Book a 15-minute clarity call
+        </TrackEventLink>
+      </div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
+    </Section>
+  );
+}
