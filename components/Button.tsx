@@ -14,12 +14,22 @@ type ButtonProps = {
 };
 
 const variants = {
-  primary: 'bg-accent text-white shadow-subtle hover:-translate-y-0.5 hover:brightness-105 active:translate-y-0',
-  secondary: 'bg-text text-white shadow-subtle hover:-translate-y-0.5 hover:opacity-95 active:translate-y-0',
-  ghost: 'border border-border bg-surface text-muted hover:bg-slate-100 hover:text-text',
+  primary:
+    'border border-accent/30 bg-accent text-white shadow-soft hover:-translate-y-0.5 hover:shadow-raised active:translate-y-px active:shadow-pressed',
+  secondary:
+    'border border-border bg-text text-bg shadow-soft hover:-translate-y-0.5 hover:shadow-raised active:translate-y-px active:shadow-pressed',
+  ghost:
+    'border border-border bg-surface text-muted shadow-soft hover:-translate-y-0.5 hover:bg-surfaceRaised hover:text-text hover:shadow-raised active:translate-y-px active:shadow-pressed',
 };
 
-export function Button({ href, children, variant = 'primary', className = '', trackingEvent, trackingProps }: ButtonProps) {
+export function Button({
+  href,
+  children,
+  variant = 'primary',
+  className = '',
+  trackingEvent,
+  trackingProps,
+}: ButtonProps) {
   return (
     <Link
       href={href}

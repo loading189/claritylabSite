@@ -8,7 +8,15 @@ type IntakeFormProps = {
   type: 'call' | 'audit';
 };
 
-const tools = ['QuickBooks', 'Xero', 'ServiceTitan', 'Housecall Pro', 'Jobber', 'Excel', 'Other'];
+const tools = [
+  'QuickBooks',
+  'Xero',
+  'ServiceTitan',
+  'Housecall Pro',
+  'Jobber',
+  'Excel',
+  'Other',
+];
 
 export function IntakeForm({ type }: IntakeFormProps) {
   const [loading, setLoading] = useState(false);
@@ -37,7 +45,9 @@ export function IntakeForm({ type }: IntakeFormProps) {
         .split('\n')
         .map((s) => s.trim())
         .filter(Boolean),
-      uploaded_file_names: (formData.get('uploaded_file_names')?.toString() || '')
+      uploaded_file_names: (
+        formData.get('uploaded_file_names')?.toString() || ''
+      )
         .split(',')
         .map((s) => s.trim())
         .filter(Boolean),
@@ -49,7 +59,11 @@ export function IntakeForm({ type }: IntakeFormProps) {
       body: JSON.stringify(payload),
     });
 
-    const data = (await response.json()) as { ok?: boolean; error?: string; tier?: string };
+    const data = (await response.json()) as {
+      ok?: boolean;
+      error?: string;
+      tier?: string;
+    };
 
     if (!response.ok || !data.ok) {
       setError(data.error || 'Could not submit intake right now.');
@@ -58,22 +72,66 @@ export function IntakeForm({ type }: IntakeFormProps) {
     }
 
     track('intake_submit', { type, tier: data.tier || 'unknown' });
-    router.push(`/intake/success?intake_type=${type}&tier=${data.tier || 'Warm'}`);
+    router.push(
+      `/intake/success?intake_type=${type}&tier=${data.tier || 'Warm'}`,
+    );
   }
 
   return (
-    <form onSubmit={onSubmit} className="space-y-3 rounded-lg border border-slate-200 bg-white p-5">
-      <input name="website" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden defaultValue="" />
+    <form
+      onSubmit={onSubmit}
+      className="space-y-4 rounded-card border border-border bg-surfaceRaised p-5 shadow-soft"
+    >
+      <input
+        name="website"
+        tabIndex={-1}
+        autoComplete="off"
+        className="hidden"
+        aria-hidden
+        defaultValue=""
+      />
       <div className="grid gap-3 md:grid-cols-2">
-        <input name="name" required placeholder="Name" className="rounded border border-slate-300 px-3 py-2 text-sm" />
-        <input name="email" required type="email" placeholder="Email" className="rounded border border-slate-300 px-3 py-2 text-sm" />
-        <input name="phone" placeholder="Phone (optional)" className="rounded border border-slate-300 px-3 py-2 text-sm" />
-        <input name="company" required placeholder="Company" className="rounded border border-slate-300 px-3 py-2 text-sm" />
-        <input name="company_website" placeholder="Website (optional)" className="rounded border border-slate-300 px-3 py-2 text-sm" />
-        <input name="location" placeholder="City / State" className="rounded border border-slate-300 px-3 py-2 text-sm" />
+        <input
+          name="name"
+          required
+          placeholder="Name"
+          className="rounded-input border border-border bg-surface px-3 py-2 text-sm text-text"
+        />
+        <input
+          name="email"
+          required
+          type="email"
+          placeholder="Email"
+          className="rounded-input border border-border bg-surface px-3 py-2 text-sm text-text"
+        />
+        <input
+          name="phone"
+          placeholder="Phone (optional)"
+          className="rounded-input border border-border bg-surface px-3 py-2 text-sm text-text"
+        />
+        <input
+          name="company"
+          required
+          placeholder="Company"
+          className="rounded-input border border-border bg-surface px-3 py-2 text-sm text-text"
+        />
+        <input
+          name="company_website"
+          placeholder="Website (optional)"
+          className="rounded-input border border-border bg-surface px-3 py-2 text-sm text-text"
+        />
+        <input
+          name="location"
+          placeholder="City / State"
+          className="rounded-input border border-border bg-surface px-3 py-2 text-sm text-text"
+        />
       </div>
 
-      <select name="industry" className="w-full rounded border border-slate-300 px-3 py-2 text-sm" defaultValue="">
+      <select
+        name="industry"
+        className="w-full rounded-input border border-border bg-surface px-3 py-2 text-sm text-text"
+        defaultValue=""
+      >
         <option value="" disabled>
           Industry
         </option>
@@ -84,7 +142,11 @@ export function IntakeForm({ type }: IntakeFormProps) {
       </select>
 
       <div className="grid gap-3 md:grid-cols-2">
-        <select name="team_size" className="rounded border border-slate-300 px-3 py-2 text-sm" defaultValue="">
+        <select
+          name="team_size"
+          className="rounded-input border border-border bg-surface px-3 py-2 text-sm text-text"
+          defaultValue=""
+        >
           <option value="" disabled>
             Team size
           </option>
@@ -93,7 +155,11 @@ export function IntakeForm({ type }: IntakeFormProps) {
           <option value="6-15">6–15</option>
           <option value="16+">16+</option>
         </select>
-        <select name="annual_revenue_range" className="rounded border border-slate-300 px-3 py-2 text-sm" defaultValue="">
+        <select
+          name="annual_revenue_range"
+          className="rounded-input border border-border bg-surface px-3 py-2 text-sm text-text"
+          defaultValue=""
+        >
           <option value="" disabled>
             Annual revenue range
           </option>
@@ -105,8 +171,10 @@ export function IntakeForm({ type }: IntakeFormProps) {
         </select>
       </div>
 
-      <fieldset className="rounded border border-slate-200 p-3">
-        <legend className="px-1 text-sm font-medium text-slate-700">Current tools</legend>
+      <fieldset className="rounded-input border border-border bg-surface p-3">
+        <legend className="px-1 text-sm font-medium text-muted">
+          Current tools
+        </legend>
         <div className="mt-2 grid grid-cols-2 gap-2 text-sm">
           {tools.map((tool) => (
             <label key={tool} className="flex items-center gap-2">
@@ -116,7 +184,11 @@ export function IntakeForm({ type }: IntakeFormProps) {
         </div>
       </fieldset>
 
-      <select name="biggest_pain" className="w-full rounded border border-slate-300 px-3 py-2 text-sm" defaultValue="">
+      <select
+        name="biggest_pain"
+        className="w-full rounded-input border border-border bg-surface px-3 py-2 text-sm text-text"
+        defaultValue=""
+      >
         <option value="" disabled>
           Biggest pain
         </option>
@@ -128,10 +200,20 @@ export function IntakeForm({ type }: IntakeFormProps) {
         <option value="other">Other</option>
       </select>
 
-      <textarea name="problem_description" required rows={4} placeholder="Describe the problem in your words" className="w-full rounded border border-slate-300 px-3 py-2 text-sm" />
+      <textarea
+        name="problem_description"
+        required
+        rows={4}
+        placeholder="Describe the problem in your words"
+        className="w-full rounded-input border border-border bg-surface px-3 py-2 text-sm text-text"
+      />
 
       <div className="grid gap-3 md:grid-cols-2">
-        <select name="urgency" className="rounded border border-slate-300 px-3 py-2 text-sm" defaultValue="">
+        <select
+          name="urgency"
+          className="rounded-input border border-border bg-surface px-3 py-2 text-sm text-text"
+          defaultValue=""
+        >
           <option value="" disabled>
             Urgency
           </option>
@@ -140,7 +222,11 @@ export function IntakeForm({ type }: IntakeFormProps) {
           <option value="this_quarter">This quarter</option>
           <option value="someday">Someday</option>
         </select>
-        <select name="decision_maker" className="rounded border border-slate-300 px-3 py-2 text-sm" defaultValue="">
+        <select
+          name="decision_maker"
+          className="rounded-input border border-border bg-surface px-3 py-2 text-sm text-text"
+          defaultValue=""
+        >
           <option value="" disabled>
             Are you the decision maker?
           </option>
@@ -151,39 +237,83 @@ export function IntakeForm({ type }: IntakeFormProps) {
 
       {type === 'audit' ? (
         <>
-          <input name="audit_goal" placeholder="Audit goal" className="w-full rounded border border-slate-300 px-3 py-2 text-sm" />
-          <select name="share_data" className="w-full rounded border border-slate-300 px-3 py-2 text-sm" defaultValue="">
+          <input
+            name="audit_goal"
+            placeholder="Audit goal"
+            className="w-full rounded-input border border-border bg-surface px-3 py-2 text-sm text-text"
+          />
+          <select
+            name="share_data"
+            className="w-full rounded-input border border-border bg-surface px-3 py-2 text-sm text-text"
+            defaultValue=""
+          >
             <option value="" disabled>
               Will you share AR aging + P&L + last 3 months transactions?
             </option>
             <option value="yes">Yes</option>
             <option value="no">No</option>
           </select>
-          <select name="upload_preference" className="w-full rounded border border-slate-300 px-3 py-2 text-sm" defaultValue="upload_link">
+          <select
+            name="upload_preference"
+            className="w-full rounded-input border border-border bg-surface px-3 py-2 text-sm text-text"
+            defaultValue="upload_link"
+          >
             <option value="upload_link">Upload here (via secure link)</option>
             <option value="email_later">Email later</option>
           </select>
           {uploadLink ? (
-            <p className="rounded bg-slate-50 p-3 text-sm text-slate-700">
-              Use secure upload link: <a href={uploadLink} target="_blank" rel="noreferrer" onClick={() => track('intake_upload', { type })}>{uploadLink}</a>
+            <p className="rounded-input border border-border bg-surface p-3 text-sm text-muted">
+              Use secure upload link:{' '}
+              <a
+                href={uploadLink}
+                target="_blank"
+                rel="noreferrer"
+                onClick={() => track('intake_upload', { type })}
+              >
+                {uploadLink}
+              </a>
             </p>
           ) : null}
-          <textarea name="uploaded_files" rows={3} placeholder="Paste uploaded file URLs (one per line)" className="w-full rounded border border-slate-300 px-3 py-2 text-sm" />
-          <input name="uploaded_file_names" placeholder="Uploaded file names (comma-separated)" className="w-full rounded border border-slate-300 px-3 py-2 text-sm" />
-          <textarea name="notes" rows={3} placeholder="Notes / constraints" className="w-full rounded border border-slate-300 px-3 py-2 text-sm" />
+          <textarea
+            name="uploaded_files"
+            rows={3}
+            placeholder="Paste uploaded file URLs (one per line)"
+            className="w-full rounded-input border border-border bg-surface px-3 py-2 text-sm text-text"
+          />
+          <input
+            name="uploaded_file_names"
+            placeholder="Uploaded file names (comma-separated)"
+            className="w-full rounded-input border border-border bg-surface px-3 py-2 text-sm text-text"
+          />
+          <textarea
+            name="notes"
+            rows={3}
+            placeholder="Notes / constraints"
+            className="w-full rounded-input border border-border bg-surface px-3 py-2 text-sm text-text"
+          />
         </>
       ) : null}
 
-      <label className="flex items-center gap-2 text-sm text-slate-700">
-        <input name="consent" type="checkbox" required /> I consent to being contacted about this intake.
+      <label className="flex items-center gap-2 text-sm text-muted">
+        <input name="consent" type="checkbox" required /> I consent to being
+        contacted about this intake.
       </label>
 
-      {error ? <p className="rounded bg-rose-50 p-2 text-sm text-rose-700">{error}</p> : null}
+      {error ? (
+        <p className="rounded border border-danger/35 bg-danger/10 p-2 text-sm text-danger">
+          {error}
+        </p>
+      ) : null}
 
-      <button disabled={loading} className="rounded bg-brand-600 px-4 py-2 text-sm font-semibold text-white disabled:opacity-60">
+      <button
+        disabled={loading}
+        className="rounded-button border border-accent/30 bg-accent px-4 py-2 text-sm font-semibold text-white shadow-soft transition hover:-translate-y-0.5 hover:shadow-raised active:translate-y-px active:shadow-pressed disabled:opacity-60"
+      >
         {loading ? 'Submitting…' : 'Submit intake'}
       </button>
-      <p className="text-xs text-slate-500">No pitch • Just clarity. Not legal/tax advice.</p>
+      <p className="text-xs text-muted">
+        No pitch • Just clarity. Not legal/tax advice.
+      </p>
     </form>
   );
 }

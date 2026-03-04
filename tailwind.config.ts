@@ -1,6 +1,7 @@
 import type { Config } from 'tailwindcss';
 
 const config: Config = {
+  darkMode: 'class',
   content: [
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
     './components/**/*.{js,ts,jsx,tsx,mdx}',
@@ -14,7 +15,6 @@ const config: Config = {
         mono: ['var(--font-mono)', 'ui-monospace'],
       },
       colors: {
-
         brand: {
           50: '#eef2ff',
           100: '#dfe8ff',
@@ -24,13 +24,17 @@ const config: Config = {
           800: '#172e6a',
           900: '#0f214b',
         },
-        bg: '#f7f8fb',
-        surface: '#ffffff',
-        surfaceRaised: '#fdfdff',
-        border: '#e4e7ec',
-        text: '#101828',
-        muted: '#475467',
-        accent: '#3156d3',
+        bg: 'hsl(var(--bg) / <alpha-value>)',
+        surface: 'hsl(var(--surface) / <alpha-value>)',
+        surfaceRaised: 'hsl(var(--surface-raised) / <alpha-value>)',
+        border: 'hsl(var(--border) / <alpha-value>)',
+        text: 'hsl(var(--text) / <alpha-value>)',
+        muted: 'hsl(var(--muted) / <alpha-value>)',
+        accent: 'hsl(var(--accent) / <alpha-value>)',
+        accent2: 'hsl(var(--accent-2) / <alpha-value>)',
+        success: 'hsl(var(--success) / <alpha-value>)',
+        warn: 'hsl(var(--warn) / <alpha-value>)',
+        danger: 'hsl(var(--danger) / <alpha-value>)',
       },
       borderRadius: {
         card: '1rem',
@@ -38,7 +42,12 @@ const config: Config = {
         input: '0.75rem',
       },
       boxShadow: {
-        subtle: '0 10px 35px -22px rgba(16, 24, 40, 0.35)',
+        soft: 'var(--shadow-soft)',
+        raised: 'var(--shadow-raised)',
+        pressed: 'var(--shadow-pressed)',
+      },
+      backgroundImage: {
+        'gradient-subtle': 'var(--gradient-subtle)',
       },
       spacing: {
         sectionPaddingY: '5rem',

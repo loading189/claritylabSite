@@ -112,10 +112,10 @@ export default function WorkWithMePage() {
     <>
       <Section>
         <Container className="max-w-5xl">
-          <h1 className="text-4xl font-semibold tracking-tight text-slate-900">
+          <h1 className="text-4xl font-semibold tracking-tight text-text">
             Work With Me
           </h1>
-          <p className="mt-4 max-w-3xl text-slate-700">
+          <p className="mt-4 max-w-3xl text-muted">
             If you want clarity without a long pitch process, start with the
             offer that matches where your business is right now. Every
             engagement is built around practical fixes your team can actually
@@ -124,7 +124,7 @@ export default function WorkWithMePage() {
         </Container>
       </Section>
 
-      <Section className="bg-white">
+      <Section className="bg-surface">
         <Container className="grid gap-5 lg:grid-cols-3">
           {offers.map((offer) => (
             <OfferCard key={offer.id} {...offer} />

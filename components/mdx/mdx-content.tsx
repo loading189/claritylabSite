@@ -39,7 +39,7 @@ export function MdxContent({
       nodes.push(
         <h1
           key={`h1-${i}`}
-          className="mt-8 text-3xl font-semibold tracking-tight text-slate-900"
+          className="mt-8 text-3xl font-semibold tracking-tight text-text"
         >
           {line.slice(2)}
         </h1>,
@@ -52,7 +52,7 @@ export function MdxContent({
       nodes.push(
         <h2
           key={`h2-${i}`}
-          className="mt-8 text-2xl font-semibold tracking-tight text-slate-900"
+          className="mt-8 text-2xl font-semibold tracking-tight text-text"
         >
           {line.slice(3)}
         </h2>,
@@ -124,7 +124,7 @@ export function MdxContent({
     }
 
     nodes.push(
-      <p key={`p-${i}`} className="mt-4 leading-7 text-slate-700">
+      <p key={`p-${i}`} className="mt-4 leading-8 text-muted">
         {line}
       </p>,
     );

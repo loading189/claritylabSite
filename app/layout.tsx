@@ -32,14 +32,20 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+const themeScript = `(function(){try{var s=localStorage.getItem('theme');var d=window.matchMedia('(prefers-color-scheme: dark)').matches;var t=s==='light'||s==='dark'?s:(d?'dark':'light');document.documentElement.classList.toggle('dark',t==='dark');}catch(e){}})();`;
+
+export default function RootLayout({
+  children,
+}: Readonly<{ children: React.ReactNode }>) {
   const localBusinessSchema = {
     '@context': 'https://schema.org',
     '@type': 'ProfessionalService',
     name: siteConfig.name,
     description: siteConfig.description,
     areaServed: ['Fargo area', 'Surrounding regional service trade markets'],
-    serviceType: ['Operational audits for HVAC, plumbing, electrical, and mechanical businesses'],
+    serviceType: [
+      'Operational audits for HVAC, plumbing, electrical, and mechanical businesses',
+    ],
     telephone: siteConfig.phone,
     email: siteConfig.email,
     url: siteConfig.url,
@@ -50,15 +56,21 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   };
 
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         <Header />
         <main>{children}</main>
         <Footer />
         <StickyCTA />
         <Analytics />
         <ChatCrisp websiteId={runtimeConfig.chat.crispWebsiteId} />
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }} />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(localBusinessSchema),
+          }}
+        />
       </body>
     </html>
   );

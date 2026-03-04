@@ -20,19 +20,16 @@ import {
 export default function HomePage() {
   return (
     <>
-      <Section className="pb-10 pt-12 sm:pt-16">
-        <Container>
-          <Badge>
-            For service trades: HVAC, plumbing, electrical, mechanical
-          </Badge>
-          <h1 className="mt-5 max-w-3xl text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl">
-            Clean up what is happening behind the scenes, so owners can breathe
-            again.
+      <Section className="pb-12 pt-12 sm:pt-16">
+        <Container className="rounded-card border border-border/70 bg-surface p-8 shadow-raised sm:p-12">
+          <Badge>Operator brief · Fargo-built for service trades</Badge>
+          <h1 className="mt-5 max-w-3xl text-4xl font-semibold tracking-tight text-text sm:text-6xl">
+            Audit-grade clarity for owner-operators who need control, not noise.
           </h1>
-          <p className="mt-5 max-w-2xl text-base text-slate-700 sm:text-lg">
-            No pitch • Just clarity. We find hidden leaks in cash flow and
-            operations, then turn those findings into a simple action plan your
-            team can execute.
+          <p className="mt-5 max-w-2xl text-base text-muted sm:text-lg">
+            No pitch. Just clear deliverables. We surface hidden leaks in
+            margin, cash flow, and handoff execution—then hand your team a
+            practical plan.
           </p>
           <div className="mt-7 flex flex-col gap-3 sm:flex-row">
             <Button
@@ -46,18 +43,21 @@ export default function HomePage() {
               Review the sample report
             </Button>
           </div>
-          <p className="mt-4 text-sm text-muted">{siteConfig.trustLine} · Typically 2–3 meaningful leaks identified in your first review.</p>
+          <p className="mt-4 text-sm text-muted">
+            {siteConfig.trustLine} · Typically 2–3 meaningful leaks identified
+            in your first review.
+          </p>
         </Container>
       </Section>
 
       <Section className="py-8">
         <Container className="grid gap-4 md:grid-cols-3">
           {waysIHelp.map((item) => (
-            <Card key={item.title} title={item.title}>
+            <Card key={item.title} title={item.title} interactive>
               <p>{item.description}</p>
             </Card>
           ))}
-          <Card title="Ways I Help">
+          <Card title="Ways I Help" interactive>
             <p>
               See the full engagement options and choose the right starting
               point for your team.
@@ -78,7 +78,7 @@ export default function HomePage() {
             <div className="space-y-4">
               {fifteenMinuteBreakdown.map((item) => (
                 <div key={item.title}>
-                  <p className="text-sm font-semibold text-slate-900">
+                  <p className="text-sm font-semibold text-text">
                     {item.title}
                   </p>
                   <p>{item.detail}</p>
@@ -89,25 +89,15 @@ export default function HomePage() {
         </Container>
       </Section>
 
-      <Section className="bg-white">
-        <Container>
-          <SectionHeader title="Example insights from the audit" subtitle="These are the types of practical outputs you can expect. No vanity dashboards, just actionable clarity." />
-          <div className="mt-8 grid gap-4 md:grid-cols-3">
-            {exampleInsights.map((insight) => (
-              <Card key={insight.title} title={insight.title}>
-                <FeatureList items={insight.bullets} />
-              </Card>
-            ))}
-          </div>
-        </Container>
-      </Section>
-
       <Section>
         <Container>
-          <SectionHeader title="Proof and tools" />
+          <SectionHeader
+            title="Proof and tools"
+            subtitle="What teams use right away: concrete examples, practical toolkits, and repeatable wins."
+          />
           <div className="mt-6 grid gap-4 md:grid-cols-2">
-            <Card title="Case studies">
-              <p className="text-sm text-slate-700">
+            <Card title="Case studies" interactive>
+              <p className="text-sm text-muted">
                 Walk through sample/demonstration audits for service trade teams
                 and see how findings turn into results.
               </p>
@@ -115,8 +105,8 @@ export default function HomePage() {
                 See case studies
               </Button>
             </Card>
-            <Card title="Resources">
-              <p className="text-sm text-slate-700">
+            <Card title="Resources" interactive>
+              <p className="text-sm text-muted">
                 Download practical checklists and scorecards you can use this
                 week with your office and field leads.
               </p>
@@ -124,6 +114,22 @@ export default function HomePage() {
                 Browse resources
               </Button>
             </Card>
+          </div>
+        </Container>
+      </Section>
+
+      <Section>
+        <Container>
+          <SectionHeader
+            title="Example insights from the audit"
+            subtitle="These are the types of practical outputs you can expect. No vanity dashboards, just actionable clarity."
+          />
+          <div className="mt-8 grid gap-4 md:grid-cols-3">
+            {exampleInsights.map((insight) => (
+              <Card key={insight.title} title={insight.title}>
+                <FeatureList items={insight.bullets} />
+              </Card>
+            ))}
           </div>
         </Container>
       </Section>
@@ -142,7 +148,7 @@ export default function HomePage() {
         </Container>
       </Section>
 
-      <Section className="bg-white">
+      <Section>
         <Container className="max-w-3xl">
           <TrustList />
         </Container>

@@ -41,10 +41,10 @@ export default function ProcessPage() {
       <TrackOnMount eventName="process_page_view" />
       <Section>
         <Container className="max-w-4xl">
-          <h1 className="text-4xl font-semibold tracking-tight text-slate-900">
+          <h1 className="text-4xl font-semibold tracking-tight text-text">
             Process
           </h1>
-          <p className="mt-4 max-w-3xl text-slate-700">
+          <p className="mt-4 max-w-3xl text-muted">
             No confusing consulting cycle. We keep this simple: quick context,
             deep analysis, practical plan, and optional help executing.
           </p>
@@ -54,7 +54,7 @@ export default function ProcessPage() {
         </Container>
       </Section>
 
-      <Section className="bg-white">
+      <Section className="bg-surface">
         <Container className="max-w-3xl">
           <TrustList />
           <StartIntakeSection where="process" />
