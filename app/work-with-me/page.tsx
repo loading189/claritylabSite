@@ -3,6 +3,7 @@ import { Container } from '@/components/Container';
 import { OfferCard } from '@/components/OfferCard';
 import { Section } from '@/components/Section';
 import { TrustList } from '@/components/TrustList';
+import { StartIntakeSection } from '@/components/StartIntakeSection';
 import { siteConfig } from '@/content/site';
 
 export const metadata: Metadata = {
@@ -134,6 +135,7 @@ export default function WorkWithMePage() {
       <Section>
         <Container className="max-w-3xl">
           <TrustList />
+          <StartIntakeSection where="work_with_me" />
         </Container>
       </Section>
 
