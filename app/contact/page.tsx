@@ -3,6 +3,7 @@ import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
 import { Container } from '@/components/Container';
 import { FormEmbed } from '@/components/FormEmbed';
+import { LeadForm } from '@/components/LeadForm';
 import { Section } from '@/components/Section';
 import { runtimeConfig } from '@/content/runtime';
 import { siteConfig } from '@/content/site';
@@ -20,6 +21,7 @@ export default function ContactPage() {
         <p className="mt-4 max-w-2xl text-slate-700">
           Keep it simple: book time, send a note, or text/email directly. No pitch • Just clarity.
         </p>
+        <p className="mt-2 text-sm text-slate-600">I’m local to Fargo; if you book a call you’ll get the fastest response.</p>
 
         {runtimeConfig.chat.enabled ? <p className="mt-3 text-sm text-emerald-700">Chat is available if you prefer a quick message.</p> : null}
 
@@ -55,16 +57,24 @@ export default function ContactPage() {
           </Card>
         </div>
 
-        <Card title="Contact form" className="mt-4">
-          {runtimeConfig.forms.hasContactForm ? (
-            <FormEmbed src={runtimeConfig.forms.contactUrl} title="Contact form" />
-          ) : (
-            <p className="text-sm text-slate-600">
-              Set <code>NEXT_PUBLIC_CONTACT_FORM_URL</code> to enable the embedded form. Fallback: email{' '}
-              <a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>.
-            </p>
-          )}
-        </Card>
+        <div className="mt-4 grid gap-4 md:grid-cols-2">
+          <LeadForm
+            source="contact_form"
+            title="Send a message"
+            helperText="Not a fit for tax/legal advice or software shopping. Best fit: owners in trades/service businesses who want practical operational guidance."
+            successMessage="Thanks — I’ll reply within 1 business day. If you want faster, book the call."
+          />
+          <Card title="Contact form embed (optional)">
+            {runtimeConfig.forms.hasContactForm ? (
+              <FormEmbed src={runtimeConfig.forms.contactUrl} title="Contact form" />
+            ) : (
+              <p className="text-sm text-slate-600">
+                Set <code>NEXT_PUBLIC_CONTACT_FORM_URL</code> to enable the embedded form. Fallback: email{' '}
+                <a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>.
+              </p>
+            )}
+          </Card>
+        </div>
       </Container>
     </Section>
   );

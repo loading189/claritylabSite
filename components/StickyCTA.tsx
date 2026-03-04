@@ -1,4 +1,7 @@
+'use client';
+
 import { runtimeConfig } from '@/content/runtime';
+import { track } from '@/lib/track';
 
 export function StickyCTA() {
   const hasPrimary = runtimeConfig.booking.enabled;
@@ -18,6 +21,7 @@ export function StickyCTA() {
             <a
               href={runtimeConfig.booking.calendlyUrl}
               className="inline-flex flex-1 items-center justify-center rounded-md bg-brand-600 px-3 py-2 text-sm font-semibold text-white no-underline"
+              onClick={() => track('booking_click', { page: 'sticky_cta' })}
             >
               Book a call
             </a>

@@ -5,6 +5,7 @@ import { Card } from '@/components/Card';
 import { Container } from '@/components/Container';
 import { FeatureList } from '@/components/FeatureList';
 import { Section } from '@/components/Section';
+import { TrackOnMount } from '@/components/TrackOnMount';
 import { caseStudies } from '@/content/caseStudies';
 import { siteConfig } from '@/content/site';
 
@@ -36,6 +37,7 @@ export default function CaseStudyDetailPage({ params }: Props) {
 
   return (
     <>
+      <TrackOnMount eventName="case_study_view" props={{ slug: study.slug }} />
       <Section>
         <Container className="max-w-5xl">
           <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">{study.label}</p>
@@ -103,7 +105,7 @@ export default function CaseStudyDetailPage({ params }: Props) {
             <p className="mt-1 text-sm text-brand-100">No pitch • Just clarity. Start with a quick call and a sample report review.</p>
           </div>
           <div className="flex flex-col gap-2 sm:flex-row">
-            <Button href={siteConfig.calendlyUrl || '/contact'} variant="secondary" className="bg-white text-brand-900 hover:bg-brand-100">
+            <Button href={siteConfig.calendlyUrl || '/contact'} variant="secondary" className="bg-white text-brand-900 hover:bg-brand-100" trackingEvent="booking_click" trackingProps={{ page: 'case_study' }}>
               Book a call
             </Button>
             <Button href="/sample-report" variant="ghost" className="border-white text-white hover:bg-brand-800">

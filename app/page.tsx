@@ -21,7 +21,9 @@ export default function HomePage() {
             simple action plan your team can execute.
           </p>
           <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-            <Button href={siteConfig.calendlyUrl || '/contact'}>Book a 15-min Clarity Call</Button>
+            <Button href={siteConfig.calendlyUrl || '/contact'} trackingEvent="booking_click" trackingProps={{ page: 'home_hero' }}>
+              Book a 15-min Clarity Call
+            </Button>
             <Button href="/sample-report" variant="ghost">
               Review the sample report
             </Button>
