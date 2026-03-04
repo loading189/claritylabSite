@@ -33,10 +33,10 @@ export function InsightsList({ posts, tags }: Props) {
 
   return (
     <>
-      <div className="mt-8 space-y-4 rounded-xl border border-slate-200 p-4">
+      <div className="mt-8 space-y-4 rounded-card border border-border bg-surface p-4 shadow-soft">
         <input
           aria-label="Search insights"
-          className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+          className="w-full"
           placeholder="Search by topic, title, or tag"
           value={query}
           onChange={(event) => {
@@ -47,11 +47,7 @@ export function InsightsList({ posts, tags }: Props) {
         />
         <div className="flex flex-wrap gap-2">
           <button
-            className={`rounded-full px-3 py-1 text-xs font-semibold ${
-              activeTag === 'all'
-                ? 'bg-slate-900 text-white'
-                : 'bg-slate-100 text-slate-700'
-            }`}
+            className={`rounded-full border px-3 py-1 text-xs font-semibold ${activeTag === 'all' ? 'border-accent/30 bg-accent text-white' : 'border-border bg-surfaceRaised text-muted'}`}
             onClick={() => setActiveTag('all')}
           >
             All
@@ -59,11 +55,7 @@ export function InsightsList({ posts, tags }: Props) {
           {tags.map((tag) => (
             <button
               key={tag}
-              className={`rounded-full px-3 py-1 text-xs font-semibold ${
-                activeTag === tag
-                  ? 'bg-slate-900 text-white'
-                  : 'bg-slate-100 text-slate-700'
-              }`}
+              className={`rounded-full border px-3 py-1 text-xs font-semibold ${activeTag === tag ? 'border-accent/30 bg-accent text-white' : 'border-border bg-surfaceRaised text-muted'}`}
               onClick={() => {
                 setActiveTag(tag);
                 track('tag_filter_click', { tag });
@@ -77,19 +69,19 @@ export function InsightsList({ posts, tags }: Props) {
 
       <div className="mt-8 grid gap-4">
         {filteredPosts.map((post) => (
-          <Card key={post.slug}>
+          <Card key={post.slug} interactive>
             <div className="flex flex-wrap items-center gap-3">
               {post.tags.map((tag) => (
                 <Badge key={tag}>{tag}</Badge>
               ))}
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-muted">
                 {post.date} · {post.readingTime} min read
               </p>
             </div>
-            <h2 className="mt-3 text-xl font-semibold text-slate-900">
+            <h2 className="mt-3 text-xl font-semibold text-text">
               {post.title}
             </h2>
-            <p className="mt-2 text-sm text-slate-700">{post.description}</p>
+            <p className="mt-2 text-sm text-muted">{post.description}</p>
             <Link
               href={`/insights/${post.slug}`}
               className="mt-4 inline-block text-sm font-semibold no-underline"

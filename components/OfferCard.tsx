@@ -27,13 +27,13 @@ export function OfferCard({
   ctaHref,
 }: OfferCardProps) {
   return (
-    <Card title={title}>
+    <Card title={title} interactive>
       <TrackOnMount eventName="offer_view" props={{ offer: id }} />
-      <p className="text-sm text-slate-700">{description}</p>
+      <p className="text-sm text-muted">{description}</p>
 
-      <div className="mt-5 space-y-5 text-sm text-slate-700">
+      <div className="mt-5 space-y-5 text-sm text-muted">
         <section>
-          <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+          <h3 className="text-xs font-semibold uppercase tracking-wide text-muted/80">
             Who it&apos;s for
           </h3>
           <div className="mt-2">
@@ -42,7 +42,7 @@ export function OfferCard({
         </section>
 
         <section>
-          <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+          <h3 className="text-xs font-semibold uppercase tracking-wide text-muted/80">
             What you get
           </h3>
           <div className="mt-2">
@@ -51,7 +51,7 @@ export function OfferCard({
         </section>
 
         <section>
-          <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+          <h3 className="text-xs font-semibold uppercase tracking-wide text-muted/80">
             How it works
           </h3>
           <ol className="mt-2 list-decimal space-y-1 pl-5">
@@ -62,7 +62,7 @@ export function OfferCard({
         </section>
 
         <section>
-          <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+          <h3 className="text-xs font-semibold uppercase tracking-wide text-muted/80">
             Timeframe
           </h3>
           <p className="mt-2">{timeframe}</p>

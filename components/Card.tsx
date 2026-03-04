@@ -1,16 +1,30 @@
-import { ReactNode } from 'react';
+import { HTMLAttributes, ReactNode } from 'react';
 
-type CardProps = {
+type CardProps = HTMLAttributes<HTMLElement> & {
   title?: string;
   children: ReactNode;
   className?: string;
+  interactive?: boolean;
 };
 
-export function Card({ title, children, className = '' }: CardProps) {
+export function Card({
+  title,
+  children,
+  className = '',
+  interactive = false,
+  ...props
+}: CardProps) {
   return (
-    <article className={`rounded-card border bg-surface p-6 shadow-subtle transition duration-200 hover:-translate-y-0.5 ${className}`}>
-      {title ? <h3 className="text-lg font-semibold text-text">{title}</h3> : null}
-      <div className={title ? 'mt-3 text-sm text-muted' : 'text-sm text-muted'}>{children}</div>
+    <article
+      {...props}
+      className={`rounded-card border border-border/90 bg-surfaceRaised p-6 shadow-soft transition duration-200 ${interactive ? 'hover:-translate-y-1 hover:shadow-raised' : ''} ${className}`}
+    >
+      {title ? (
+        <h3 className="text-lg font-semibold text-text">{title}</h3>
+      ) : null}
+      <div className={title ? 'mt-3 text-sm text-muted' : 'text-sm text-muted'}>
+        {children}
+      </div>
     </article>
   );
 }

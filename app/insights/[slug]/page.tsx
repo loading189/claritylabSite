@@ -86,18 +86,20 @@ export default function InsightDetailPage({
     <Section>
       <TrackOnMount eventName="insight_view" props={{ slug: post.slug }} />
       <Container className="max-w-3xl">
-        <div className="flex flex-wrap gap-2">
-          {post.tags.map((tag) => (
-            <Badge key={tag}>{tag}</Badge>
-          ))}
+        <div className="rounded-card border border-border bg-surface p-6 shadow-soft sm:p-8">
+          <div className="flex flex-wrap gap-2">
+            {post.tags.map((tag) => (
+              <Badge key={tag}>{tag}</Badge>
+            ))}
+          </div>
+          <h1 className="mt-5 text-4xl font-semibold tracking-tight text-text">
+            {post.title}
+          </h1>
+          <p className="mt-4 text-muted">{post.description}</p>
+          <p className="mt-4 text-sm text-muted/85">
+            Published {post.date} · {post.readingTime} min read
+          </p>
         </div>
-        <h1 className="mt-5 text-4xl font-semibold tracking-tight text-slate-900">
-          {post.title}
-        </h1>
-        <p className="mt-4 text-slate-700">{post.description}</p>
-        <p className="mt-4 text-sm text-slate-500">
-          Published {post.date} · {post.readingTime} min read
-        </p>
 
         <article className="mt-8">
           <MdxContent content={post.content} slug={post.slug} />
@@ -107,8 +109,8 @@ export default function InsightDetailPage({
         <MiniCTA cta={post.cta} slug={post.slug} />
 
         {related.length > 0 && (
-          <div className="mt-12">
-            <h2 className="text-xl font-semibold text-slate-900">
+          <div className="mt-12 rounded-card border border-border bg-surface p-6 shadow-soft">
+            <h2 className="text-xl font-semibold text-text">
               Related insights
             </h2>
             <div className="mt-3 space-y-2">
@@ -116,7 +118,7 @@ export default function InsightDetailPage({
                 <Link
                   key={item.slug}
                   href={`/insights/${item.slug}`}
-                  className="block text-sm font-semibold no-underline"
+                  className="block rounded-button px-2 py-1.5 text-sm font-semibold text-accent no-underline hover:bg-surfaceRaised"
                 >
                   {item.title} →
                 </Link>
@@ -126,12 +128,12 @@ export default function InsightDetailPage({
         )}
       </Container>
 
-      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-slate-200 bg-white p-3 md:hidden">
+      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-surface p-3 md:hidden">
         <TrackEventLink
           href={siteConfig.calendlyUrl}
           eventName="insight_cta_click"
           props={{ slug: post.slug, cta_type: 'book' }}
-          className="block rounded-lg bg-slate-900 px-4 py-3 text-center text-sm font-semibold text-white no-underline"
+          className="block rounded-button border border-accent/30 bg-accent px-4 py-3 text-center text-sm font-semibold text-white no-underline shadow-soft"
         >
           Book a 15-minute clarity call
         </TrackEventLink>
