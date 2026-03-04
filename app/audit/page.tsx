@@ -6,6 +6,7 @@ import { Card } from '@/components/Card';
 import { Container } from '@/components/Container';
 import { FeatureList } from '@/components/FeatureList';
 import { FormEmbed } from '@/components/FormEmbed';
+import { LeadForm } from '@/components/LeadForm';
 import { Section } from '@/components/Section';
 import { runtimeConfig } from '@/content/runtime';
 import { notAFit, siteConfig, whoItsFor } from '@/content/site';
@@ -27,7 +28,9 @@ export default function AuditPage() {
             service trade owners who need better decisions now.
           </p>
           <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-            <Button href={siteConfig.calendlyUrl || '/contact'}>Book a 15-min Clarity Call</Button>
+            <Button href={siteConfig.calendlyUrl || '/contact'} trackingEvent="booking_click" trackingProps={{ page: 'audit' }}>
+              Book a 15-min Clarity Call
+            </Button>
             <Button href="/sample-report" variant="ghost">
               Preview sample report
             </Button>
@@ -67,9 +70,14 @@ export default function AuditPage() {
       </Section>
 
       <Section>
-        <Container className="max-w-4xl">
-          <Card title="Request an Audit">
-            <p className="mb-4 text-sm text-slate-700">No pitch • Just clarity. Share a few details and we’ll map the right next step.</p>
+        <Container className="max-w-4xl space-y-4">
+          <LeadForm
+            source="audit_request"
+            title="Request an Audit"
+            helperText="No pitch • Just clarity. Best fit for established trades/service teams. Not a fit for accounting/legal advice."
+            successMessage="Thanks — your audit request is in. I’ll follow up with the best next step."
+          />
+          <Card title="Audit form embed (optional)">
             {runtimeConfig.forms.hasAuditForm ? (
               <FormEmbed src={runtimeConfig.forms.auditUrl} title="Request an audit form" />
             ) : (

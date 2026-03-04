@@ -15,7 +15,13 @@ export function CalloutCTA() {
           </p>
           <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
             {runtimeConfig.booking.enabled ? (
-              <Button href={siteConfig.calendlyUrl} variant="secondary" className="bg-white text-brand-900 hover:bg-brand-100">
+              <Button
+                href={siteConfig.calendlyUrl}
+                variant="secondary"
+                className="bg-white text-brand-900 hover:bg-brand-100"
+                trackingEvent="booking_click"
+                trackingProps={{ page: 'callout_cta' }}
+              >
                 Open booking
               </Button>
             ) : null}
@@ -28,7 +34,7 @@ export function CalloutCTA() {
               </a>
             ) : null}
           </div>
-          <p className="mt-4 text-xs text-brand-100">{siteConfig.trustLine}</p>
+          <p className="mt-4 text-xs text-brand-100">No pitch • Just clarity. Not accounting or legal advice; operational guidance.</p>
         </div>
       </Container>
     </section>

@@ -22,7 +22,7 @@ export default function SampleReportPage() {
 
           <div className="mt-6 rounded-lg border border-brand-200 bg-brand-50 p-4">
             <p className="text-sm text-brand-900">Want this for your business? We can build this with your numbers in a focused audit.</p>
-            <Button href={siteConfig.calendlyUrl || '/contact'} className="mt-3">
+            <Button href={siteConfig.calendlyUrl || '/contact'} className="mt-3" trackingEvent="booking_click" trackingProps={{ page: 'sample_report' }}>
               Book a 15-min Clarity Call
             </Button>
           </div>
@@ -90,7 +90,7 @@ export default function SampleReportPage() {
             Bring your own data, and you’ll get a deliverable-driven audit with clear next actions and optional implementation support.
           </p>
           <div className="mt-5 flex flex-col gap-3 sm:flex-row">
-            <Button href={siteConfig.calendlyUrl || '/contact'}>Book a 15-min Clarity Call</Button>
+            <Button href={siteConfig.calendlyUrl || '/contact'} trackingEvent="booking_click" trackingProps={{ page: 'sample_report_footer' }}>Book a 15-min Clarity Call</Button>
             <Button href="/audit" variant="ghost">
               Request an audit
             </Button>

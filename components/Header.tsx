@@ -34,7 +34,11 @@ export function Header() {
               {item.label}
             </Link>
           ))}
-          {runtimeConfig.booking.enabled ? <Button href={siteConfig.calendlyUrl}>Book a 15-min Clarity Call</Button> : null}
+          {runtimeConfig.booking.enabled ? (
+            <Button href={siteConfig.calendlyUrl} trackingEvent="booking_click" trackingProps={{ page: 'header' }}>
+              Book a 15-min Clarity Call
+            </Button>
+          ) : null}
         </nav>
       </Container>
 
@@ -51,7 +55,11 @@ export function Header() {
                 {item.label}
               </Link>
             ))}
-            {runtimeConfig.booking.enabled ? <Button href={siteConfig.calendlyUrl}>Book a 15-min Clarity Call</Button> : null}
+            {runtimeConfig.booking.enabled ? (
+              <Button href={siteConfig.calendlyUrl} trackingEvent="booking_click" trackingProps={{ page: 'header_mobile' }}>
+                Book a 15-min Clarity Call
+              </Button>
+            ) : null}
           </Container>
         </div>
       ) : null}
