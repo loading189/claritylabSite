@@ -3,6 +3,8 @@ import { Container } from '@/components/Container';
 import { IntakeForm } from '@/components/IntakeForm';
 import { Section } from '@/components/Section';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: 'Clarity Call Intake',
   description: 'Structured intake to prepare your Clarity Call.',

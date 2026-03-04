@@ -6,9 +6,24 @@ Next.js 14 App Router site for Clarity Labs.
 
 1. Copy `.env.example` to `.env.local`.
 2. Fill in public values (`NEXT_PUBLIC_*`) for site, booking, forms, resources, analytics, and upload-link UX.
-3. Fill in private values for Airtable, Resend, newsletter, monitoring, and intake token in Vercel project settings.
+3. Fill in private values for Airtable, Resend, newsletter, health checks, and diagnostic tokens in Vercel project settings.
+4. Use Node.js **20.x LTS** (recommended for parity with Vercel builds).
 
-## Microservices & integrations
+## Font strategy (build-safe)
+
+This project no longer fetches remote fonts at build time. It uses a premium system font stack via CSS variables in `app/globals.css`.
+
+- Sans: `ui-sans-serif, system-ui, -apple-system, Segoe UI, Inter, Roboto, ...`
+- Display: `Avenir Next, Avenir, Segoe UI, Inter, ...`
+- Mono: `ui-monospace, SFMono-Regular, Menlo, Consolas, ...`
+
+If you want self-hosted fonts later:
+
+1. Add `.woff2` files under `public/fonts/`.
+2. Switch `app/layout.tsx` to `next/font/local` with the same CSS variables (`--font-sans`, `--font-display`, `--font-mono`).
+3. Keep `tailwind.config.ts` font family entries unchanged.
+
+## Integrations
 
 All integrations are configured through `content/runtime.ts` and server env vars.
 
@@ -20,19 +35,20 @@ All integrations are configured through `content/runtime.ts` and server env vars
 - **Newsletter webhook**: optional provider sync via `NEWSLETTER_PROVIDER`, `NEWSLETTER_ENDPOINT_URL`, `NEWSLETTER_API_KEY`, `NEWSLETTER_LIST_ID`.
 - **Analytics**: Plausible enabled when `NEXT_PUBLIC_ANALYTICS_PROVIDER=plausible` and `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` is set.
 - **Upload link**: audit intake upload UX uses `NEXT_PUBLIC_INTAKE_UPLOAD_URL`.
-- **Sentry (env-gated)**: client DSN `NEXT_PUBLIC_SENTRY_DSN`, server DSN `SENTRY_DSN`.
+- **Sentry (env-gated)**: enabled only when `NEXT_PUBLIC_SENTRY_DSN` is set. Optional source-map upload vars: `SENTRY_AUTH_TOKEN`, `SENTRY_ORG`, `SENTRY_PROJECT`.
+- **Health checks**: `/api/health` shallow check; `/api/health?deep=1&token=...` runs minimal live checks when `HEALTH_TOKEN` is configured.
 - **Developer diagnostics**: `/dev/status` is available in development or when `ADMIN_DIAGNOSTIC_TOKEN` is provided as `?token=...`.
 
-## Go-live checklist
+## Production checklist (Vercel)
 
-- Set all required env vars in Vercel.
-- Test booking CTA + Calendly embed.
-- Test contact form submit + audit form submit.
-- Test resource request email delivery.
-- Test intake submit and upload-link flow.
-- Test analytics events (`booking_click`, `contact_submit`, `audit_submit`, `resource_request_submit`, `intake_submit`).
-- Test error monitoring DSNs (client/server).
-- Open `/dev/status` and confirm no expected integration is disabled.
+- Set required env vars in Vercel (Production + Preview where needed).
+- Deploy and verify `/api/health` returns expected statuses.
+- Verify booking CTA and contact + intake forms submit correctly.
+- Verify resource request sends delivery email.
+- Verify Airtable lead/intake rows are created.
+- Verify Crisp widget loads when enabled.
+- Verify analytics events fire (`booking_click`, `contact_submit`, `audit_submit`, `resource_request_submit`, `intake_submit`).
+- Verify Sentry captures a deliberate test error via `/api/dev/sentry-test` (dev/token-gated).
 
 ## Intake onboarding system
 
@@ -48,23 +64,6 @@ All integrations are configured through `content/runtime.ts` and server env vars
 - Audit intake invite link format: `/intake/audit?t=INTAKE_TOKEN`
 - Share token privately only.
 - If token is missing or invalid, users are routed to a friendly error state and directed to `/contact`.
-
-### Required env vars (Vercel)
-
-- `INTAKE_TOKEN` (server-only)
-- `AIRTABLE_API_KEY`
-- `AIRTABLE_BASE_ID`
-- `AIRTABLE_INTAKES_TABLE` (default: `Intakes`)
-- `AIRTABLE_TABLE_NAME` (default: `Leads`)
-- `RESEND_API_KEY`
-- `EMAIL_FROM`
-- `EMAIL_REPLY_TO`
-- `INTAKE_OWNER_EMAIL` (optional; defaults to site email)
-- `NEXT_PUBLIC_INTAKE_UPLOAD_URL` (optional secure upload form/folder link)
-
-Optional helper:
-
-- `AIRTABLE_INTAKES_TABLE_URL` for generating direct Airtable record links in owner pre-call brief emails.
 
 ## Local dev
 

@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import { Inter, JetBrains_Mono, Space_Grotesk } from 'next/font/google';
 import './globals.css';
 import { Analytics } from '@/components/Analytics';
 import { ChatCrisp } from '@/components/ChatCrisp';
@@ -8,10 +7,6 @@ import { Header } from '@/components/Header';
 import { StickyCTA } from '@/components/StickyCTA';
 import { runtimeConfig } from '@/content/runtime';
 import { siteConfig } from '@/content/site';
-
-const sans = Inter({ subsets: ['latin'], variable: '--font-sans', display: 'swap' });
-const display = Space_Grotesk({ subsets: ['latin'], variable: '--font-display', display: 'swap' });
-const mono = JetBrains_Mono({ subsets: ['latin'], variable: '--font-mono', display: 'swap' });
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
@@ -55,7 +50,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   };
 
   return (
-    <html lang="en" className={`${sans.variable} ${display.variable} ${mono.variable}`}>
+    <html lang="en">
       <body>
         <Header />
         <main>{children}</main>

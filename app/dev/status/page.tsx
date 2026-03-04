@@ -44,6 +44,18 @@ export default function DevStatusPage({ searchParams }: { searchParams: { token?
             </ul>
           </Card>
         </div>
+        <Card title="Ops checks">
+          <ul className="space-y-2 text-sm">
+            <li>
+              <a href="/api/health" target="_blank" rel="noreferrer">Open /api/health (shallow)</a>
+            </li>
+            <li>
+              <a href="/api/dev/sentry-test" target="_blank" rel="noreferrer">Trigger Sentry test error</a>
+            </li>
+            <li className="text-xs text-muted">Deep health checks require <code>HEALTH_TOKEN</code> via <code>/api/health?deep=1&token=...</code>.</li>
+          </ul>
+        </Card>
+
         <Card title="Public env var presence">
           <ul className="grid gap-2 text-sm md:grid-cols-2">
             {Object.entries(status.envPresence).map(([key, isSet]) => (
