@@ -16,11 +16,11 @@ export function StickyCTA() {
     <>
       <div aria-hidden className="h-24 md:hidden" />
       <div className="fixed inset-x-0 bottom-0 z-50 p-3 md:hidden">
-        <div className="mx-auto flex max-w-3xl items-center gap-2 rounded-card border border-border bg-surface/90 p-2 shadow-raised backdrop-blur-xl">
+        <div className="sticky-cta-shell mx-auto flex max-w-3xl items-center gap-2 rounded-card border border-border bg-surface/90 p-2 shadow-raised backdrop-blur-xl">
           {hasPrimary ? (
             <a
               href={runtimeConfig.booking.calendlyUrl}
-              className="inline-flex flex-1 items-center justify-center rounded-button border border-accent/30 bg-accent px-3 py-2 text-sm font-semibold text-white no-underline shadow-soft"
+              className="motion-safe-transform inline-flex flex-1 items-center justify-center rounded-button border border-accent/30 bg-accent px-3 py-2 text-sm font-semibold text-white no-underline shadow-soft transition duration-200 hover:-translate-y-px hover:shadow-raised active:translate-y-px active:shadow-pressed"
               onClick={() => track('booking_click', { page: 'sticky_cta' })}
             >
               Book a call
@@ -29,7 +29,7 @@ export function StickyCTA() {
           {hasPhone ? (
             <a
               href={`tel:${runtimeConfig.site.phone}`}
-              className="inline-flex items-center justify-center rounded-button border border-border bg-surfaceRaised px-3 py-2 text-sm font-semibold text-text no-underline"
+              className="motion-safe-transform inline-flex items-center justify-center rounded-button border border-border bg-surfaceRaised px-3 py-2 text-sm font-semibold text-text no-underline transition duration-200 hover:-translate-y-px hover:shadow-soft active:translate-y-px"
             >
               Text
             </a>
@@ -37,7 +37,7 @@ export function StickyCTA() {
           {hasEmail ? (
             <a
               href={`mailto:${runtimeConfig.site.email}`}
-              className="inline-flex items-center justify-center rounded-button border border-border bg-surfaceRaised px-3 py-2 text-sm font-semibold text-text no-underline"
+              className="motion-safe-transform inline-flex items-center justify-center rounded-button border border-border bg-surfaceRaised px-3 py-2 text-sm font-semibold text-text no-underline transition duration-200 hover:-translate-y-px hover:shadow-soft active:translate-y-px"
             >
               Email
             </a>

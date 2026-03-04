@@ -4,8 +4,9 @@ import Link from 'next/link';
 import { useMemo, useState } from 'react';
 import { Badge } from '@/components/Badge';
 import { Card } from '@/components/Card';
-import { track } from '@/lib/track';
+import { Reveal } from '@/components/Reveal';
 import { InsightPost } from '@/lib/content/insights';
+import { track } from '@/lib/track';
 
 type Props = {
   posts: InsightPost[];
@@ -68,27 +69,33 @@ export function InsightsList({ posts, tags }: Props) {
       </div>
 
       <div className="mt-8 grid gap-4">
-        {filteredPosts.map((post) => (
-          <Card key={post.slug} interactive>
-            <div className="flex flex-wrap items-center gap-3">
-              {post.tags.map((tag) => (
-                <Badge key={tag}>{tag}</Badge>
-              ))}
-              <p className="text-xs text-muted">
-                {post.date} · {post.readingTime} min read
-              </p>
-            </div>
-            <h2 className="mt-3 text-xl font-semibold text-text">
-              {post.title}
-            </h2>
-            <p className="mt-2 text-sm text-muted">{post.description}</p>
-            <Link
-              href={`/insights/${post.slug}`}
-              className="mt-4 inline-block text-sm font-semibold no-underline"
-            >
-              Read insight →
-            </Link>
-          </Card>
+        {filteredPosts.map((post, index) => (
+          <Reveal
+            key={post.slug}
+            variant="fadeIn"
+            delay={Math.min(index, 8) * 45}
+          >
+            <Card interactive>
+              <div className="flex flex-wrap items-center gap-3">
+                {post.tags.map((tag) => (
+                  <Badge key={tag}>{tag}</Badge>
+                ))}
+                <p className="text-xs text-muted">
+                  {post.date} · {post.readingTime} min read
+                </p>
+              </div>
+              <h2 className="mt-3 text-xl font-semibold text-text">
+                {post.title}
+              </h2>
+              <p className="mt-2 text-sm text-muted">{post.description}</p>
+              <Link
+                href={`/insights/${post.slug}`}
+                className="mt-4 inline-block text-sm font-semibold no-underline"
+              >
+                Read insight →
+              </Link>
+            </Card>
+          </Reveal>
         ))}
       </div>
     </>

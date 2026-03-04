@@ -1,9 +1,12 @@
+import { CSSProperties } from 'react';
+
 type DataTableProps = {
   headers: string[];
   rows: string[][];
+  animateRows?: boolean;
 };
 
-export function DataTable({ headers, rows }: DataTableProps) {
+export function DataTable({ headers, rows, animateRows = false }: DataTableProps) {
   return (
     <div className="overflow-hidden rounded-card border border-border bg-surface shadow-soft">
       <div className="overflow-x-auto">
@@ -21,7 +24,12 @@ export function DataTable({ headers, rows }: DataTableProps) {
             {rows.map((row, i) => (
               <tr
                 key={`${row.join('-')}-${i}`}
-                className="hover:bg-accent/8 odd:bg-surface even:bg-surfaceRaised"
+                className={`hover:bg-accent/8 odd:bg-surface even:bg-surfaceRaised ${animateRows ? 'table-row-reveal' : ''}`}
+                style={
+                  animateRows
+                    ? ({ animationDelay: `${i * 70}ms` } as CSSProperties)
+                    : undefined
+                }
               >
                 {row.map((cell, j) => (
                   <td key={`${cell}-${j}`} className="px-4 py-2.5 text-muted">

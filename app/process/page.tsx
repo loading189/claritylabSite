@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import { Container } from '@/components/Container';
 import { ProcessTimeline } from '@/components/ProcessTimeline';
+import { Reveal } from '@/components/Reveal';
 import { Section } from '@/components/Section';
 import { TrackOnMount } from '@/components/TrackOnMount';
 import { TrustList } from '@/components/TrustList';
@@ -41,13 +42,17 @@ export default function ProcessPage() {
       <TrackOnMount eventName="process_page_view" />
       <Section>
         <Container className="max-w-4xl">
-          <h1 className="text-4xl font-semibold tracking-tight text-text">
-            Process
-          </h1>
-          <p className="mt-4 max-w-3xl text-muted">
+          <Reveal>
+            <h1 className="text-4xl font-semibold tracking-tight text-text">
+              Process
+            </h1>
+          </Reveal>
+          <Reveal delay={80}>
+            <p className="mt-4 max-w-3xl text-muted">
             No confusing consulting cycle. We keep this simple: quick context,
             deep analysis, practical plan, and optional help executing.
-          </p>
+            </p>
+          </Reveal>
           <div className="mt-8">
             <ProcessTimeline steps={processSteps} />
           </div>
