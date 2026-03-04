@@ -6,7 +6,33 @@ Next.js 14 App Router site for Clarity Labs.
 
 1. Copy `.env.example` to `.env.local`.
 2. Fill in public values (`NEXT_PUBLIC_*`) for site, booking, forms, resources, analytics, and upload-link UX.
-3. Fill in private values for Airtable, Resend, and intake token in Vercel project settings.
+3. Fill in private values for Airtable, Resend, newsletter, monitoring, and intake token in Vercel project settings.
+
+## Microservices & integrations
+
+All integrations are configured through `content/runtime.ts` and server env vars.
+
+- **Calendly**: booking CTA/embed when `NEXT_PUBLIC_CALENDLY_URL` is set.
+- **Embedded forms (Tally or equivalent)**: contact/audit embeds use `NEXT_PUBLIC_CONTACT_FORM_URL` and `NEXT_PUBLIC_AUDIT_FORM_URL`.
+- **Crisp chat**: client chat widget enabled by `NEXT_PUBLIC_CRISP_WEBSITE_ID`.
+- **Airtable writes**: lead + intake persistence via `AIRTABLE_API_KEY`, `AIRTABLE_BASE_ID`, table vars.
+- **Resend emails**: resource delivery and intake notifications use `RESEND_API_KEY`, `EMAIL_FROM`, `EMAIL_REPLY_TO`.
+- **Newsletter webhook**: optional provider sync via `NEWSLETTER_PROVIDER`, `NEWSLETTER_ENDPOINT_URL`, `NEWSLETTER_API_KEY`, `NEWSLETTER_LIST_ID`.
+- **Analytics**: Plausible enabled when `NEXT_PUBLIC_ANALYTICS_PROVIDER=plausible` and `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` is set.
+- **Upload link**: audit intake upload UX uses `NEXT_PUBLIC_INTAKE_UPLOAD_URL`.
+- **Sentry (env-gated)**: client DSN `NEXT_PUBLIC_SENTRY_DSN`, server DSN `SENTRY_DSN`.
+- **Developer diagnostics**: `/dev/status` is available in development or when `ADMIN_DIAGNOSTIC_TOKEN` is provided as `?token=...`.
+
+## Go-live checklist
+
+- Set all required env vars in Vercel.
+- Test booking CTA + Calendly embed.
+- Test contact form submit + audit form submit.
+- Test resource request email delivery.
+- Test intake submit and upload-link flow.
+- Test analytics events (`booking_click`, `contact_submit`, `audit_submit`, `resource_request_submit`, `intake_submit`).
+- Test error monitoring DSNs (client/server).
+- Open `/dev/status` and confirm no expected integration is disabled.
 
 ## Intake onboarding system
 
@@ -66,28 +92,3 @@ curl -X POST http://localhost:3000/api/resources/request \
   -H 'Content-Type: application/json' \
   -d '{"resource_slug":"ar-recovery-checklist","email":"owner@example.com","name":"Owner","website":""}'
 ```
-
-## Verification checklist
-
-- Submit call intake and verify Airtable `Intakes` + `Leads` updates.
-- Submit audit intake with valid token and verify success.
-- Submit audit intake without token and verify rejection.
-- Verify both emails send: client confirmation + owner pre-call brief.
-- Verify upload-link workflow: URL is shown in audit intake and stored links are saved.
-- Verify success page copy changes by tier (Hot/Warm vs Cold).
-- Verify analytics events fire: `onboarding_view`, `intake_view`, `intake_submit`, `intake_upload`, `intake_cta_click`.
-
-## Notes
-
-- Secrets (`AIRTABLE_API_KEY`, `RESEND_API_KEY`, `NEWSLETTER_API_KEY`, `INTAKE_TOKEN`) are server-only.
-- Lead/intake capture uses in-memory rate limiting + honeypot protection.
-- If Airtable or Resend is not configured, graceful fallbacks still prevent hard crashes.
-
-## How to publish an insight
-
-1. Copy `content/templates/insight-template.mdx` to `content/insights/<your-slug>.mdx`.
-2. Update frontmatter (`title`, `description`, `date`, `tags`, `published`, `type`, `cta`).
-3. Write the content in plain Markdown + optional helper blocks (`<Callout />`, `<Stat />`, `<Table />`, `<MiniCTA />`).
-4. Add practical operator-focused tags (for filtering and related posts).
-5. Set `published: true` when ready to go live.
-6. Commit and push to GitLab. Vercel deploys automatically.

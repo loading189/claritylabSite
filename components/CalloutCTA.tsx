@@ -14,7 +14,7 @@ export function CalloutCTA() {
             cash flow and operations, this is a no-pitch clarity call.
           </p>
           <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
-            {runtimeConfig.booking.enabled ? (
+            {runtimeConfig.featureFlags.isBookingEnabled ? (
               <Button
                 href={siteConfig.calendlyUrl}
                 variant="secondary"

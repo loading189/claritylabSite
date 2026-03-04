@@ -8,7 +8,7 @@ type SectionProps = {
 
 export function Section({ children, className = '', id }: SectionProps) {
   return (
-    <section id={id} className={`py-14 sm:py-20 ${className}`}>
+    <section id={id} className={`py-sectionPaddingY ${className}`}>
       {children}
     </section>
   );

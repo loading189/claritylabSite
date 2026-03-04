@@ -9,8 +9,8 @@ import { checkRateLimit } from '../../_utils/rateLimit';
 const readIp = (request: NextRequest) => request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
 
 const resourceLinks: Record<string, string> = {
-  'ar-recovery-checklist': runtimeConfig.resources.arRecoveryUrl,
-  'cash-flow-snapshot': runtimeConfig.resources.cashflowSnapshotUrl,
+  'ar-recovery-checklist': runtimeConfig.resources.arUrl,
+  'cash-flow-snapshot': runtimeConfig.resources.cashflowUrl,
 };
 
 export async function POST(request: NextRequest) {

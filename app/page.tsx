@@ -7,6 +7,7 @@ import { FeatureList } from '@/components/FeatureList';
 import { ProcessTimeline } from '@/components/ProcessTimeline';
 import { Section } from '@/components/Section';
 import { TrustList } from '@/components/TrustList';
+import { SectionHeader } from '@/components/SectionHeader';
 import {
   exampleInsights,
   fifteenMinuteBreakdown,
@@ -45,7 +46,7 @@ export default function HomePage() {
               Review the sample report
             </Button>
           </div>
-          <p className="mt-4 text-sm text-slate-500">{siteConfig.trustLine}</p>
+          <p className="mt-4 text-sm text-muted">{siteConfig.trustLine} · Typically 2–3 meaningful leaks identified in your first review.</p>
         </Container>
       </Section>
 
@@ -90,13 +91,7 @@ export default function HomePage() {
 
       <Section className="bg-white">
         <Container>
-          <h2 className="text-2xl font-semibold text-slate-900">
-            Example insights from the audit
-          </h2>
-          <p className="mt-3 max-w-2xl text-sm text-slate-600">
-            These are the types of practical outputs you can expect. No vanity
-            dashboards, just actionable clarity.
-          </p>
+          <SectionHeader title="Example insights from the audit" subtitle="These are the types of practical outputs you can expect. No vanity dashboards, just actionable clarity." />
           <div className="mt-8 grid gap-4 md:grid-cols-3">
             {exampleInsights.map((insight) => (
               <Card key={insight.title} title={insight.title}>
@@ -109,9 +104,7 @@ export default function HomePage() {
 
       <Section>
         <Container>
-          <h2 className="text-2xl font-semibold text-slate-900">
-            Proof and tools
-          </h2>
+          <SectionHeader title="Proof and tools" />
           <div className="mt-6 grid gap-4 md:grid-cols-2">
             <Card title="Case studies">
               <p className="text-sm text-slate-700">
@@ -137,7 +130,7 @@ export default function HomePage() {
 
       <Section>
         <Container>
-          <h2 className="text-2xl font-semibold text-slate-900">How we work</h2>
+          <SectionHeader title="How we work" />
           <div className="mt-6">
             <ProcessTimeline
               steps={howItWorks.map((item) => ({

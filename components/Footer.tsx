@@ -5,22 +5,22 @@ import { Container } from './Container';
 
 export function Footer() {
   return (
-    <footer className="border-t border-slate-200 bg-white py-10">
-      <Container className="grid gap-6 md:grid-cols-2 md:items-end">
+    <footer className="border-t bg-surface py-12">
+      <Container className="grid gap-8 md:grid-cols-2 md:items-end">
         <div>
-          <p className="text-sm font-semibold text-slate-900">{siteConfig.name}</p>
-          <p className="mt-2 max-w-md text-sm text-slate-600">{siteConfig.description}</p>
-          <p className="mt-3 text-xs text-slate-500">{siteConfig.trustLine}</p>
+          <p className="text-sm font-semibold text-text">{siteConfig.name}</p>
+          <p className="mt-2 max-w-md text-sm text-muted">{siteConfig.description}</p>
+          <p className="mt-4 text-xs text-muted/80">{siteConfig.trustLine}</p>
         </div>
         <div className="md:text-right">
-          <div className="flex flex-wrap gap-4 md:justify-end">
+          <div className="flex flex-wrap gap-3 md:justify-end">
             {navItems.map((item) => (
-              <Link key={item.href} href={item.href} className="text-sm text-slate-600 no-underline hover:text-slate-900">
+              <Link key={item.href} href={item.href} className="text-sm text-muted no-underline hover:text-text">
                 {item.label}
               </Link>
             ))}
           </div>
-          <p className="mt-4 text-sm text-slate-700">
+          <p className="mt-5 text-sm text-text">
             <a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>
             {runtimeConfig.site.hasPhone ? (
               <>

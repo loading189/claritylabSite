@@ -4,7 +4,7 @@ import { runtimeConfig } from '@/content/runtime';
 import { track } from '@/lib/track';
 
 export function StickyCTA() {
-  const hasPrimary = runtimeConfig.booking.enabled;
+  const hasPrimary = runtimeConfig.featureFlags.isBookingEnabled;
   const hasEmail = Boolean(runtimeConfig.site.email);
   const hasPhone = runtimeConfig.site.hasPhone;
 

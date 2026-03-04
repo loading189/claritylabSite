@@ -14,9 +14,9 @@ type ButtonProps = {
 };
 
 const variants = {
-  primary: 'bg-brand-600 text-white hover:bg-brand-700',
-  secondary: 'bg-slate-900 text-white hover:bg-slate-700',
-  ghost: 'border border-slate-300 text-slate-700 hover:bg-white',
+  primary: 'bg-accent text-white shadow-subtle hover:-translate-y-0.5 hover:brightness-105 active:translate-y-0',
+  secondary: 'bg-text text-white shadow-subtle hover:-translate-y-0.5 hover:opacity-95 active:translate-y-0',
+  ghost: 'border border-border bg-surface text-muted hover:bg-slate-100 hover:text-text',
 };
 
 export function Button({ href, children, variant = 'primary', className = '', trackingEvent, trackingProps }: ButtonProps) {
@@ -24,11 +24,9 @@ export function Button({ href, children, variant = 'primary', className = '', tr
     <Link
       href={href}
       onClick={() => {
-        if (trackingEvent) {
-          track(trackingEvent, trackingProps);
-        }
+        if (trackingEvent) track(trackingEvent, trackingProps);
       }}
-      className={`inline-flex items-center justify-center rounded-md px-4 py-2.5 text-sm font-semibold no-underline transition ${variants[variant]} ${className}`}
+      className={`inline-flex h-11 items-center justify-center rounded-button px-4 text-sm font-semibold no-underline transition duration-200 disabled:pointer-events-none disabled:opacity-60 ${variants[variant]} ${className}`}
     >
       {children}
     </Link>

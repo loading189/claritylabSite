@@ -6,14 +6,83 @@
   color-scheme: light;
 }
 
+* {
+  @apply border-border;
+}
+
 body {
-  @apply bg-slate-50 text-slate-900 antialiased;
+  @apply bg-bg font-sans text-text antialiased;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  @apply bg-accent/15 text-accent;
 }
 
 a {
-  @apply text-brand-600 underline-offset-4 transition hover:text-brand-700;
+  @apply text-accent underline-offset-4 transition-colors hover:text-text;
 }
 
 :focus-visible {
-  @apply outline-none ring-2 ring-brand-500 ring-offset-2;
+  @apply outline-none ring-2 ring-accent/60 ring-offset-2 ring-offset-bg;
+}
+
+h1,
+h2,
+h3 {
+  @apply font-display tracking-tight text-text;
+}
+
+h1 {
+  @apply text-4xl sm:text-5xl;
+}
+
+h2 {
+  @apply text-3xl;
+}
+
+h3 {
+  @apply text-xl;
+}
+
+input,
+textarea,
+select {
+  @apply h-11 w-full rounded-input border border-border bg-surface px-3 text-sm text-text placeholder:text-muted/70 transition;
+}
+
+textarea {
+  @apply h-auto py-2.5;
+}
+
+button {
+  @apply transition;
+}
+
+.prose-shell {
+  @apply max-w-prose text-base leading-8 text-muted;
+}
+
+.prose-shell h2,
+.prose-shell h3 {
+  @apply mt-10 text-text;
+}
+
+.prose-shell p + p {
+  @apply mt-5;
+}
+
+.prose-shell a {
+  @apply font-medium text-accent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition-duration: 0ms !important;
+    scroll-behavior: auto !important;
+  }
 }

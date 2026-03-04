@@ -24,12 +24,12 @@ export default function ContactPage() {
         </p>
         <p className="mt-2 text-sm text-slate-600">I’m local to Fargo; if you book a call you’ll get the fastest response.</p>
 
-        {runtimeConfig.chat.enabled ? <p className="mt-3 text-sm text-emerald-700">Chat is available if you prefer a quick message.</p> : null}
+        {runtimeConfig.featureFlags.isChatEnabled ? <p className="mt-3 text-sm text-emerald-700">Chat is available if you prefer a quick message.</p> : null}
 
         <div className="mt-8 grid gap-4 md:grid-cols-2">
           <Card title="Book a 15-min Clarity Call">
             <p className="mb-4 text-sm text-slate-700">Pick a time directly if booking is enabled.</p>
-            {runtimeConfig.booking.enabled ? (
+            {runtimeConfig.featureFlags.isBookingEnabled ? (
               <iframe
                 src={runtimeConfig.booking.calendlyUrl}
                 title="Calendly booking"
@@ -50,7 +50,7 @@ export default function ContactPage() {
               </p>
             ) : null}
             <p className="mt-4 text-xs text-slate-500">{siteConfig.trustLine}</p>
-            {!runtimeConfig.booking.enabled ? (
+            {!runtimeConfig.featureFlags.isBookingEnabled ? (
               <Button href={`mailto:${siteConfig.email}?subject=Clarity%20Call%20Request`} className="mt-4">
                 Request by email
               </Button>
@@ -66,8 +66,8 @@ export default function ContactPage() {
             successMessage="Thanks — I’ll reply within 1 business day. If you want faster, book the call."
           />
           <Card title="Contact form embed (optional)">
-            {runtimeConfig.forms.hasContactForm ? (
-              <FormEmbed src={runtimeConfig.forms.contactUrl} title="Contact form" />
+            {runtimeConfig.featureFlags.isContactFormEnabled ? (
+              <FormEmbed src={runtimeConfig.forms.contactFormUrl} title="Contact form" />
             ) : (
               <p className="text-sm text-slate-600">
                 Set <code>NEXT_PUBLIC_CONTACT_FORM_URL</code> to enable the embedded form. Fallback: email{' '}
