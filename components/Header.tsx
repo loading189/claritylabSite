@@ -1,0 +1,59 @@
+'use client';
+
+import Link from 'next/link';
+import { useState } from 'react';
+import { navItems, siteConfig } from '@/content/site';
+import { Button } from './Button';
+import { Container } from './Container';
+
+export function Header() {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <header className="sticky top-0 z-40 border-b border-slate-200 bg-slate-50/95 backdrop-blur">
+      <Container className="flex min-h-16 items-center justify-between py-3">
+        <Link href="/" className="no-underline">
+          <p className="text-sm font-semibold text-slate-900">{siteConfig.name}</p>
+          <p className="text-xs text-slate-600">{siteConfig.subTagline}</p>
+        </Link>
+
+        <button
+          type="button"
+          className="rounded-md border border-slate-300 px-3 py-1 text-sm md:hidden"
+          onClick={() => setOpen((current) => !current)}
+          aria-expanded={open}
+          aria-controls="mobile-nav"
+        >
+          Menu
+        </button>
+
+        <nav className="hidden items-center gap-6 md:flex" aria-label="Main navigation">
+          {navItems.map((item) => (
+            <Link key={item.href} href={item.href} className="text-sm text-slate-700 no-underline hover:text-slate-900">
+              {item.label}
+            </Link>
+          ))}
+          <Button href={siteConfig.calendlyUrl}>Book a chat</Button>
+        </nav>
+      </Container>
+
+      {open ? (
+        <div id="mobile-nav" className="border-t border-slate-200 bg-white md:hidden">
+          <Container className="flex flex-col gap-3 py-4">
+            {navItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="text-sm text-slate-700 no-underline"
+                onClick={() => setOpen(false)}
+              >
+                {item.label}
+              </Link>
+            ))}
+            <Button href={siteConfig.calendlyUrl}>Book a chat</Button>
+          </Container>
+        </div>
+      ) : null}
+    </header>
+  );
+}
