@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { navItems, siteConfig } from '@/content/site';
+import { runtimeConfig } from '@/content/runtime';
 import { Button } from './Button';
 import { Container } from './Container';
 
@@ -27,13 +28,13 @@ export function Header() {
           Menu
         </button>
 
-        <nav className="hidden items-center gap-6 md:flex" aria-label="Main navigation">
+        <nav className="hidden items-center gap-4 md:flex" aria-label="Main navigation">
           {navItems.map((item) => (
             <Link key={item.href} href={item.href} className="text-sm text-slate-700 no-underline hover:text-slate-900">
               {item.label}
             </Link>
           ))}
-          <Button href={siteConfig.calendlyUrl}>Book a chat</Button>
+          {runtimeConfig.booking.enabled ? <Button href={siteConfig.calendlyUrl}>Book a 15-min Clarity Call</Button> : null}
         </nav>
       </Container>
 
@@ -50,7 +51,7 @@ export function Header() {
                 {item.label}
               </Link>
             ))}
-            <Button href={siteConfig.calendlyUrl}>Book a chat</Button>
+            {runtimeConfig.booking.enabled ? <Button href={siteConfig.calendlyUrl}>Book a 15-min Clarity Call</Button> : null}
           </Container>
         </div>
       ) : null}

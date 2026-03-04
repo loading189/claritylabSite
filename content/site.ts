@@ -1,23 +1,26 @@
+import { runtimeConfig } from './runtime';
+
 export const siteConfig = {
-  name: 'Clarity Labs',
+  name: runtimeConfig.site.name,
   founder: 'Christopher Taylor',
   tagline: 'Less chaos. More time.',
-  subTagline: 'Audit-grade clarity for service businesses.',
+  subTagline: 'Audit-grade clarity for service trades.',
   location: 'Fargo area',
-  trustLine: 'Fargo area • No pitch • Just clarity',
+  trustLine: 'No pitch • Just clarity',
   description:
-    'Clarity Labs helps service business owners find where cash, time, and margin leak, then turns that into a practical action plan.',
-  url: 'https://claritylabs.co',
-  calendlyUrl: process.env.CALENDLY_URL || 'https://calendly.com/your-link',
-  email: process.env.SITE_EMAIL || 'hello@claritylabs.co',
-  phone: process.env.SITE_PHONE || '(701) 555-0142',
+    'Clarity Labs helps HVAC, plumbing, electrical, and mechanical service business owners find where cash, time, and margin leak, then turn that into a practical action plan.',
+  url: runtimeConfig.site.url,
+  calendlyUrl: runtimeConfig.booking.calendlyUrl,
+  email: runtimeConfig.site.email,
+  phone: runtimeConfig.site.phone,
 };
 
 export const navItems = [
   { label: 'Home', href: '/' },
   { label: 'Audit', href: '/audit' },
-  { label: 'Insights', href: '/insights' },
-  { label: 'About', href: '/about' },
+  { label: 'Sample Report', href: '/sample-report' },
+  { label: 'Case Studies', href: '/case-studies' },
+  { label: 'Resources', href: '/resources' },
   { label: 'Contact', href: '/contact' },
 ];
 
