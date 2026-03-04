@@ -79,9 +79,9 @@ export function getIntegrationStatus() {
       enabled: (process.env.NEWSLETTER_PROVIDER || 'none') !== 'none' && Boolean(process.env.NEWSLETTER_ENDPOINT_URL),
       required: ['NEWSLETTER_PROVIDER', 'NEWSLETTER_ENDPOINT_URL'],
     },
-    sentryServer: {
-      enabled: Boolean(process.env.SENTRY_DSN),
-      required: ['SENTRY_DSN'],
+    sentry: {
+      enabled: Boolean(process.env.NEXT_PUBLIC_SENTRY_DSN),
+      required: ['NEXT_PUBLIC_SENTRY_DSN'],
     },
   };
 
