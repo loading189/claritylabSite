@@ -78,8 +78,8 @@ export default function AuditPage() {
             successMessage="Thanks — your audit request is in. I’ll follow up with the best next step."
           />
           <Card title="Audit form embed (optional)">
-            {runtimeConfig.forms.hasAuditForm ? (
-              <FormEmbed src={runtimeConfig.forms.auditUrl} title="Request an audit form" />
+            {runtimeConfig.featureFlags.isAuditFormEnabled ? (
+              <FormEmbed src={runtimeConfig.forms.auditFormUrl} title="Request an audit form" />
             ) : (
               <p className="text-sm text-slate-600">
                 Add <code>NEXT_PUBLIC_AUDIT_FORM_URL</code> to enable the embedded form. For now, contact us directly at{' '}

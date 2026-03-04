@@ -45,7 +45,7 @@ export function LeadForm({ source, title, helperText, successMessage }: LeadForm
     setSuccess(true);
     setLoading(false);
     event.currentTarget.reset();
-    track(source === 'audit_request' ? 'audit_request_submit' : 'contact_submit', { page: window.location.pathname });
+    track(source === 'audit_request' ? 'audit_submit' : 'contact_submit', { page: window.location.pathname });
   }
 
   return (

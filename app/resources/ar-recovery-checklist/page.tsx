@@ -31,7 +31,7 @@ export default function ARRecoveryChecklistPage() {
         <Card title="Get access" className="mt-4">
           <ResourceRequestForm
             resourceSlug="ar-recovery-checklist"
-            fallbackDownloadUrl={runtimeConfig.resources.arRecoveryUrl}
+            fallbackDownloadUrl={runtimeConfig.resources.arUrl}
             siteEmail={siteConfig.email}
           />
         </Card>

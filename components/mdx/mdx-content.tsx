@@ -5,6 +5,7 @@ import {
   SimpleTable,
   Stat,
 } from '@/components/mdx/blocks';
+import { Prose } from '@/components/Prose';
 import { InsightCTA } from '@/lib/content/insights';
 
 function parseProps(raw: string): Record<string, string> {
@@ -130,5 +131,5 @@ export function MdxContent({
     i += 1;
   }
 
-  return <div>{nodes}</div>;
+  return <Prose>{nodes}</Prose>;
 }

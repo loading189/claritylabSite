@@ -31,7 +31,7 @@ export default function CashFlowSnapshotPage() {
         <Card title="Get access" className="mt-4">
           <ResourceRequestForm
             resourceSlug="cash-flow-snapshot"
-            fallbackDownloadUrl={runtimeConfig.resources.cashflowSnapshotUrl}
+            fallbackDownloadUrl={runtimeConfig.resources.cashflowUrl}
             siteEmail={siteConfig.email}
           />
         </Card>
