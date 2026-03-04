@@ -29,7 +29,7 @@ export type InsightPost = Frontmatter & {
 const CONTENT_DIR = path.join(process.cwd(), 'content', 'insights');
 
 function parseFrontmatter(raw: string): { data: Frontmatter; content: string } {
-  const match = raw.match(/^---\n([\s\S]*?)\n---\n?/);
+  const match = raw.match(/^\uFEFF?\s*---\r?\n([\s\S]*?)\r?\n---\r?\n?/);
   if (!match) throw new Error('Missing frontmatter block');
 
   const [, yaml] = match;
@@ -96,7 +96,15 @@ function loadInsightFile(fileName: string): InsightPost {
   const slug = fileName.replace(/\.mdx$/, '');
   const filePath = path.join(CONTENT_DIR, fileName);
   const raw = fs.readFileSync(filePath, 'utf8');
-  const { data, content } = parseFrontmatter(raw);
+  let data: Frontmatter;
+  let content: string;
+
+  try {
+    ({ data, content } = parseFrontmatter(raw));
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    throw new Error(`Failed to parse frontmatter in ${filePath}: ${message}`);
+  }
 
   return {
     ...data,
