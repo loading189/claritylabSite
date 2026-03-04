@@ -18,6 +18,7 @@ export const siteConfig = {
 export const navItems = [
   { label: 'Home', href: '/' },
   { label: 'Audit', href: '/audit' },
+  { label: 'Insights', href: '/insights' },
   { label: 'Sample Report', href: '/sample-report' },
   { label: 'Case Studies', href: '/case-studies' },
   { label: 'Resources', href: '/resources' },
@@ -56,7 +57,8 @@ export const fifteenMinuteBreakdown = [
   },
   {
     title: 'Signal scan',
-    detail: 'We identify 2-3 likely leaks in cash flow, productivity, or workflow.',
+    detail:
+      'We identify 2-3 likely leaks in cash flow, productivity, or workflow.',
   },
   {
     title: 'Right next step',
@@ -67,7 +69,11 @@ export const fifteenMinuteBreakdown = [
 export const exampleInsights = [
   {
     title: 'AR & cash flow clarity',
-    bullets: ['Aging table by customer', 'DSO trend snapshot', '90-day recovery plan'],
+    bullets: [
+      'Aging table by customer',
+      'DSO trend snapshot',
+      '90-day recovery plan',
+    ],
   },
   {
     title: 'Technician productivity',
@@ -90,19 +96,23 @@ export const exampleInsights = [
 export const howItWorks = [
   {
     step: 'Discover',
-    description: 'Short call to understand goals, constraints, and where pressure shows up.',
+    description:
+      'Short call to understand goals, constraints, and where pressure shows up.',
   },
   {
     step: 'Audit',
-    description: 'Review financial and operational signals to surface the highest-impact gaps.',
+    description:
+      'Review financial and operational signals to surface the highest-impact gaps.',
   },
   {
     step: 'Action Plan',
-    description: 'Get a concise roadmap with owner-level priorities and team-level actions.',
+    description:
+      'Get a concise roadmap with owner-level priorities and team-level actions.',
   },
   {
     step: 'Optional Implement',
-    description: 'If useful, I can help your team execute the first phase and measure traction.',
+    description:
+      'If useful, I can help your team execute the first phase and measure traction.',
   },
 ];
 
@@ -122,21 +132,24 @@ export const insightPosts = [
   {
     slug: 'why-dso-matters-for-trades',
     title: 'Why DSO matters more than top-line growth in service trades',
-    excerpt: 'If receivables stretch, growth can increase stress instead of freedom.',
+    excerpt:
+      'If receivables stretch, growth can increase stress instead of freedom.',
     date: '2026-02-10',
     category: 'Cash Flow',
   },
   {
     slug: 'schedule-gaps-that-kill-margin',
     title: 'Schedule gaps that quietly kill technician margin',
-    excerpt: 'Small dispatch misses create expensive idle windows across the week.',
+    excerpt:
+      'Small dispatch misses create expensive idle windows across the week.',
     date: '2026-01-28',
     category: 'Operations',
   },
   {
     slug: 'handoffs-before-you-buy-software',
     title: 'Fix handoffs before buying another software tool',
-    excerpt: 'Workflow friction usually starts in process clarity, not tool selection.',
+    excerpt:
+      'Workflow friction usually starts in process clarity, not tool selection.',
     date: '2026-01-15',
     category: 'Workflow',
   },
