@@ -36,7 +36,7 @@ export function Button({
       onClick={() => {
         if (trackingEvent) track(trackingEvent, trackingProps);
       }}
-      className={`motion-safe-transform inline-flex h-11 items-center justify-center rounded-button px-4 text-sm font-semibold no-underline transition duration-200 disabled:pointer-events-none disabled:opacity-60 ${variants[variant]} ${className}`}
+      className={`hover-lift inline-flex h-11 items-center justify-center rounded-button px-4 text-sm font-semibold no-underline transition duration-200 disabled:pointer-events-none disabled:opacity-60 ${variants[variant]} ${className}`}
     >
       {children}
     </Link>

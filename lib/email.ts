@@ -44,3 +44,48 @@ export async function sendResourceEmail({
 
   return { delivered: true };
 }
+
+async function sendEmail({ to, subject, html }: { to: string; subject: string; html: string }) {
+  if (!hasResend) return { delivered: false };
+
+  const response = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${RESEND_API_KEY}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      from: EMAIL_FROM,
+      to: [to],
+      reply_to: EMAIL_REPLY_TO,
+      subject,
+      html,
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error('Email send failed.');
+  }
+
+  return { delivered: true };
+}
+
+export async function sendClientUploadNotification(params: { clientEmail: string; filename: string; clientId: string }) {
+  const owner = process.env.OWNER_EMAIL;
+  if (!owner) return { delivered: false };
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+  return sendEmail({
+    to: owner,
+    subject: `Client upload: ${params.clientEmail} — ${params.filename}`,
+    html: `<p>A new client file was uploaded.</p><ul><li>Client: ${params.clientEmail}</li><li>File: ${params.filename}</li></ul><p><a href="${siteUrl}/admin/clients/${params.clientId}">Open client record</a></p>`,
+  });
+}
+
+export async function sendReportReadyNotification(params: { to: string }) {
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+  return sendEmail({
+    to: params.to,
+    subject: 'Your Clarity Report is ready',
+    html: `<p>Your Clarity report is now ready in your portal.</p><p><a href="${siteUrl}/client/reports">View your report</a></p><p>Next step: book your review call.</p>`,
+  });
+}

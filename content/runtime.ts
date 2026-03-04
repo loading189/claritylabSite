@@ -16,6 +16,9 @@ const env = {
   plausibleDomain: readEnv(process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN),
   sentryDsn: readEnv(process.env.NEXT_PUBLIC_SENTRY_DSN),
   uploadUrl: readEnv(process.env.NEXT_PUBLIC_INTAKE_UPLOAD_URL),
+  clerkPublishableKey: readEnv(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY),
+  clerkSignInUrl: readEnv(process.env.NEXT_PUBLIC_CLERK_SIGN_IN_URL),
+  clerkSignUpUrl: readEnv(process.env.NEXT_PUBLIC_CLERK_SIGN_UP_URL),
 };
 
 export const runtimeConfig = {
@@ -26,30 +29,18 @@ export const runtimeConfig = {
     phone: env.sitePhone,
     hasPhone: has(env.sitePhone),
   },
-  booking: {
-    calendlyUrl: env.calendlyUrl,
+  auth: {
+    clerkPublishableKey: env.clerkPublishableKey,
+    signInUrl: env.clerkSignInUrl || '/sign-in',
+    signUpUrl: env.clerkSignUpUrl || '/sign-up',
   },
-  forms: {
-    auditFormUrl: env.auditFormUrl,
-    contactFormUrl: env.contactFormUrl,
-  },
-  chat: {
-    crispWebsiteId: env.crispWebsiteId,
-  },
-  resources: {
-    arUrl: env.arUrl,
-    cashflowUrl: env.cashflowUrl,
-  },
-  analytics: {
-    provider: env.analyticsProvider,
-    plausibleDomain: env.plausibleDomain,
-  },
-  monitoring: {
-    sentryDsn: env.sentryDsn,
-  },
-  uploads: {
-    intakeUploadUrl: env.uploadUrl,
-  },
+  booking: { calendlyUrl: env.calendlyUrl },
+  forms: { auditFormUrl: env.auditFormUrl, contactFormUrl: env.contactFormUrl },
+  chat: { crispWebsiteId: env.crispWebsiteId },
+  resources: { arUrl: env.arUrl, cashflowUrl: env.cashflowUrl },
+  analytics: { provider: env.analyticsProvider, plausibleDomain: env.plausibleDomain },
+  monitoring: { sentryDsn: env.sentryDsn },
+  uploads: { intakeUploadUrl: env.uploadUrl },
   featureFlags: {
     isBookingEnabled: has(env.calendlyUrl),
     isChatEnabled: has(env.crispWebsiteId),
@@ -60,6 +51,7 @@ export const runtimeConfig = {
     isCashflowResourceEnabled: has(env.cashflowUrl),
     isUploadEnabled: has(env.uploadUrl),
     isSentryEnabled: has(env.sentryDsn),
+    isClientVaultEnabled: Boolean(process.env.AIRTABLE_BASE_ID && process.env.AIRTABLE_API_KEY),
   },
 };
 
@@ -67,17 +59,21 @@ export type RuntimeConfig = typeof runtimeConfig;
 
 export function getIntegrationStatus() {
   const server = {
-    airtable: {
+    auth: {
+      enabled: Boolean(process.env.CLERK_SECRET_KEY && process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY),
+      required: ['CLERK_SECRET_KEY', 'NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY'],
+    },
+    storage: {
+      enabled: Boolean(process.env.FILE_SIGNING_SECRET),
+      required: ['FILE_SIGNING_SECRET', 'FILE_URL_TTL_SECONDS'],
+    },
+    filesTable: {
       enabled: Boolean(process.env.AIRTABLE_API_KEY && process.env.AIRTABLE_BASE_ID),
-      required: ['AIRTABLE_API_KEY', 'AIRTABLE_BASE_ID'],
+      required: ['AIRTABLE_API_KEY', 'AIRTABLE_BASE_ID', 'AIRTABLE_FILES_TABLE', 'AIRTABLE_CLIENTS_TABLE'],
     },
     resend: {
       enabled: Boolean(process.env.RESEND_API_KEY && process.env.EMAIL_FROM),
       required: ['RESEND_API_KEY', 'EMAIL_FROM'],
-    },
-    newsletter: {
-      enabled: (process.env.NEWSLETTER_PROVIDER || 'none') !== 'none' && Boolean(process.env.NEWSLETTER_ENDPOINT_URL),
-      required: ['NEWSLETTER_PROVIDER', 'NEWSLETTER_ENDPOINT_URL'],
     },
     sentry: {
       enabled: Boolean(process.env.NEXT_PUBLIC_SENTRY_DSN),
@@ -86,6 +82,9 @@ export function getIntegrationStatus() {
   };
 
   const publicEnv = [
+    'NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY',
+    'NEXT_PUBLIC_CLERK_SIGN_IN_URL',
+    'NEXT_PUBLIC_CLERK_SIGN_UP_URL',
     'NEXT_PUBLIC_CALENDLY_URL',
     'NEXT_PUBLIC_AUDIT_FORM_URL',
     'NEXT_PUBLIC_CONTACT_FORM_URL',

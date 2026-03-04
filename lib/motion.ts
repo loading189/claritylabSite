@@ -1,8 +1,8 @@
 export const MOTION = {
   duration: {
     fast: 180,
-    base: 320,
-    reveal: 450,
+    base: 240,
+    reveal: 320,
     slow: 700,
   },
   easing: {
