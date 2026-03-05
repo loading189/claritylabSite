@@ -1,3 +1,4 @@
+import { ClerkProvider } from '@clerk/nextjs';
 import type { Metadata } from 'next';
 import './globals.css';
 import { Analytics } from '@/components/Analytics';
@@ -57,22 +58,24 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body>
-        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
-        <Header />
-        <main><PageTransition>{children}</PageTransition></main>
-        <Footer />
-        <StickyCTA />
-        <Analytics />
-        <ChatCrisp websiteId={runtimeConfig.chat.crispWebsiteId} />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(localBusinessSchema),
-          }}
-        />
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en" suppressHydrationWarning>
+        <body>
+          <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+          <Header />
+          <main><PageTransition>{children}</PageTransition></main>
+          <Footer />
+          <StickyCTA />
+          <Analytics />
+          <ChatCrisp websiteId={runtimeConfig.chat.crispWebsiteId} />
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify(localBusinessSchema),
+            }}
+          />
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

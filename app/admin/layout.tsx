@@ -4,7 +4,8 @@ import { getServerUser } from '@/lib/serverAuth';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const user = getServerUser();
-  if (!user || user.role !== 'admin') redirect('/sign-in');
+  if (!user) redirect('/sign-in');
+  if (user.role !== 'admin') redirect('/client?denied=admin');
 
   return (
     <PortalShell

@@ -9,6 +9,23 @@ Next.js 14 App Router site for Clarity Labs.
 3. Fill in private values for Airtable, Resend, newsletter, health checks, and diagnostic tokens in Vercel project settings.
 4. Use Node.js **20.x LTS** (recommended for parity with Vercel builds).
 
+## Clerk setup
+
+1. In `.env.local` (and in Vercel project env vars), set:
+   - `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`
+   - `CLERK_SECRET_KEY`
+   - `NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in`
+   - `NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up`
+   - `NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL=/client`
+   - `NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL=/client`
+   - `OWNER_EMAIL` (optional fallback admin check)
+2. In the Clerk dashboard, add these redirect URLs for local development:
+   - `http://localhost:3000/sign-in`
+   - `http://localhost:3000/sign-up`
+   - `http://localhost:3000/client`
+3. To grant admin access, set user public metadata in Clerk to:
+   - `{"role":"admin"}`
+
 ## Font strategy (build-safe)
 
 This project no longer fetches remote fonts at build time. It uses a premium system font stack via CSS variables in `app/globals.css`.
@@ -97,7 +114,7 @@ curl -X POST http://localhost:3000/api/resources/request \
 ### Invite and access model
 - Vault routes are `/client/*` and `/admin/*`.
 - v1 is invite-only via Clerk dashboard invites (admin workflow note included in `/admin/clients`).
-- Admin access is determined by `OWNER_EMAIL` (or upstream `x-clerk-role=admin`).
+- Admin access is determined by Clerk `publicMetadata.role === "admin"`, with `OWNER_EMAIL` as an optional fallback.
 
 ### Upload and report flow
 1. Client uploads a file from `/client/files`.
