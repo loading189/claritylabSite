@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import Link from 'next/link';
 import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
 import { Container } from '@/components/Container';
@@ -15,7 +16,7 @@ import styles from './page.module.css';
 export const metadata: Metadata = {
   title: 'Contact',
   description:
-    'Book a short clarity call, use the contact form, or send a direct note.',
+    'Start with Clarity Scan, then email us or send a direct note if needed.',
 };
 
 export default function ContactPage({
@@ -52,24 +53,36 @@ export default function ContactPage({
         ) : null}
 
         <div className={styles.gridTwo}>
-          <Card title="Book Audit" neumorphic>
+          <Card title="Start Diagnostic" neumorphic>
             <p className="mb-4 text-sm text-muted">
-              Pick a time directly if booking is enabled.
+              Run the Clarity Scan first so we can route you to the right next
+              step.
+            </p>
+            <Button
+              href="/scan"
+              trackingEvent="scan_click"
+              trackingProps={{ page: 'contact_primary' }}
+            >
+              Start Diagnostic
+            </Button>
+            <p className="mt-3 text-xs text-muted">
+              Prefer context first?{' '}
+              <Link href="/sample-report">View Sample Report</Link> or{' '}
+              <Link href="/insights">Read Insights</Link>.
             </p>
             {runtimeConfig.featureFlags.isBookingEnabled ? (
-              <iframe
-                src={runtimeConfig.booking.calendlyUrl}
-                title="Calendly booking"
-                className="h-[620px] w-full rounded-lg border border-border"
-                loading="lazy"
-              />
-            ) : (
-              <p className="text-sm text-muted">
-                Set NEXT_PUBLIC_CALENDLY_URL to enable the embedded calendar.
-              </p>
-            )}
+              <Button
+                href={runtimeConfig.booking.calendlyUrl}
+                variant="ghost"
+                className="mt-4"
+                trackingEvent="booking_click"
+                trackingProps={{ page: 'contact_secondary' }}
+              >
+                Book a 20-minute Clarity Call
+              </Button>
+            ) : null}
           </Card>
-          <Card title="Direct contact" neumorphic>
+          <Card title="Email us" neumorphic>
             <p>
               Email:{' '}
               <a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>
@@ -120,7 +133,7 @@ export default function ContactPage({
         <Card className={styles.nextCard} title="Next step" neumorphic>
           <NextStepCTA
             title="Prefer to move now?"
-            subtitle="Book your audit or review the sample deliverable before we talk."
+            subtitle="Start your diagnostic or review the sample deliverable before we talk."
             trackingPage="contact_next_step"
           />
         </Card>

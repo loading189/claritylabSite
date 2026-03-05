@@ -49,7 +49,7 @@ export default function CaseStudyDetailPage({ params }: Props) {
           <h1 className={styles.title}>{study.title}</h1>
           <p className={styles.summary}>{study.outcome}</p>
           <div className={styles.ctaRow}>
-            <Button href="/audit">Book Audit</Button>
+            <Button href="/scan">Start Diagnostic</Button>
             <Button href="/sample-report" variant="ghost">
               View Sample Report
             </Button>
@@ -105,11 +105,11 @@ export default function CaseStudyDetailPage({ params }: Props) {
               What to do next
             </h2>
             <p className="mt-2 text-sm text-muted">
-              If this pattern looks familiar, start with an audit and compare
-              your current system to the sample deliverable.
+              If this pattern looks familiar, start with Clarity Scan, then
+              compare your current system to the sample deliverable.
             </p>
             <div className={styles.ctaRow}>
-              <Button href="/audit">Book Audit</Button>
+              <Button href="/scan">Start Diagnostic</Button>
               <Button href="/sample-report" variant="ghost">
                 View Sample Report
               </Button>

@@ -4,6 +4,7 @@ import { NormalizedLead } from './leads';
 const AIRTABLE_API_KEY = process.env.AIRTABLE_API_KEY;
 const AIRTABLE_BASE_ID = process.env.AIRTABLE_BASE_ID;
 const AIRTABLE_TABLE_NAME = process.env.AIRTABLE_TABLE_NAME || 'Leads';
+const AIRTABLE_DIAGNOSTICS_TABLE = process.env.AIRTABLE_DIAGNOSTICS_TABLE || 'Diagnostics';
 
 const headers = {
   Authorization: `Bearer ${AIRTABLE_API_KEY}`,
@@ -11,6 +12,7 @@ const headers = {
 };
 
 export const hasAirtable = Boolean(AIRTABLE_API_KEY && AIRTABLE_BASE_ID && AIRTABLE_TABLE_NAME);
+export const hasDiagnosticsAirtable = Boolean(AIRTABLE_API_KEY && AIRTABLE_BASE_ID && AIRTABLE_DIAGNOSTICS_TABLE);
 
 const dateOnly = (iso: string) => iso.slice(0, 10);
 
@@ -66,4 +68,48 @@ export async function upsertLead(lead: NormalizedLead) {
   if (!createResponse.ok) {
     throw new Error(`Airtable create failed: ${createResponse.status}`);
   }
+}
+
+export async function createDiagnosticSubmission(payload: {
+  email: string;
+  company?: string;
+  consent: boolean;
+  score: number;
+  tier: string;
+  primarySignal: string;
+  source: string;
+  utm?: Record<string, string | undefined>;
+  answers: Record<string, string | boolean | undefined>;
+}) {
+  if (!hasDiagnosticsAirtable) {
+    console.log('Diagnostic capture fallback (no Airtable configured):', payload);
+    return { stored: false, mode: 'manual_delivery' as const };
+  }
+
+  const createResponse = await fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${encodeURIComponent(AIRTABLE_DIAGNOSTICS_TABLE)}`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({
+      fields: {
+        email: payload.email,
+        company: payload.company,
+        consent: payload.consent,
+        score: payload.score,
+        tier: payload.tier,
+        primary_signal: payload.primarySignal,
+        source: payload.source,
+        utm_source: payload.utm?.utm_source,
+        utm_medium: payload.utm?.utm_medium,
+        utm_campaign: payload.utm?.utm_campaign,
+        answers_json: JSON.stringify(payload.answers),
+        created_at: new Date().toISOString(),
+      },
+    }),
+  });
+
+  if (!createResponse.ok) {
+    throw new Error(`Airtable diagnostic create failed: ${createResponse.status}`);
+  }
+
+  return { stored: true, mode: 'airtable' as const };
 }

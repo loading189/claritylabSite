@@ -39,8 +39,8 @@ const offers = [
       'Report delivery and walkthrough call',
     ],
     timeframe: 'Typically 1–2 weeks.',
-    ctaLabel: 'Book Audit',
-    ctaHref: siteConfig.calendlyUrl || '/contact',
+    ctaLabel: 'Start Diagnostic',
+    ctaHref: '/scan',
   },
   {
     id: 'implementation_sprint',
@@ -65,8 +65,8 @@ const offers = [
       'Handoff SOPs and dashboard tracking',
     ],
     timeframe: 'Typically 2–4 weeks.',
-    ctaLabel: 'Book Audit',
-    ctaHref: siteConfig.calendlyUrl || '/contact',
+    ctaLabel: 'Start Diagnostic',
+    ctaHref: '/scan',
   },
   {
     id: 'ongoing_advisory',
@@ -90,8 +90,8 @@ const offers = [
       'Support between sessions as needed',
     ],
     timeframe: 'Month-to-month support cadence.',
-    ctaLabel: 'Book Audit',
-    ctaHref: siteConfig.calendlyUrl || '/contact',
+    ctaLabel: 'Start Diagnostic',
+    ctaHref: '/scan',
   },
 ];
 

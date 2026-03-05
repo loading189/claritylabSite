@@ -1,0 +1,21 @@
+.scanPage {
+  position: relative;
+}
+
+.scanPage::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      circle at top left,
+      hsl(var(--accent) / 0.09),
+      transparent 45%
+    ),
+    radial-gradient(
+      circle at bottom right,
+      hsl(var(--accent2) / 0.1),
+      transparent 45%
+    );
+}

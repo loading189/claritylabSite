@@ -130,12 +130,12 @@ export default function InsightDetailPage({
 
       <div className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-surface p-3 md:hidden">
         <TrackEventLink
-          href={siteConfig.calendlyUrl}
+          href="/scan"
           eventName="insight_cta_click"
           props={{ slug: post.slug, cta_type: 'book' }}
           className="block rounded-button border border-accent/30 bg-accent px-4 py-3 text-center text-sm font-semibold text-white no-underline shadow-soft"
         >
-          Book Audit
+          Start Diagnostic
         </TrackEventLink>
       </div>
       <script

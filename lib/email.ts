@@ -89,3 +89,40 @@ export async function sendReportReadyNotification(params: { to: string }) {
     html: `<p>Your Clarity report is now ready in your portal.</p><p><a href="${siteUrl}/client/reports">View your report</a></p><p>Next step: book your review call.</p>`,
   });
 }
+
+export async function sendDiagnosticResultEmail(params: {
+  to: string;
+  company?: string;
+  score: number;
+  tier: string;
+  primarySignal: string;
+}) {
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+  const greeting = params.company ? `for ${params.company}` : 'for your business';
+
+  return sendEmail({
+    to: params.to,
+    subject: 'Your Clarity Scan results',
+    html: `<p>Thanks for completing the Clarity Scan ${greeting}.</p><p><strong>Operational Health Score:</strong> ${params.score}<br/><strong>Tier:</strong> ${params.tier}<br/><strong>Primary signal:</strong> ${params.primarySignal}</p><p>Recommended next step: ${params.tier === 'not_fit_yet' ? `<a href="${siteUrl}/resources/ar-recovery-checklist">Get the AR Checklist</a>` : `<a href="${siteUrl}/start-here">Book a 20-minute Clarity Call</a>`}.</p>`,
+  });
+}
+
+export async function sendDiagnosticOwnerNotification(params: {
+  score: number;
+  tier: string;
+  primarySignal: string;
+  email: string;
+  company?: string;
+  source: string;
+}) {
+  const to = process.env.DIAGNOSTIC_OWNER_EMAIL || process.env.OWNER_EMAIL || process.env.INTAKE_OWNER_EMAIL;
+  if (!to) return { delivered: false };
+
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+
+  return sendEmail({
+    to,
+    subject: `New Clarity Scan: ${params.tier} (${params.score})`,
+    html: `<p>New diagnostic submission received.</p><ul><li>Email: ${params.email}</li><li>Company: ${params.company || 'n/a'}</li><li>Score: ${params.score}</li><li>Tier: ${params.tier}</li><li>Primary signal: ${params.primarySignal}</li><li>Source: ${params.source}</li></ul><p><a href="${siteUrl}/start-here">Start Here</a> · <a href="${siteUrl}/contact">Contact</a></p>`,
+  });
+}

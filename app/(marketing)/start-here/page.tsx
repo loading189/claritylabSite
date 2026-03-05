@@ -13,7 +13,7 @@ import styles from './page.module.css';
 export const metadata: Metadata = {
   title: 'Start Here',
   description:
-    'New here? Start with the audit path, sample report preview, or AR checklist in under two minutes.',
+    'New here? Start with the Clarity Scan, sample report preview, or AR checklist in under two minutes.',
   alternates: {
     canonical: `${siteConfig.url}/start-here`,
   },
@@ -21,10 +21,10 @@ export const metadata: Metadata = {
 
 const actions = [
   {
-    title: 'Book Audit',
+    title: 'Start Diagnostic',
     description:
       'Best first step if you want a focused review of cash, capacity, and execution leaks.',
-    href: siteConfig.calendlyUrl || '/contact',
+    href: '/scan',
     event: 'start_here_book_click',
   },
   {
