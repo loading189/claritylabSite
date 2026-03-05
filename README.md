@@ -154,6 +154,13 @@ curl -X POST http://localhost:3000/api/resources/request \
 - v1 is invite-only via Clerk dashboard invites (admin workflow note included in `/admin/clients`).
 - Admin access is determined by Clerk `publicMetadata.role === "admin"`, with `OWNER_EMAIL` as an optional fallback.
 
+### Inviting clients from diagnostics
+
+- Admins can review scan submissions at `/admin/diagnostics` and open record details at `/admin/diagnostics/[id]`.
+- `POST /api/admin/clients/invite-from-diagnostic` creates/updates a `Clients` row with `status=invited` and `latest_diagnostic_id`.
+- If Clerk server keys are configured, the endpoint attempts to send a Clerk invitation automatically.
+- If Clerk is not configured (or invite call fails), response returns manual instructions: create user in Clerk dashboard for that email and set role metadata if needed.
+
 ### Upload and report flow
 
 1. Client uploads a file from `/client/files`.

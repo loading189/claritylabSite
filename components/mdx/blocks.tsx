@@ -132,7 +132,7 @@ export function AuthorBlock() {
         href="/about"
         className="mt-2 inline-block text-sm font-semibold no-underline"
       >
-        Learn more about the approach →
+        View founder approach
       </Link>
     </div>
   );
