@@ -14,12 +14,14 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-border/80 bg-bg/85 backdrop-blur-xl">
-      <Container className="flex min-h-[4.5rem] items-center justify-between py-3">
+      <Container className="flex min-h-[4.5rem] items-center justify-between gap-4 py-3">
         <Link href="/" className="no-underline">
-          <p className="text-sm font-bold uppercase tracking-[0.12em] text-accent">
+          <p className="text-sm font-bold uppercase leading-none tracking-[0.12em] text-accent">
             {siteConfig.name}
           </p>
-          <p className="text-xs text-muted">{siteConfig.subTagline}</p>
+          <p className="mt-1 text-xs leading-tight text-muted">
+            {siteConfig.subTagline}
+          </p>
         </Link>
 
         <button
@@ -47,7 +49,7 @@ export function Header() {
                 href={item.href}
                 className={`nav-link rounded-button px-3 py-2 text-sm no-underline transition ${
                   active
-                    ? 'bg-accent text-black shadow-soft'
+                    ? 'bg-surfaceRaised text-accent shadow-soft'
                     : 'text-muted hover:bg-surfaceRaised hover:text-text'
                 }`}
               >

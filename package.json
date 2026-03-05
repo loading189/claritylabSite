@@ -7,8 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format": "prettier --ignore-unknown --write \"app/**/*.{ts,tsx,css,md,mdx}\" \"components/**/*.{ts,tsx,css,md,mdx}\" \"content/**/*.{ts,tsx,md,mdx,json}\" \"lib/**/*.{ts,tsx}\" middleware.ts tailwind.config.* next.config.* postcss.config.* README.md .env.example .eslintrc.json .prettierrc",
+    "format:check": "prettier --ignore-unknown --check \"app/**/*.{ts,tsx,css,md,mdx}\" \"components/**/*.{ts,tsx,css,md,mdx}\" \"content/**/*.{ts,tsx,md,mdx,json}\" \"lib/**/*.{ts,tsx}\" middleware.ts tailwind.config.* next.config.* postcss.config.* README.md .env.example .eslintrc.json .prettierrc"
   },
   "dependencies": {
     "next": "14.2.26",

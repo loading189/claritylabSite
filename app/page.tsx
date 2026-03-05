@@ -5,6 +5,7 @@ import { CalloutCTA } from '@/components/CalloutCTA';
 import { Card } from '@/components/Card';
 import { Container } from '@/components/Container';
 import { FeatureList } from '@/components/FeatureList';
+import { HeroBackdrop } from '@/components/HeroBackdrop';
 import { Reveal } from '@/components/Reveal';
 import { Section } from '@/components/Section';
 import { SectionHeader } from '@/components/SectionHeader';
@@ -28,12 +29,13 @@ export default function HomePage() {
   return (
     <>
       <Section className="pb-10 pt-12 sm:pt-16">
-        <Container className="rounded-card border border-accent/40 bg-surface p-8 shadow-raised sm:p-12">
+        <Container className="relative overflow-hidden rounded-card border border-accent/40 bg-surface p-8 shadow-raised sm:p-12">
+          <HeroBackdrop />
           <Reveal>
             <Badge>Clarity Labs Audit</Badge>
           </Reveal>
           <Reveal delay={80}>
-            <h1 className="mt-5 max-w-4xl text-5xl font-bold leading-[1.05] text-text sm:text-7xl">
+            <h1 className="relative mt-5 max-w-4xl text-balance text-[clamp(2.2rem,6vw,4.5rem)] font-bold leading-[1.03] text-text">
               We diagnose exactly where cash, capacity, and execution break down
               in your service business.
             </h1>
@@ -54,14 +56,14 @@ export default function HomePage() {
                 Book Audit
               </Button>
               <Button href="/sample-report" variant="ghost">
-                Sample Report
+                View Sample Report
               </Button>
             </div>
           </Reveal>
         </Container>
       </Section>
 
-      <Section className="py-8" id="problem">
+      <Section className="section-divider py-8" id="problem">
         <Container>
           <SectionHeader
             title="Operational problems we find first"
@@ -82,7 +84,7 @@ export default function HomePage() {
         </Container>
       </Section>
 
-      <Section id="method">
+      <Section className="section-divider" id="method">
         <Container>
           <SectionHeader
             title="The Clarity Labs Process"
@@ -106,7 +108,7 @@ export default function HomePage() {
         </Container>
       </Section>
 
-      <Section id="findings">
+      <Section className="section-divider" id="findings">
         <Container>
           <SectionHeader
             title="Example findings from audits"
@@ -133,7 +135,7 @@ export default function HomePage() {
         </Container>
       </Section>
 
-      <Section id="sample-report">
+      <Section className="section-divider" id="sample-report">
         <Container>
           <Reveal>
             <Card className="border-accent/35 bg-gradient-subtle">
@@ -149,8 +151,10 @@ export default function HomePage() {
                 <Button
                   href={siteConfig.calendlyUrl || '/contact'}
                   variant="ghost"
+                  trackingEvent="booking_click"
+                  trackingProps={{ page: 'home_sample_preview' }}
                 >
-                  Talk Through Your Metrics
+                  Book Audit
                 </Button>
               </div>
             </Card>
@@ -158,7 +162,7 @@ export default function HomePage() {
         </Container>
       </Section>
 
-      <Section id="insights">
+      <Section className="section-divider" id="insights">
         <Container>
           <SectionHeader
             title="Latest insights"
@@ -188,7 +192,7 @@ export default function HomePage() {
         </Container>
       </Section>
 
-      <CalloutCTA />
+      <CalloutCTA trackingPage="home_callout" />
     </>
   );
 }

@@ -96,11 +96,13 @@ h4 {
 }
 
 h1 {
-  @apply text-4xl leading-tight sm:text-5xl;
+  font-size: clamp(2rem, 4.8vw, 3.7rem);
+  line-height: 1.08;
 }
 
 h2 {
-  @apply text-3xl leading-tight;
+  font-size: clamp(1.55rem, 3.4vw, 2.5rem);
+  line-height: 1.15;
 }
 
 h3 {
@@ -255,39 +257,37 @@ button {
   isolation: isolate;
 }
 
-.hero-blob {
+.hero-grid,
+.hero-noise,
+.hero-glow {
   position: absolute;
-  border-radius: 999px;
-  filter: blur(42px);
-  opacity: 0.4;
-  will-change: transform;
+  inset: 0;
 }
 
-.hero-blob-a {
-  width: 18rem;
-  height: 18rem;
-  left: -4rem;
-  top: -5rem;
-  background: hsl(var(--accent) / 0.33);
-  animation: hero-drift-a 24s ease-in-out infinite alternate;
+.hero-grid {
+  background-image:
+    linear-gradient(to right, hsl(var(--text) / 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, hsl(var(--text) / 0.05) 1px, transparent 1px);
+  background-size: 36px 36px;
+  opacity: 0.2;
 }
 
-.hero-blob-b {
-  width: 16rem;
-  height: 16rem;
-  right: -3rem;
-  top: -2rem;
-  background: hsl(var(--accent-2) / 0.28);
-  animation: hero-drift-b 28s ease-in-out infinite alternate;
+.hero-noise {
+  opacity: 0.1;
+  background-image: radial-gradient(
+    hsl(var(--text) / 0.22) 0.45px,
+    transparent 0.55px
+  );
+  background-size: 3px 3px;
 }
 
-.hero-blob-c {
-  width: 15rem;
-  height: 15rem;
-  right: 30%;
-  bottom: -7rem;
-  background: hsl(var(--text) / 0.12);
-  animation: hero-drift-c 30s ease-in-out infinite alternate;
+.hero-glow {
+  background-image: radial-gradient(
+    circle at 16% 20%,
+    hsl(var(--accent) / 0.24),
+    transparent 50%
+  );
+  animation: hero-glow-pulse 12s ease-in-out infinite alternate;
 }
 
 .mini-meter-fill {
@@ -322,30 +322,12 @@ button {
   animation: cta-rise 300ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-@keyframes hero-drift-a {
+@keyframes hero-glow-pulse {
   from {
-    transform: translate3d(0, 0, 0);
+    opacity: 0.75;
   }
   to {
-    transform: translate3d(26px, 18px, 0);
-  }
-}
-
-@keyframes hero-drift-b {
-  from {
-    transform: translate3d(0, 0, 0);
-  }
-  to {
-    transform: translate3d(-20px, 24px, 0);
-  }
-}
-
-@keyframes hero-drift-c {
-  from {
-    transform: translate3d(0, 0, 0);
-  }
-  to {
-    transform: translate3d(20px, -16px, 0);
+    opacity: 1;
   }
 }
 
@@ -368,7 +350,7 @@ button {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-blob,
+  .hero-glow,
   .table-row-reveal,
   .sticky-cta-shell,
   .page-transition {
@@ -380,6 +362,25 @@ button {
 
 .hover-lift {
   @apply motion-safe-transform transition duration-200 hover:-translate-y-1 hover:shadow-raised active:translate-y-px active:shadow-pressed;
+}
+
+.section-divider {
+  position: relative;
+}
+
+.section-divider::before {
+  content: '';
+  position: absolute;
+  left: 1rem;
+  right: 1rem;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    hsl(var(--accent) / 0.3),
+    transparent
+  );
 }
 
 .button-glow {

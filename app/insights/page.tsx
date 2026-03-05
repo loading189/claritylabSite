@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { Badge } from '@/components/Badge';
+import { CalloutCTA } from '@/components/CalloutCTA';
 import { Card } from '@/components/Card';
 import { Container } from '@/components/Container';
 import { InsightsList } from '@/components/insights-list';
@@ -20,45 +21,50 @@ export default function InsightsPage() {
   const fallbackFeatured = featured.length ? featured : posts.slice(0, 3);
 
   return (
-    <Section>
-      <Container className="max-w-5xl">
-        <Reveal>
-          <div className="rounded-card border border-border bg-surface p-8 shadow-soft">
-            <h1 className="text-4xl font-semibold tracking-tight text-text">
-              Clarity Labs Insights
-            </h1>
-            <p className="mt-4 max-w-2xl text-muted">
-              Operator-level notes on cash flow, team utilization, and process
-              design for service businesses.
-            </p>
-          </div>
-        </Reveal>
+    <>
+      <Section>
+        <Container className="max-w-5xl">
+          <Reveal>
+            <div className="rounded-card border border-border bg-surface p-8 shadow-soft">
+              <h1 className="text-4xl font-semibold tracking-tight text-text">
+                Clarity Labs Insights
+              </h1>
+              <p className="mt-4 max-w-2xl text-muted">
+                Operator-level notes on cash flow, team utilization, and process
+                design for service businesses.
+              </p>
+            </div>
+          </Reveal>
 
-        <div className="mt-10">
-          <h2 className="text-xl font-semibold text-text">Featured</h2>
-          <div className="mt-4 grid gap-4 md:grid-cols-3">
-            {fallbackFeatured.map((post, index) => (
-              <Reveal key={post.slug} delay={index * 70}>
-                <Card interactive>
-                  <Badge>{post.tags[0]}</Badge>
-                  <h3 className="mt-3 text-lg font-semibold text-text">
-                    {post.title}
-                  </h3>
-                  <p className="mt-2 text-sm text-muted">{post.description}</p>
-                  <Link
-                    href={`/insights/${post.slug}`}
-                    className="mt-3 inline-block text-sm font-semibold no-underline"
-                  >
-                    Read →
-                  </Link>
-                </Card>
-              </Reveal>
-            ))}
+          <div className="mt-10">
+            <h2 className="text-xl font-semibold text-text">Featured</h2>
+            <div className="mt-4 grid gap-4 md:grid-cols-3">
+              {fallbackFeatured.map((post, index) => (
+                <Reveal key={post.slug} delay={index * 70}>
+                  <Card interactive>
+                    <Badge>{post.tags[0]}</Badge>
+                    <h3 className="mt-3 text-lg font-semibold text-text">
+                      {post.title}
+                    </h3>
+                    <p className="mt-2 text-sm text-muted">
+                      {post.description}
+                    </p>
+                    <Link
+                      href={`/insights/${post.slug}`}
+                      className="mt-3 inline-block text-sm font-semibold no-underline"
+                    >
+                      Read →
+                    </Link>
+                  </Card>
+                </Reveal>
+              ))}
+            </div>
           </div>
-        </div>
 
-        <InsightsList posts={posts} tags={getInsightTags()} />
-      </Container>
-    </Section>
+          <InsightsList posts={posts} tags={getInsightTags()} />
+        </Container>
+      </Section>
+      <CalloutCTA trackingPage="insights_callout" />
+    </>
   );
 }

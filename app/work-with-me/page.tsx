@@ -38,7 +38,7 @@ const offers = [
       'Report delivery and walkthrough call',
     ],
     timeframe: 'Typically 1–2 weeks.',
-    ctaLabel: 'Book a Clarity Call',
+    ctaLabel: 'Book Audit',
     ctaHref: siteConfig.calendlyUrl || '/contact',
   },
   {
@@ -64,7 +64,7 @@ const offers = [
       'Handoff SOPs and dashboard tracking',
     ],
     timeframe: 'Typically 2–4 weeks.',
-    ctaLabel: 'Book a call',
+    ctaLabel: 'Book Audit',
     ctaHref: siteConfig.calendlyUrl || '/contact',
   },
   {
@@ -89,7 +89,7 @@ const offers = [
       'Support between sessions as needed',
     ],
     timeframe: 'Month-to-month support cadence.',
-    ctaLabel: 'Contact / Book call',
+    ctaLabel: 'Book Audit',
     ctaHref: siteConfig.calendlyUrl || '/contact',
   },
 ];
@@ -120,10 +120,10 @@ export default function WorkWithMePage() {
           </Reveal>
           <Reveal delay={80}>
             <p className="mt-4 max-w-3xl text-muted">
-            If you want clarity without a long pitch process, start with the
-            offer that matches where your business is right now. Every
-            engagement is built around practical fixes your team can actually
-            run.
+              If you want clarity without a long pitch process, start with the
+              offer that matches where your business is right now. Every
+              engagement is built around practical fixes your team can actually
+              run.
             </p>
           </Reveal>
         </Container>

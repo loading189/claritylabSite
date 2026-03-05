@@ -89,6 +89,25 @@ npm install
 npm run dev
 ```
 
+## Formatting (scoped)
+
+Formatting commands intentionally target active application surfaces only so legacy formatting outside these directories does not block checks.
+
+```bash
+npm run format
+npm run format:check
+```
+
+Scope includes:
+
+- `app/**/*.{ts,tsx,css,md,mdx}`
+- `components/**/*.{ts,tsx,css,md,mdx}`
+- `content/**/*.{ts,tsx,md,mdx,json}`
+- `lib/**/*.{ts,tsx}`
+- `middleware.ts`
+- `tailwind.config.*`, `next.config.*`, `postcss.config.*`
+- `README.md`, `.env.example`, `.eslintrc.json`, `.prettierrc`
+
 ## API smoke tests (curl)
 
 ```bash
@@ -112,11 +131,13 @@ curl -X POST http://localhost:3000/api/resources/request \
 ## Client Vault v1
 
 ### Invite and access model
+
 - Vault routes are `/client/*` and `/admin/*`.
 - v1 is invite-only via Clerk dashboard invites (admin workflow note included in `/admin/clients`).
 - Admin access is determined by Clerk `publicMetadata.role === "admin"`, with `OWNER_EMAIL` as an optional fallback.
 
 ### Upload and report flow
+
 1. Client uploads a file from `/client/files`.
 2. App requests a short-lived upload URL from `/api/client/files/presign-upload`.
 3. Browser uploads directly to the signed endpoint.
@@ -125,15 +146,18 @@ curl -X POST http://localhost:3000/api/resources/request \
 6. Admin uploads reports in `/admin/clients/[clientId]/upload-report`; client gets notified and downloads from `/client/reports`.
 
 ### Storage and security model
+
 - Files are private and served via short-lived signed URLs (`FILE_URL_TTL_SECONDS`, default 900s).
 - v1 runtime uses a local signed blob handler (`/api/client/files/blob`) so you can keep private access semantics without a custom file server.
 - S3/R2 env vars are included for direct provider migration.
 
 ### Airtable schema (required)
+
 - `Files`: `client_id`, `client_email`, `uploader_role`, `uploader_user_id`, `category`, `filename`, `storage_key`, `mime_type`, `size_bytes`, `created_at`, `note`.
 - `Clients`: `client_id`, `company`, `primary_email`, `status`, `created_at`.
 
 ### QA checklist (20 min)
+
 - Admin sign-in and load `/admin/clients`.
 - Create or invite test client in auth provider.
 - Client uploads file, verify owner email + admin listing.

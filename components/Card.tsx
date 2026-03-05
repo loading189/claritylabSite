@@ -17,7 +17,7 @@ export function Card({
   return (
     <article
       {...props}
-      className={`rounded-card border border-border/90 bg-surfaceRaised p-6 shadow-soft transition duration-200 ${interactive ? 'hover-lift cursor-pointer hover:border-accent/60' : ''} ${className}`}
+      className={`rounded-card border border-border/90 bg-surfaceRaised p-6 shadow-soft transition duration-200 ${interactive ? 'hover-lift cursor-pointer hover:border-accent/60 hover:shadow-raised' : ''} ${className}`}
     >
       {title ? (
         <h3 className="text-lg font-semibold text-text">{title}</h3>
