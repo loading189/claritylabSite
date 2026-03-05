@@ -18,6 +18,7 @@ export default function InsightsPage() {
   const posts = getAllInsights();
   const featured = posts.filter((post) => post.featured).slice(0, 3);
   const fallbackFeatured = featured.length ? featured : posts.slice(0, 3);
+  const tags = getInsightTags();
 
   return (
     <>
@@ -36,11 +37,11 @@ export default function InsightsPage() {
           </Reveal>
 
           <div className={styles.featuredSection}>
-            <h2 className="text-xl font-semibold text-text">Featured</h2>
+            <h2 className="text-xl font-semibold text-text">Start here</h2>
             <FeaturedInsights posts={fallbackFeatured} />
           </div>
 
-          <InsightsList posts={posts} tags={getInsightTags()} />
+          <InsightsList posts={posts} tags={tags} />
         </Container>
       </Section>
       <CalloutCTA trackingPage="insights_callout" />

@@ -56,7 +56,13 @@ export async function POST(request: NextRequest) {
       downloadUrl: resourceLinks[found.slug],
     });
 
-    return NextResponse.json({ ok: true, delivered: emailResult.delivered });
+    return NextResponse.json({
+      ok: true,
+      delivered: emailResult.delivered,
+      message: emailResult.delivered
+        ? 'Check your inbox for the resource.'
+        : 'Request received. Check your inbox and contact us if it does not arrive.',
+    });
   } catch (error) {
     console.error('Resource request error', error);
     return NextResponse.json({ ok: false, error: 'Could not process request right now. Please email us directly.' }, { status: 500 });
