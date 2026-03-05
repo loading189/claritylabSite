@@ -7,8 +7,12 @@
   --color-accent-magenta: #ff2d95;
   --color-border-subtle: rgba(255, 255, 255, 0.08);
 
-  --glow-magenta: 0 0 12px rgba(255, 45, 149, 0.35);
-  --glow-yellow: 0 0 12px rgba(245, 197, 66, 0.35);
+  --glow-magenta: 0 0 12px rgba(255, 45, 149, 0.24);
+  --glow-yellow: 0 0 12px rgba(245, 197, 66, 0.24);
+
+  --section-padding-y: 80px;
+  --section-gap: 28px;
+  --card-padding: 24px;
 
   --space-xs: 6px;
   --space-sm: 10px;
@@ -46,7 +50,7 @@
   );
   --shadow-soft:
     8px 8px 20px rgba(0, 0, 0, 0.35), -6px -6px 18px rgba(255, 255, 255, 0.03);
-  --shadow-raised: 0 18px 32px -20px rgba(0, 0, 0, 0.9), var(--glow-magenta);
+  --shadow-raised: 0 18px 32px -20px rgba(0, 0, 0, 0.9);
   --shadow-pressed:
     inset 0 2px 0 hsl(var(--text) / 0.08), 0 6px 14px -8px rgba(0, 0, 0, 0.85);
 

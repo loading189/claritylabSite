@@ -1,13 +1,13 @@
 .kpiGrid {
-  margin-top: 1.5rem;
+  margin-top: var(--section-gap);
   display: grid;
-  gap: 1rem;
+  gap: var(--section-gap);
 }
 
 .contentLayout {
-  margin-top: 2rem;
+  margin-top: var(--section-gap);
   display: grid;
-  gap: 1.5rem;
+  gap: var(--section-gap);
 }
 
 .sectionsNavWrap {
@@ -39,7 +39,7 @@
 
 .reportStack {
   display: grid;
-  gap: 1.5rem;
+  gap: var(--section-gap);
 }
 
 .ctaBanner {

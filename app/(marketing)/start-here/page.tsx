@@ -4,6 +4,8 @@ import { Card } from '@/components/Card';
 import { Container } from '@/components/Container';
 import { Reveal } from '@/components/Reveal';
 import { Section } from '@/components/Section';
+import { MarketingHero } from '@/components/marketing/MarketingHero';
+import { NextStepCTA } from '@/components/marketing/NextStepCTA';
 import { runtimeConfig } from '@/content/runtime';
 import { siteConfig } from '@/content/site';
 import styles from './page.module.css';
@@ -46,19 +48,18 @@ export default function StartHerePage() {
     <Section>
       <Container className={styles.container}>
         <Reveal>
-          <h1 className={styles.title}>Start here</h1>
-          <p className={styles.intro}>
-            This page is for service business owners who know something is
-            leaking but want a clean next step. Pick one path below and move
-            immediately: book the audit, review the sample output, or start with
-            the AR checklist.
-          </p>
+          <MarketingHero
+            badge="Start Here"
+            title="Pick the fastest path to clarity."
+            description="This page is for service business owners who know something is leaking but want a clean next step."
+            trackingPage="start_here"
+          />
         </Reveal>
 
         <div className={styles.grid}>
           {actions.map((action, index) => (
             <Reveal key={action.title} delay={index * 80}>
-              <Card interactive className={styles.actionCard}>
+              <Card interactive className={styles.actionCard} neumorphic>
                 <h2 className="text-xl font-semibold text-text">
                   {action.title}
                 </h2>
@@ -75,6 +76,14 @@ export default function StartHerePage() {
             </Reveal>
           ))}
         </div>
+
+        <Card className={styles.nextCard} neumorphic>
+          <NextStepCTA
+            title="Want a quick recommendation first?"
+            subtitle="Use one of the three paths above and we will help you choose the right next move."
+            trackingPage="start_here_next"
+          />
+        </Card>
 
         <p className={styles.contactLine}>
           Prefer email?{' '}

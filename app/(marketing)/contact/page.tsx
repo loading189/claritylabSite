@@ -5,6 +5,7 @@ import { Container } from '@/components/Container';
 import { FormEmbed } from '@/components/FormEmbed';
 import { LeadForm } from '@/components/LeadForm';
 import { NextStepCTA } from '@/components/marketing/NextStepCTA';
+import { SectionHeader } from '@/components/marketing/SectionHeader';
 import { Section } from '@/components/Section';
 import { StartIntakeSection } from '@/components/StartIntakeSection';
 import { runtimeConfig } from '@/content/runtime';
@@ -27,17 +28,10 @@ export default function ContactPage({
   return (
     <Section>
       <Container className={styles.container}>
-        <h1 className="text-4xl font-semibold tracking-tight text-text">
-          Let’s talk through your next best move.
-        </h1>
-        <p className="mt-4 max-w-2xl text-muted">
-          Keep it simple: book time, send a note, or text/email directly. No
-          pitch • Just clarity.
-        </p>
-        <p className="mt-2 text-sm text-muted">
-          I’m local to Fargo; if you book a call you’ll get the fastest
-          response.
-        </p>
+        <SectionHeader
+          title="Let’s talk through your next best move."
+          subtitle="Keep it simple: book time, send a note, or text/email directly. No pitch • Just clarity."
+        />
 
         {showPortalSetup ? (
           <div className="bg-card mt-4 rounded-lg border border-border p-4 text-sm text-muted">
@@ -52,7 +46,7 @@ export default function ContactPage({
         ) : null}
 
         {runtimeConfig.featureFlags.isChatEnabled ? (
-          <p className="mt-3 text-sm text-accent">
+          <p className="mt-3 text-sm text-accent2">
             Chat is available if you prefer a quick message.
           </p>
         ) : null}

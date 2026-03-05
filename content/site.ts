@@ -16,12 +16,10 @@ export const siteConfig = {
 };
 
 export const navItems = [
-  { label: 'Home', href: '/' },
   { label: 'Start Here', href: '/start-here' },
-  { label: 'Audit', href: '/audit' },
   { label: 'Insights', href: '/insights' },
-  { label: 'Sample Report', href: '/sample-report' },
-  { label: 'Contact', href: '/contact' },
+  { label: 'Case Studies', href: '/case-studies' },
+  { label: 'Audit', href: '/audit' },
 ];
 
 export const waysIHelp = [
