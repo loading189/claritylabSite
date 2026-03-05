@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import { BrandIcon } from '@/components/brand/iconMap';
 import { Card } from '@/components/Card';
 import { Container } from '@/components/Container';
 import { DataTable } from '@/components/DataTable';
@@ -28,24 +29,25 @@ export default function SampleReportPage() {
       <Container>
         <Reveal>
           <SectionHeader
-            eyebrow="Sample"
             title="Sample Report Preview"
+            eyebrow="Lab output"
             subtitle="Mock data example showing the scorecards and recommendations included in a Clarity Labs audit deliverable."
           />
         </Reveal>
 
         <Reveal delay={100}>
           <div className={styles.kpiGrid}>
-            <StatCard label="Total AR" value="$198,700" />
-            <StatCard label="0–30 bucket" value="$112,000" />
-            <StatCard label="DSO" value="54 days" />
+            <StatCard label="Total AR" value="$198,700" icon="cashflow" />
+            <StatCard label="0–30 bucket" value="$112,000" icon="signal" />
+            <StatCard label="DSO" value="54 days" icon="analyze" />
           </div>
         </Reveal>
 
         <div className={styles.contentLayout}>
           <aside className={styles.sectionsNavWrap}>
             <div className={styles.sectionsNav}>
-              <p className="text-xs font-semibold uppercase tracking-[0.12em] text-muted">
+              <p className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.12em] text-muted">
+                <BrandIcon concept="report" size={14} />
                 Sections
               </p>
               <div className="mt-3 space-y-1">

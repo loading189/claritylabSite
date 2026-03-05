@@ -1,6 +1,8 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { DataMotif } from '@/components/brand/DataMotif';
+import { BrandIcon } from '@/components/brand/iconMap';
 import { Badge } from '@/components/Badge';
 import { Container } from '@/components/Container';
 import { Section } from '@/components/Section';
@@ -87,6 +89,10 @@ export default function InsightDetailPage({
       <TrackOnMount eventName="insight_view" props={{ slug: post.slug }} />
       <Container className="max-w-3xl">
         <div className="rounded-card border border-border bg-surface p-6 shadow-soft sm:p-8">
+          <p className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.12em] text-muted">
+            <BrandIcon concept="report" size={14} />
+            Lab note
+          </p>
           <div className="flex flex-wrap gap-2">
             {post.tags.map((tag) => (
               <Badge key={tag}>{tag}</Badge>
@@ -101,10 +107,16 @@ export default function InsightDetailPage({
           </p>
         </div>
 
-        <article className="mt-8">
+        <div className="mt-6">
+          <DataMotif variant="signal" />
+        </div>
+        <article className="mt-4">
           <MdxContent content={post.content} slug={post.slug} />
         </article>
 
+        <div className="mt-8 border-t border-border/70 pt-6">
+          <DataMotif variant="ticks" />
+        </div>
         <AuthorBlock />
         <MiniCTA cta={post.cta} slug={post.slug} />
 

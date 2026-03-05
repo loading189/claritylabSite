@@ -14,3 +14,8 @@
 .featuredSection {
   margin-top: 2.5rem;
 }
+
+.heroCard {
+  position: relative;
+  overflow: hidden;
+}

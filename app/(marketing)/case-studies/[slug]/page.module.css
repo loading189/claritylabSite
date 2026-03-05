@@ -57,3 +57,11 @@
 .nextCard {
   border-color: hsl(var(--accent) / 0.35);
 }
+
+.heroShell {
+  position: relative;
+}
+.metricChip {
+  display: inline-flex;
+  align-items: center;
+}

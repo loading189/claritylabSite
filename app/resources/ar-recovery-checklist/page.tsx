@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import { Card } from '@/components/Card';
 import { Container } from '@/components/Container';
 import { FeatureList } from '@/components/FeatureList';
+import { BrandIcon } from '@/components/brand/iconMap';
 import { ResourceRequestForm } from '@/components/ResourceRequestForm';
 import { Section } from '@/components/Section';
 import { resources } from '@/content/resources';
@@ -21,14 +22,17 @@ export default function ARRecoveryChecklistPage() {
   return (
     <Section>
       <Container className="max-w-4xl">
-        <h1 className="text-4xl font-semibold tracking-tight text-slate-900">{resource.title}</h1>
-        <p className="mt-4 text-slate-700">{resource.valueProp}</p>
+        <h1 className="inline-flex items-center gap-2 text-4xl font-semibold tracking-tight text-text">
+          <BrandIcon concept="cashflow" variant="yellow" />
+          {resource.title}
+        </h1>
+        <p className="mt-4 text-muted">{resource.valueProp}</p>
 
-        <Card title="What’s inside" className="mt-6">
+        <Card title="What’s inside" className="mt-6" neumorphic>
           <FeatureList items={resource.includes} />
         </Card>
 
-        <Card title="Who it’s for" className="mt-4">
+        <Card title="Who it’s for" className="mt-4" neumorphic>
           <FeatureList
             items={[
               'Owners with growing AR over the last 2-3 months',
@@ -38,7 +42,7 @@ export default function ARRecoveryChecklistPage() {
           />
         </Card>
 
-        <Card title="Get access" className="mt-4">
+        <Card title="Get access" className="mt-4" neumorphic>
           <ResourceRequestForm
             resourceSlug="ar-recovery-checklist"
             fallbackDownloadUrl={runtimeConfig.resources.arUrl}

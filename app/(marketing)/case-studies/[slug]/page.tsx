@@ -1,5 +1,7 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import { DataMotif } from '@/components/brand/DataMotif';
+import { BrandIcon } from '@/components/brand/iconMap';
 import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
 import { Container } from '@/components/Container';
@@ -44,8 +46,15 @@ export default function CaseStudyDetailPage({ params }: Props) {
     <>
       <TrackOnMount eventName="case_study_view" props={{ slug: study.slug }} />
       <Section>
-        <Container className={styles.heroContainer}>
-          <p className={styles.label}>{study.label}</p>
+        <Container className={`${styles.heroContainer} ${styles.heroShell}`}>
+          <p className={styles.label}>
+            <BrandIcon
+              concept="proof"
+              size={14}
+              className="mr-1 inline-block"
+            />
+            {study.label}
+          </p>
           <h1 className={styles.title}>{study.title}</h1>
           <p className={styles.summary}>{study.outcome}</p>
           <div className={styles.ctaRow}>
@@ -57,7 +66,9 @@ export default function CaseStudyDetailPage({ params }: Props) {
           <div className={styles.chipRow}>
             {study.metricChips.map((chip) => (
               <span key={chip} className={styles.metricChip}>
+                <BrandIcon concept="signal" size={13} className="mr-1.5" />
                 {chip}
+                <DataMotif variant="ticks" className="ml-2" />
               </span>
             ))}
           </div>
@@ -99,7 +110,7 @@ export default function CaseStudyDetailPage({ params }: Props) {
       </Section>
 
       <Section>
-        <Container className={styles.heroContainer}>
+        <Container className={`${styles.heroContainer} ${styles.heroShell}`}>
           <Card className={styles.nextCard}>
             <h2 className="text-2xl font-semibold text-text">
               What to do next

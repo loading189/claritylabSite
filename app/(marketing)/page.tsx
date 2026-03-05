@@ -14,6 +14,7 @@ import { ProblemGrid } from '@/components/marketing/ProblemGrid';
 import { ProcessSteps } from '@/components/marketing/ProcessSteps';
 import { SectionHeader } from '@/components/marketing/SectionHeader';
 import { StatCard } from '@/components/marketing/StatCard';
+import { BrandConcept } from '@/components/brand/iconMap';
 import { caseStudies } from '@/content/caseStudies';
 import { exampleInsights, howItWorks, problems } from '@/content/site';
 import { getAllInsights } from '@/lib/content/insights';
@@ -31,18 +32,21 @@ const proofPatterns = [
     note: 'When AR ownership is unclear, old balances linger and payroll weeks get tighter.',
     href: '/case-studies/ar-stalled-350k',
     label: 'Read AR pattern',
+    icon: 'cashflow' as BrandConcept,
   },
   {
     metric: '47% technician utilization',
     note: 'Busy schedules can still hide dead time, overtime drift, and dispatch misses.',
     href: '/case-studies/technician-utilization-47',
     label: 'Read utilization pattern',
+    icon: 'workflow' as BrandConcept,
   },
   {
     metric: '54-day DSO pattern',
     note: 'Invoice lag plus weak follow-up usually shows up before owners feel it in cash.',
     href: '/sample-report',
     label: 'View sample report',
+    icon: 'report' as BrandConcept,
   },
 ];
 
@@ -61,6 +65,7 @@ export default function HomePage() {
             description="Conversion-focused operational audits for teams that want concrete fixes, stronger margin control, and cleaner execution."
             withBackdrop
             trackingPage="home_hero"
+            accentIcon="diagnose"
           />
         </Container>
       </Section>
@@ -98,6 +103,7 @@ export default function HomePage() {
                   label={item.label}
                   value={item.metric}
                   note={item.note}
+                  icon={item.icon}
                 />
               </Reveal>
             ))}
@@ -153,6 +159,7 @@ export default function HomePage() {
                   title={study.title}
                   detail={study.summary}
                   href={`/case-studies/${study.slug}`}
+                  icon="proof"
                 />
               </Reveal>
             ))}

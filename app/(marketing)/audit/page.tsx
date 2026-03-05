@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
+import { BrandIcon, BrandConcept } from '@/components/brand/iconMap';
 import { CalloutCTA } from '@/components/CalloutCTA';
 import { Card } from '@/components/Card';
 import { Container } from '@/components/Container';
@@ -24,17 +25,20 @@ const examples = [
     href: '/case-studies/ar-stalled-350k',
     detail:
       'How cadence, ownership, and escalation patterns tightened collections.',
+    icon: 'cashflow' as BrandConcept,
   },
   {
     title: 'Technician utilization at 47%',
     href: '/case-studies/technician-utilization-47',
     detail: 'How dispatch and closeout rhythms recovered billable capacity.',
+    icon: 'workflow' as BrandConcept,
   },
   {
     title: 'Sample report preview',
     href: '/sample-report',
     detail:
       'See the exact scorecard and recommendation structure before booking.',
+    icon: 'report' as BrandConcept,
   },
 ];
 
@@ -49,6 +53,7 @@ export default function AuditPage() {
             description="The Clarity Labs Audit is a focused review of your key operating and financial signals, designed for service trade owners who need better decisions now."
             trackingEvent="audit_cta_click"
             trackingPage="audit"
+            accentIcon="analyze"
           />
         </Container>
       </Section>
@@ -106,7 +111,8 @@ export default function AuditPage() {
           <div className={styles.examplesGrid}>
             {examples.map((example) => (
               <Card key={example.href} interactive>
-                <h3 className="text-lg font-semibold text-text">
+                <h3 className="flex items-center gap-2 text-lg font-semibold text-text">
+                  <BrandIcon concept={example.icon} size={16} />
                   {example.title}
                 </h3>
                 <p className="mt-2 text-sm text-muted">{example.detail}</p>

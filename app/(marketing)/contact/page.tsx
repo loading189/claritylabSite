@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import { BrandIcon } from '@/components/brand/iconMap';
 import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
 import { Container } from '@/components/Container';
@@ -27,7 +28,8 @@ export default function ContactPage({
   return (
     <Section>
       <Container className={styles.container}>
-        <h1 className="text-4xl font-semibold tracking-tight text-text">
+        <h1 className="inline-flex items-center gap-2 text-4xl font-semibold tracking-tight text-text">
+          <BrandIcon concept="lead" variant="yellow" />
           Let’s talk through your next best move.
         </h1>
         <p className="mt-4 max-w-2xl text-muted">
@@ -38,6 +40,18 @@ export default function ContactPage({
           I’m local to Fargo; if you book a call you’ll get the fastest
           response.
         </p>
+
+        <div className={styles.iconRow}>
+          <p>
+            <BrandIcon concept="proof" size={15} /> Secure handling
+          </p>
+          <p>
+            <BrandIcon concept="workflow" size={15} /> Operator-first guidance
+          </p>
+          <p>
+            <BrandIcon concept="signal" size={15} /> Practical next actions
+          </p>
+        </div>
 
         {showPortalSetup ? (
           <div className="bg-card mt-4 rounded-lg border border-border p-4 text-sm text-muted">

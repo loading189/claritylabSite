@@ -19,3 +19,17 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+
+.iconRow {
+  margin-top: var(--space-md);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+  font-size: 0.875rem;
+  color: hsl(var(--muted));
+}
+.iconRow p {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}

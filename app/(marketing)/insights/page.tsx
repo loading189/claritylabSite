@@ -1,4 +1,6 @@
 import { Metadata } from 'next';
+import { BrandedBackdrop } from '@/components/brand/BrandedBackdrop';
+import { BrandIcon } from '@/components/brand/iconMap';
 import { CalloutCTA } from '@/components/CalloutCTA';
 import { Card } from '@/components/Card';
 import { Container } from '@/components/Container';
@@ -27,9 +29,18 @@ export default function InsightsPage() {
       <Section>
         <Container className={styles.container}>
           <Reveal>
-            <div className={`${styles.heroCard} neu-card`}>
-              <h1 className="heading-lg text-text">Clarity Labs Insights</h1>
-              <p className="mt-4 max-w-2xl text-muted">
+            <div
+              className={`${styles.heroCard} neu-card relative isolate overflow-hidden`}
+            >
+              <BrandedBackdrop withScan />
+              <h1 className="heading-lg relative z-10 text-text">
+                Clarity Labs Insights
+              </h1>
+              <p className="relative z-10 mt-2 inline-flex items-center gap-2 text-xs uppercase tracking-[0.12em] text-muted">
+                <BrandIcon concept="signal" size={14} />
+                Lab notes
+              </p>
+              <p className="relative z-10 mt-4 max-w-2xl text-muted">
                 Operator-level notes on cash flow, team utilization, and process
                 design for service businesses.
               </p>

@@ -52,4 +52,11 @@
 
   --font-sans: var(--font-body);
   --font-display: var(--font-heading);
+
+  --texture-noise-opacity: 0.03;
+  --texture-grid-opacity: 0.04;
+  --texture-scan-opacity: 0.12;
+  --texture-blend-mode: soft-light;
+  --texture-mask-soft: radial-gradient(circle at 20% 20%, black, transparent 80%);
+  --texture-noise-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.15' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.65'/%3E%3C/svg%3E");
 }

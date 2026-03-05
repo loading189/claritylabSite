@@ -1,3 +1,5 @@
+import { BrandedBackdrop } from '@/components/brand/BrandedBackdrop';
+import { BrandIcon } from '@/components/brand/iconMap';
 import { runtimeConfig } from '@/content/runtime';
 import { siteConfig } from '@/content/site';
 import { Button } from './Button';
@@ -15,13 +17,20 @@ export function CalloutCTA({
   return (
     <section className="py-14 sm:py-16">
       <Container>
-        <div className="neu-card rounded-2xl border-accent/30 p-8 sm:p-10">
-          <h2 className="heading-lg text-text">Ready to book your audit?</h2>
-          <p className="mt-3 max-w-2xl text-sm text-muted sm:text-base">
+        <div className="neu-card relative isolate overflow-hidden rounded-2xl border-accent/30 p-8 sm:p-10">
+          <BrandedBackdrop withScan />
+          <p className="relative z-10 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.12em] text-muted">
+            <BrandIcon concept="workflow" size={15} />
+            Operator-first support
+          </p>
+          <h2 className="heading-lg relative z-10 mt-2 text-text">
+            Ready to book your audit?
+          </h2>
+          <p className="relative z-10 mt-3 max-w-2xl text-sm text-muted sm:text-base">
             Bring your current numbers and we will map where margin, cash flow,
             and operational execution are breaking.
           </p>
-          <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
+          <div className="relative z-10 mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
             {runtimeConfig.featureFlags.isBookingEnabled ? (
               <Button
                 href={siteConfig.calendlyUrl}

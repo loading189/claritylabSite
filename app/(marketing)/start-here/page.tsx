@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import { BrandIcon, BrandConcept } from '@/components/brand/iconMap';
 import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
 import { Container } from '@/components/Container';
@@ -24,6 +25,7 @@ const actions = [
       'Best first step if you want a focused review of cash, capacity, and execution leaks.',
     href: siteConfig.calendlyUrl || '/contact',
     event: 'start_here_book_click',
+    icon: 'diagnose' as BrandConcept,
   },
   {
     title: 'View Sample Report',
@@ -31,6 +33,7 @@ const actions = [
       'See the exact deliverable format before you decide to engage.',
     href: '/sample-report',
     event: 'start_here_sample_report_click',
+    icon: 'report' as BrandConcept,
   },
   {
     title: 'Get the AR Checklist',
@@ -38,6 +41,7 @@ const actions = [
       'Run the one-page collections cadence with your team this week.',
     href: '/resources/ar-recovery-checklist',
     event: 'start_here_checklist_click',
+    icon: 'cashflow' as BrandConcept,
   },
 ];
 
@@ -59,9 +63,12 @@ export default function StartHerePage() {
           {actions.map((action, index) => (
             <Reveal key={action.title} delay={index * 80}>
               <Card interactive className={styles.actionCard}>
-                <h2 className="text-xl font-semibold text-text">
-                  {action.title}
-                </h2>
+                <div className="flex items-center gap-2">
+                  <BrandIcon concept={action.icon} size={16} />
+                  <h2 className="text-xl font-semibold text-text">
+                    {action.title}
+                  </h2>
+                </div>
                 <p className="mt-2 text-sm text-muted">{action.description}</p>
                 <Button
                   href={action.href}

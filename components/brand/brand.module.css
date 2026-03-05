@@ -1,0 +1,91 @@
+.textureOverlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+.grain {
+  background-image: var(--texture-noise-image);
+  background-size: 180px 180px;
+  mix-blend-mode: var(--texture-blend-mode);
+  mask-image: var(--texture-mask-soft);
+  -webkit-mask-image: var(--texture-mask-soft);
+}
+.grid {
+  background-image:
+    linear-gradient(to right, hsl(var(--text) / 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, hsl(var(--text) / 0.05) 1px, transparent 1px);
+  background-size: 34px 34px;
+  mask-image: var(--texture-mask-soft);
+  -webkit-mask-image: var(--texture-mask-soft);
+}
+.scan {
+  background-image:
+    radial-gradient(
+      circle at 12% 26%,
+      hsl(var(--accent) / 0.35),
+      transparent 45%
+    ),
+    linear-gradient(
+      110deg,
+      transparent 0%,
+      hsl(var(--accent-2) / 0.2) 38%,
+      transparent 62%
+    );
+}
+.subtle {
+  opacity: var(--texture-grid-opacity);
+}
+.medium {
+  opacity: calc(var(--texture-grid-opacity) + 0.02);
+}
+.grain.subtle {
+  opacity: var(--texture-noise-opacity);
+}
+.grain.medium {
+  opacity: calc(var(--texture-noise-opacity) + 0.01);
+}
+.scan.subtle {
+  opacity: var(--texture-scan-opacity);
+}
+.scan.medium {
+  opacity: calc(var(--texture-scan-opacity) + 0.04);
+}
+.brandedBackdrop {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 0;
+}
+.glow {
+  position: absolute;
+  inset: -20% -10% auto;
+  height: 75%;
+  background: radial-gradient(
+    circle at 15% 25%,
+    hsl(var(--accent-2) / 0.28),
+    transparent 56%
+  );
+  opacity: 0.6;
+}
+.dataMotif {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: hsl(var(--muted));
+  opacity: 0.7;
+}
+.dataMotif svg {
+  display: block;
+}
+@media (prefers-reduced-motion: reduce) {
+  .scan {
+    background-image: radial-gradient(
+      circle at 18% 28%,
+      hsl(var(--accent) / 0.26),
+      transparent 50%
+    );
+  }
+}

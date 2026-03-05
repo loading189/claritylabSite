@@ -1,7 +1,8 @@
 import { ReactNode } from 'react';
 import { Badge } from '@/components/Badge';
 import { Button } from '@/components/Button';
-import { HeroBackdrop } from '@/components/HeroBackdrop';
+import { BrandedBackdrop } from '@/components/brand/BrandedBackdrop';
+import { BrandIcon, BrandConcept } from '@/components/brand/iconMap';
 import { siteConfig } from '@/content/site';
 
 type MarketingHeroProps = {
@@ -13,6 +14,7 @@ type MarketingHeroProps = {
   trackingPage?: string;
   children?: ReactNode;
   className?: string;
+  accentIcon?: BrandConcept;
 };
 
 export function MarketingHero({
@@ -24,18 +26,24 @@ export function MarketingHero({
   trackingPage = 'marketing_hero',
   children,
   className,
+  accentIcon = 'signal',
 }: MarketingHeroProps) {
   return (
-    <div className={className}>
-      {withBackdrop ? <HeroBackdrop /> : null}
-      {badge ? <Badge>{badge}</Badge> : null}
-      <h1 className="heading-xl relative mt-4 text-balance font-bold text-text">
+    <div className={`relative isolate ${className || ''}`}>
+      {withBackdrop ? <BrandedBackdrop withScan /> : null}
+      {badge ? (
+        <div className="relative z-10 inline-flex items-center gap-2">
+          <BrandIcon concept={accentIcon} size={16} variant="yellow" />
+          <Badge>{badge}</Badge>
+        </div>
+      ) : null}
+      <h1 className="heading-xl relative z-10 mt-4 text-balance font-bold text-text">
         {title}
       </h1>
-      <p className="mt-5 max-w-2xl text-base text-muted sm:text-lg">
+      <p className="relative z-10 mt-5 max-w-2xl text-base text-muted sm:text-lg">
         {description}
       </p>
-      <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+      <div className="relative z-10 mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
         <Button
           href={siteConfig.calendlyUrl || '/contact'}
           trackingEvent={trackingEvent}

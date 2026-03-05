@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import { BrandIcon } from '@/components/brand/iconMap';
 import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
 import { Container } from '@/components/Container';
@@ -16,7 +17,11 @@ export default function ThanksPage() {
   return (
     <Section>
       <Container className={styles.container}>
-        <Card className={styles.heroCard} title="You’re booked" neumorphic>
+        <Card className={styles.heroCard} neumorphic>
+          <h1 className="inline-flex items-center gap-2 text-2xl font-semibold text-text">
+            <BrandIcon concept="proof" size={18} />
+            You’re booked
+          </h1>
           <p className="max-w-2xl text-sm text-muted sm:text-base">
             Thanks — next steps are simple. Bring the items below so we can
             focus the call on fast, practical wins.
