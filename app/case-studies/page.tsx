@@ -10,7 +10,7 @@ import { caseStudies } from '@/content/caseStudies';
 export const metadata: Metadata = {
   title: 'Case Studies',
   description:
-    'Sample/demonstration case studies showing how Clarity Labs audits translate into measurable outcomes.',
+    'Pattern-based case studies showing common cash and capacity failures in service businesses and how they get fixed.',
 };
 
 export default function CaseStudiesPage() {
@@ -18,14 +18,14 @@ export default function CaseStudiesPage() {
     <Section>
       <Container className="max-w-5xl">
         <Reveal>
-          <h1 className="text-4xl font-semibold tracking-tight text-slate-900">
+          <h1 className="text-4xl font-semibold tracking-tight text-text">
             Case studies
           </h1>
         </Reveal>
         <Reveal delay={80}>
-          <p className="mt-4 max-w-3xl text-slate-700">
-            These are sample/demonstration scenarios for service trades. They are
-            realistic, but they do not represent named clients.
+          <p className="mt-4 max-w-3xl text-muted">
+            These are anonymized pattern examples based on recurring field
+            conditions. They are realistic scenarios, not named client stories.
           </p>
         </Reveal>
 
@@ -34,10 +34,10 @@ export default function CaseStudiesPage() {
             <Reveal key={study.slug} delay={index * 70}>
               <Card>
                 <Badge>{study.label}</Badge>
-                <h2 className="mt-3 text-xl font-semibold text-slate-900">
+                <h2 className="mt-3 text-xl font-semibold text-text">
                   {study.title}
                 </h2>
-                <p className="mt-2 text-sm text-slate-700">{study.summary}</p>
+                <p className="mt-2 text-sm text-muted">{study.summary}</p>
                 <Link
                   href={`/case-studies/${study.slug}`}
                   className="mt-4 inline-block text-sm font-semibold no-underline"

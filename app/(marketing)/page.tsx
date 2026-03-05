@@ -12,6 +12,7 @@ import { NextStepCTA } from '@/components/marketing/NextStepCTA';
 import { ProblemGrid } from '@/components/marketing/ProblemGrid';
 import { ProcessSteps } from '@/components/marketing/ProcessSteps';
 import { SectionHeader } from '@/components/marketing/SectionHeader';
+import { caseStudies } from '@/content/caseStudies';
 import { exampleInsights, howItWorks, problems } from '@/content/site';
 import { getAllInsights } from '@/lib/content/insights';
 import styles from './page.module.css';
@@ -20,6 +21,27 @@ const findings = [
   'Revenue concentration: top 3 customers account for 48% of monthly cash inflow.',
   'Invoice lag: average 5.8 days between job completion and invoice send.',
   'Dispatch drag: 11% of technician hours lost to avoidable routing and handoff delays.',
+];
+
+const proofPatterns = [
+  {
+    metric: '$350k AR outstanding',
+    note: 'When AR ownership is unclear, old balances linger and payroll weeks get tighter.',
+    href: '/case-studies/ar-stalled-350k',
+    label: 'Read AR pattern',
+  },
+  {
+    metric: '47% technician utilization',
+    note: 'Busy schedules can still hide dead time, overtime drift, and dispatch misses.',
+    href: '/case-studies/technician-utilization-47',
+    label: 'Read utilization pattern',
+  },
+  {
+    metric: '54-day DSO pattern',
+    note: 'Invoice lag plus weak follow-up usually shows up before owners feel it in cash.',
+    href: '/sample-report',
+    label: 'View sample report',
+  },
 ];
 
 export default function HomePage() {
@@ -64,6 +86,29 @@ export default function HomePage() {
       <Section className={styles.dividerSection} id="findings">
         <Container>
           <SectionHeader
+            title="Proof patterns we see every week"
+            subtitle="Short signals that show where cash, capacity, and execution are breaking down."
+          />
+          <div className={styles.proofGrid}>
+            {proofPatterns.map((item, index) => (
+              <Reveal key={item.metric} delay={index * 70}>
+                <Card interactive>
+                  <p className="text-lg font-semibold text-text">
+                    {item.metric}
+                  </p>
+                  <p className="mt-2 text-sm text-muted">{item.note}</p>
+                  <Link
+                    href={item.href}
+                    className="mt-4 inline-block text-sm font-semibold no-underline"
+                  >
+                    {item.label} →
+                  </Link>
+                </Card>
+              </Reveal>
+            ))}
+          </div>
+
+          <SectionHeader
             title="Example findings from audits"
             subtitle="Real insights that create decisions in days, not months."
           />
@@ -105,7 +150,33 @@ export default function HomePage() {
       <Section className={styles.dividerSection}>
         <Container>
           <SectionHeader
-            title="Start here"
+            title="Case studies"
+            subtitle="Pattern-based examples of what changes after a focused audit."
+          />
+          <div className={styles.caseStudyGrid}>
+            {caseStudies.slice(0, 2).map((study, index) => (
+              <Reveal key={study.slug} delay={index * 80}>
+                <Card interactive>
+                  <p className="text-xs font-semibold uppercase tracking-[0.08em] text-muted">
+                    {study.label}
+                  </p>
+                  <h3 className="mt-2 text-lg font-semibold text-text">
+                    {study.title}
+                  </h3>
+                  <p className="mt-2 text-sm text-muted">{study.summary}</p>
+                  <Link
+                    href={`/case-studies/${study.slug}`}
+                    className="mt-4 inline-block text-sm font-semibold no-underline"
+                  >
+                    Read case study →
+                  </Link>
+                </Card>
+              </Reveal>
+            ))}
+          </div>
+
+          <SectionHeader
+            title="Start with these operator notes"
             subtitle="Featured operator notes we recommend reading first."
           />
           <FeaturedInsights

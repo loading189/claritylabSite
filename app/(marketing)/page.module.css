@@ -32,9 +32,24 @@
   gap: 1rem;
 }
 
+.proofGrid,
+.caseStudyGrid {
+  margin-top: 1.25rem;
+  display: grid;
+  gap: 1rem;
+}
+
 @media (min-width: 768px) {
   .exampleGrid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .proofGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .caseStudyGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 

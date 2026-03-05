@@ -24,36 +24,36 @@
   color: hsl(var(--muted));
 }
 
-.threeColGrid,
-.twoColGrid {
+.ctaRow {
+  margin-top: 1.25rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.chipRow {
+  margin-top: 1.25rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.metricChip {
+  border-radius: 999px;
+  border: 1px solid hsl(var(--accent) / 0.4);
+  background: hsl(var(--surfaceRaised));
+  padding: 0.35rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: hsl(var(--text));
+}
+
+.stack {
+  max-width: 64rem;
   display: grid;
   gap: 1rem;
 }
 
-.tableHeadRow {
-  color: hsl(var(--muted));
-}
-
-.tableBodyRow {
-  border-top: 1px solid hsl(var(--border));
-}
-
-.ctaSection {
-  background: hsl(var(--surface));
-}
-
-.ctaContainer {
-  padding-top: 2.5rem;
-  padding-bottom: 2.5rem;
-}
-
-@media (min-width: 768px) {
-  .threeColGrid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
-  .twoColGrid {
-    max-width: 64rem;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
+.nextCard {
+  border-color: hsl(var(--accent) / 0.35);
 }
