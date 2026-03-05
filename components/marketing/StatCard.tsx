@@ -14,7 +14,7 @@ export function StatCard({
   className = '',
 }: StatCardProps) {
   return (
-    <article className={`neu-card p-6 ${className}`}>
+    <article className={`neu-card p-cardPad ${className}`}>
       <p className="text-xs font-semibold uppercase tracking-[0.12em] text-accent2">
         {label}
       </p>

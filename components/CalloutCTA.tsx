@@ -13,9 +13,9 @@ export function CalloutCTA({
   trackingPage = 'callout_cta',
 }: CalloutCTAProps) {
   return (
-    <section className="py-14 sm:py-16">
+    <section className="py-sectionPaddingY">
       <Container>
-        <div className="neu-card rounded-2xl border-accent/30 p-8 sm:p-10">
+        <div className="neu-card rounded-2xl border-accent/25 p-cardPad sm:p-10">
           <h2 className="heading-lg text-text">Ready to book your audit?</h2>
           <p className="mt-3 max-w-2xl text-sm text-muted sm:text-base">
             Bring your current numbers and we will map where margin, cash flow,

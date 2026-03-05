@@ -1,32 +1,32 @@
 .heroSection {
-  padding-top: var(--space-xl);
-  padding-bottom: var(--space-lg);
+  padding-top: var(--section-gap);
+  padding-bottom: var(--section-padding-y);
 }
 
 .heroContainer {
   position: relative;
   overflow: hidden;
   border-radius: var(--radius-card);
-  border: 1px solid hsl(var(--accent-2) / 0.38);
+  border: 1px solid hsl(var(--border));
   background: hsl(var(--surface));
-  padding: 2rem;
-  box-shadow: var(--shadow-raised);
+  padding: var(--card-padding);
+  box-shadow: var(--shadow-soft);
 }
 
 .dividerSection {
-  padding-top: var(--space-lg);
-  padding-bottom: var(--space-lg);
+  padding-top: var(--section-padding-y);
+  padding-bottom: var(--section-padding-y);
 }
 
 .dividerSection::before {
   content: '';
   display: block;
   height: 1px;
-  margin-bottom: var(--space-lg);
+  margin-bottom: var(--section-gap);
   background: linear-gradient(
     90deg,
     transparent,
-    hsl(var(--accent-2) / 0.3),
+    hsl(var(--border)),
     transparent
   );
 }

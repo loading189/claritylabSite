@@ -1,16 +1,18 @@
 .container {
   max-width: 64rem;
+  display: grid;
+  gap: var(--section-gap);
 }
 
 .heroCard {
   border-radius: var(--radius-card);
-  padding: 2rem;
+  padding: var(--card-padding);
 }
 
 .inlineCta {
-  margin-top: 1.25rem;
+  margin-top: 0;
 }
 
 .featuredSection {
-  margin-top: 2.5rem;
+  margin-top: 0;
 }

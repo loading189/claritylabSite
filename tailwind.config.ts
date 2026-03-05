@@ -50,7 +50,9 @@ const config: Config = {
         'gradient-subtle': 'var(--gradient-subtle)',
       },
       spacing: {
-        sectionPaddingY: '5rem',
+        sectionPaddingY: 'var(--section-padding-y)',
+        sectionGap: 'var(--section-gap)',
+        cardPad: 'var(--card-padding)',
       },
       maxWidth: {
         container: '76rem',

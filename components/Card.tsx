@@ -19,7 +19,7 @@ export function Card({
   return (
     <article
       {...props}
-      className={`${neumorphic ? 'neu-card border-border/50 bg-surface' : 'rounded-card border border-border/90 bg-surfaceRaised shadow-soft'} p-6 transition duration-200 ${interactive ? 'hover-lift cursor-pointer hover:border-accent2/60 hover:shadow-raised' : ''} ${className}`}
+      className={`${neumorphic ? 'neu-card border-border/50 bg-surface' : 'rounded-card border border-border/90 bg-surfaceRaised shadow-soft'} p-cardPad transition duration-200 ${interactive ? 'hover-lift cursor-pointer hover:border-accent2/40 hover:shadow-raised' : ''} ${className}`}
     >
       {title ? (
         <h3 className="text-lg font-semibold text-text">{title}</h3>

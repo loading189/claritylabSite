@@ -4,19 +4,19 @@
 
 .gridTwo {
   display: grid;
-  gap: 1rem;
+  gap: var(--section-gap);
 }
 
 .examplesWrap,
 .formStack {
   max-width: 64rem;
   display: grid;
-  gap: 1rem;
+  gap: var(--section-gap);
 }
 
 .examplesGrid {
   display: grid;
-  gap: 1rem;
+  gap: var(--section-gap);
 }
 
 @media (min-width: 768px) {

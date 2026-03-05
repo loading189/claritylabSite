@@ -1,10 +1,11 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { Badge } from '@/components/Badge';
 import { Card } from '@/components/Card';
 import { Container } from '@/components/Container';
 import { Reveal } from '@/components/Reveal';
 import { Section } from '@/components/Section';
+import { NextStepCTA } from '@/components/marketing/NextStepCTA';
+import { SectionHeader } from '@/components/marketing/SectionHeader';
 import { caseStudies } from '@/content/caseStudies';
 
 export const metadata: Metadata = {
@@ -18,25 +19,19 @@ export default function CaseStudiesPage() {
     <Section>
       <Container className="max-w-5xl">
         <Reveal>
-          <h1 className="text-4xl font-semibold tracking-tight text-text">
-            Case studies
-          </h1>
-        </Reveal>
-        <Reveal delay={80}>
-          <p className="mt-4 max-w-3xl text-muted">
-            These are anonymized pattern examples based on recurring field
-            conditions. They are realistic scenarios, not named client stories.
-          </p>
+          <SectionHeader
+            eyebrow="Case Studies"
+            title="Pattern-based case studies"
+            subtitle="These are anonymized field patterns. They are realistic scenarios, not named client stories."
+          />
         </Reveal>
 
-        <div className="mt-8 grid gap-4">
+        <div className="mt-sectionGap grid gap-4">
           {caseStudies.map((study, index) => (
             <Reveal key={study.slug} delay={index * 70}>
-              <Card>
-                <Badge>{study.label}</Badge>
-                <h2 className="mt-3 text-xl font-semibold text-text">
-                  {study.title}
-                </h2>
+              <Card neumorphic>
+                <p className="text-xs font-semibold uppercase tracking-[0.12em] text-accent2">{study.label}</p>
+                <h2 className="mt-3 text-xl font-semibold text-text">{study.title}</h2>
                 <p className="mt-2 text-sm text-muted">{study.summary}</p>
                 <Link
                   href={`/case-studies/${study.slug}`}
@@ -48,6 +43,10 @@ export default function CaseStudiesPage() {
             </Reveal>
           ))}
         </div>
+
+        <Card className="mt-sectionGap" neumorphic>
+          <NextStepCTA trackingPage="case_studies" />
+        </Card>
       </Container>
     </Section>
   );

@@ -1,16 +1,16 @@
 .container {
   max-width: 64rem;
+  display: grid;
+  gap: var(--section-gap);
 }
 
 .gridTwo {
-  margin-top: 1rem;
   display: grid;
   gap: 1rem;
 }
 
 .nextCard {
-  margin-top: 2rem;
-  border-color: hsl(var(--accent) / 0.35);
+  border-color: hsl(var(--border));
   background: var(--gradient-subtle);
 }
 
