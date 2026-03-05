@@ -10,7 +10,7 @@ export function ProblemGrid({ items }: ProblemGridProps) {
     <div className="mt-6 grid gap-4 md:grid-cols-3">
       {items.map((problem, index) => (
         <Reveal key={problem} delay={index * 70}>
-          <Card interactive>
+          <Card interactive neumorphic>
             <h3 className="text-xl font-semibold text-text">0{index + 1}</h3>
             <p className="mt-3 text-sm text-muted">{problem}</p>
           </Card>

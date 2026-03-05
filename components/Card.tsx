@@ -5,6 +5,7 @@ type CardProps = HTMLAttributes<HTMLElement> & {
   children: ReactNode;
   className?: string;
   interactive?: boolean;
+  neumorphic?: boolean;
 };
 
 export function Card({
@@ -12,12 +13,13 @@ export function Card({
   children,
   className = '',
   interactive = false,
+  neumorphic = false,
   ...props
 }: CardProps) {
   return (
     <article
       {...props}
-      className={`rounded-card border border-border/90 bg-surfaceRaised p-6 shadow-soft transition duration-200 ${interactive ? 'hover-lift cursor-pointer hover:border-accent/60 hover:shadow-raised' : ''} ${className}`}
+      className={`${neumorphic ? 'neu-card border-border/50 bg-surface' : 'rounded-card border border-border/90 bg-surfaceRaised shadow-soft'} p-6 transition duration-200 ${interactive ? 'hover-lift cursor-pointer hover:border-accent2/60 hover:shadow-raised' : ''} ${className}`}
     >
       {title ? (
         <h3 className="text-lg font-semibold text-text">{title}</h3>

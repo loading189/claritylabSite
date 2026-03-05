@@ -7,11 +7,13 @@ import { Reveal } from '@/components/Reveal';
 import { Section } from '@/components/Section';
 import { FeaturedInsights } from '@/components/marketing/FeaturedInsights';
 import { FindingsStrip } from '@/components/marketing/FindingsStrip';
+import { InsightHighlight } from '@/components/marketing/InsightHighlight';
 import { MarketingHero } from '@/components/marketing/MarketingHero';
 import { NextStepCTA } from '@/components/marketing/NextStepCTA';
 import { ProblemGrid } from '@/components/marketing/ProblemGrid';
 import { ProcessSteps } from '@/components/marketing/ProcessSteps';
 import { SectionHeader } from '@/components/marketing/SectionHeader';
+import { StatCard } from '@/components/marketing/StatCard';
 import { caseStudies } from '@/content/caseStudies';
 import { exampleInsights, howItWorks, problems } from '@/content/site';
 import { getAllInsights } from '@/lib/content/insights';
@@ -92,18 +94,11 @@ export default function HomePage() {
           <div className={styles.proofGrid}>
             {proofPatterns.map((item, index) => (
               <Reveal key={item.metric} delay={index * 70}>
-                <Card interactive>
-                  <p className="text-lg font-semibold text-text">
-                    {item.metric}
-                  </p>
-                  <p className="mt-2 text-sm text-muted">{item.note}</p>
-                  <Link
-                    href={item.href}
-                    className="mt-4 inline-block text-sm font-semibold no-underline"
-                  >
-                    {item.label} →
-                  </Link>
-                </Card>
+                <StatCard
+                  label={item.label}
+                  value={item.metric}
+                  note={item.note}
+                />
               </Reveal>
             ))}
           </div>
@@ -116,7 +111,7 @@ export default function HomePage() {
           <div className={styles.exampleGrid}>
             {exampleInsights.map((insight, index) => (
               <Reveal key={insight.title} delay={index * 70}>
-                <Card title={insight.title}>
+                <Card title={insight.title} neumorphic>
                   <FeatureList items={insight.bullets} />
                 </Card>
               </Reveal>
@@ -128,10 +123,8 @@ export default function HomePage() {
       <Section className={styles.dividerSection} id="sample-report">
         <Container>
           <Reveal>
-            <Card className={styles.sampleCard}>
-              <h2 className="text-3xl font-bold text-text">
-                Sample Report Preview
-              </h2>
+            <Card className={styles.sampleCard} neumorphic>
+              <h2 className="heading-lg text-text">Sample Report Preview</h2>
               <p className="mt-3 max-w-2xl text-sm text-muted">
                 Download the sample report to see the structure, scorecards, and
                 recommendation format we deliver.
@@ -156,21 +149,11 @@ export default function HomePage() {
           <div className={styles.caseStudyGrid}>
             {caseStudies.slice(0, 2).map((study, index) => (
               <Reveal key={study.slug} delay={index * 80}>
-                <Card interactive>
-                  <p className="text-xs font-semibold uppercase tracking-[0.08em] text-muted">
-                    {study.label}
-                  </p>
-                  <h3 className="mt-2 text-lg font-semibold text-text">
-                    {study.title}
-                  </h3>
-                  <p className="mt-2 text-sm text-muted">{study.summary}</p>
-                  <Link
-                    href={`/case-studies/${study.slug}`}
-                    className="mt-4 inline-block text-sm font-semibold no-underline"
-                  >
-                    Read case study →
-                  </Link>
-                </Card>
+                <InsightHighlight
+                  title={study.title}
+                  detail={study.summary}
+                  href={`/case-studies/${study.slug}`}
+                />
               </Reveal>
             ))}
           </div>
@@ -192,10 +175,8 @@ export default function HomePage() {
             subtitle="Practical notes from the field on cash, team throughput, and execution systems."
           />
           <FeaturedInsights posts={latestPosts} />
-          <Card className="mt-6">
-            <h3 className="text-lg font-semibold text-text">
-              Get the AR checklist
-            </h3>
+          <Card className="mt-6" neumorphic>
+            <h3 className="heading-md text-text">Get the AR checklist</h3>
             <p className="mt-2 text-sm text-muted">
               Use the one-page cadence to tighten collections without creating
               friction.

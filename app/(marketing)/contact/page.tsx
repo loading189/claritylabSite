@@ -58,7 +58,7 @@ export default function ContactPage({
         ) : null}
 
         <div className={styles.gridTwo}>
-          <Card title="Book Audit">
+          <Card title="Book Audit" neumorphic>
             <p className="mb-4 text-sm text-muted">
               Pick a time directly if booking is enabled.
             </p>
@@ -75,7 +75,7 @@ export default function ContactPage({
               </p>
             )}
           </Card>
-          <Card title="Direct contact">
+          <Card title="Direct contact" neumorphic>
             <p>
               Email:{' '}
               <a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>
@@ -105,7 +105,7 @@ export default function ContactPage({
             helperText="Not a fit for tax/legal advice or software shopping. Best fit: owners in trades/service businesses who want practical operational guidance."
             successMessage="Thanks — I’ll reply within 1 business day. If you want faster, book the call."
           />
-          <Card title="Contact form embed (optional)">
+          <Card title="Contact form embed (optional)" neumorphic>
             {runtimeConfig.featureFlags.isContactFormEnabled ? (
               <FormEmbed
                 src={runtimeConfig.forms.contactFormUrl}
@@ -123,7 +123,7 @@ export default function ContactPage({
 
         <StartIntakeSection where="contact" />
 
-        <Card className={styles.nextCard} title="Next step">
+        <Card className={styles.nextCard} title="Next step" neumorphic>
           <NextStepCTA
             title="Prefer to move now?"
             subtitle="Book your audit or review the sample deliverable before we talk."

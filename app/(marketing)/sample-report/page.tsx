@@ -1,13 +1,13 @@
 import { Metadata } from 'next';
 import { Card } from '@/components/Card';
 import { Container } from '@/components/Container';
-import { CountUp } from '@/components/CountUp';
 import { DataTable } from '@/components/DataTable';
 import { MiniMeter } from '@/components/MiniMeter';
 import { NextStepCTA } from '@/components/marketing/NextStepCTA';
 import { Reveal } from '@/components/Reveal';
 import { Section } from '@/components/Section';
 import { SectionHeader } from '@/components/marketing/SectionHeader';
+import { StatCard } from '@/components/marketing/StatCard';
 import styles from './page.module.css';
 
 export const metadata: Metadata = {
@@ -36,27 +36,9 @@ export default function SampleReportPage() {
 
         <Reveal delay={100}>
           <div className={styles.kpiGrid}>
-            <Card title="Total AR">
-              <CountUp
-                value={198700}
-                currency
-                className="text-2xl font-semibold text-text"
-              />
-            </Card>
-            <Card title="0–30 bucket">
-              <CountUp
-                value={112000}
-                currency
-                className="text-2xl font-semibold text-text"
-              />
-            </Card>
-            <Card title="DSO">
-              <CountUp
-                value={54}
-                suffix=" days"
-                className="text-2xl font-semibold text-text"
-              />
-            </Card>
+            <StatCard label="Total AR" value="$198,700" />
+            <StatCard label="0–30 bucket" value="$112,000" />
+            <StatCard label="DSO" value="54 days" />
           </div>
         </Reveal>
 
@@ -82,7 +64,7 @@ export default function SampleReportPage() {
 
           <div className={styles.reportStack}>
             <Reveal variant="fadeIn">
-              <Card className={styles.ctaBanner}>
+              <Card className={styles.ctaBanner} neumorphic>
                 <NextStepCTA
                   title="Want this for your business?"
                   subtitle="We can build this with your numbers in a focused audit."
@@ -97,6 +79,7 @@ export default function SampleReportPage() {
                 title="AR & cash flow"
                 className="scroll-mt-28"
                 interactive
+                neumorphic
                 id="ar-cashflow"
               >
                 <DataTable
@@ -126,6 +109,7 @@ export default function SampleReportPage() {
                 title="Technician productivity"
                 className="scroll-mt-28"
                 interactive
+                neumorphic
                 id="tech-productivity"
               >
                 <DataTable
@@ -157,6 +141,7 @@ export default function SampleReportPage() {
                 title="Workflow gaps"
                 className="scroll-mt-28"
                 interactive
+                neumorphic
                 id="workflow-gaps"
               >
                 <DataTable
@@ -176,7 +161,7 @@ export default function SampleReportPage() {
             </Reveal>
 
             <Reveal variant="scaleIn">
-              <Card className={styles.footerCard}>
+              <Card className={styles.footerCard} neumorphic>
                 <NextStepCTA
                   trackingEvent="sample_report_cta_click"
                   trackingPage="sample_report_footer"

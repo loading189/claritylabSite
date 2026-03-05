@@ -18,7 +18,7 @@ export function FeaturedInsights({ posts }: FeaturedInsightsProps) {
     <div className="mt-4 grid gap-4 md:grid-cols-3">
       {posts.map((post, index) => (
         <Reveal key={post.slug} delay={index * 70}>
-          <Card interactive>
+          <Card interactive neumorphic>
             <Badge>{post.tags[0]}</Badge>
             <h3 className="mt-3 text-lg font-semibold text-text">
               {post.title}

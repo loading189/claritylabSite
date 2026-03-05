@@ -55,7 +55,7 @@ export default function AuditPage() {
 
       <Section>
         <Container className={styles.gridTwo}>
-          <Card title="What you get">
+          <Card title="What you get" neumorphic>
             <FeatureList
               items={[
                 'A short diagnostic summary in plain English',
@@ -65,7 +65,7 @@ export default function AuditPage() {
               ]}
             />
           </Card>
-          <Card title="Typical focus areas">
+          <Card title="Typical focus areas" neumorphic>
             <FeatureList
               items={[
                 'AR aging and collection speed',
@@ -75,14 +75,14 @@ export default function AuditPage() {
               ]}
             />
           </Card>
-          <Card title="Who it’s for">
+          <Card title="Who it’s for" neumorphic>
             <FeatureList items={whoItsFor} />
           </Card>
-          <Card title="Not a fit (yet)">
+          <Card title="Not a fit (yet)" neumorphic>
             <FeatureList items={notAFit} />
           </Card>
 
-          <Card title="Get the AR checklist">
+          <Card title="Get the AR checklist" neumorphic>
             <p className="text-sm text-muted">
               Want a practical AR cadence before the full audit? Start with the
               one-page checklist and run it with your office lead this week.

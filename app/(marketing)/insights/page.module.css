@@ -3,11 +3,12 @@
 }
 
 .heroCard {
-  border-radius: 1rem;
-  border: 1px solid hsl(var(--border));
-  background: hsl(var(--surface));
+  border-radius: var(--radius-card);
   padding: 2rem;
-  box-shadow: var(--shadow-soft);
+}
+
+.inlineCta {
+  margin-top: 1.25rem;
 }
 
 .featuredSection {

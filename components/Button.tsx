@@ -15,11 +15,11 @@ type ButtonProps = {
 
 const variants = {
   primary:
-    'border border-accent bg-accent text-black shadow-soft hover:-translate-y-px hover:shadow-raised hover:shadow-accent/30 active:translate-y-px active:shadow-pressed',
+    'border border-accent bg-accent text-black shadow-soft hover:-translate-y-px hover:border-accent2/70 hover:shadow-raised active:translate-y-px active:shadow-pressed',
   secondary:
-    'border border-white/20 bg-white text-black shadow-soft hover:-translate-y-px hover:bg-accent2 hover:shadow-raised active:translate-y-px active:shadow-pressed',
+    'border border-accent2/45 bg-accent2/15 text-white shadow-soft hover:-translate-y-px hover:bg-accent2/25 hover:shadow-raised active:translate-y-px active:shadow-pressed',
   ghost:
-    'border border-border bg-surface text-white shadow-soft hover:-translate-y-px hover:border-accent/60 hover:bg-surfaceRaised hover:text-accent2 hover:shadow-raised active:translate-y-px active:shadow-pressed',
+    'border border-border bg-surface text-white shadow-soft hover:-translate-y-px hover:border-accent2/60 hover:bg-surfaceRaised hover:text-accent2 hover:shadow-raised active:translate-y-px active:shadow-pressed',
 };
 
 export function Button({

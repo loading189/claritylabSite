@@ -18,11 +18,11 @@ export function NextStepCTA({
 }: NextStepCTAProps) {
   return (
     <div className={className}>
-      <h2 className="text-3xl font-semibold text-text">{title}</h2>
+      <h2 className="heading-md text-text">{title}</h2>
       <p className="mt-3 max-w-2xl text-sm text-muted sm:text-base">
         {subtitle}
       </p>
-      <div className="mt-5 flex flex-col gap-3 sm:flex-row">
+      <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
         <Button
           href={siteConfig.calendlyUrl || '/contact'}
           trackingEvent={trackingEvent}
@@ -32,6 +32,9 @@ export function NextStepCTA({
         </Button>
         <Button href="/sample-report" variant="ghost">
           View Sample Report
+        </Button>
+        <Button href="/resources/ar-recovery-checklist" variant="secondary">
+          Get the AR Checklist
         </Button>
       </div>
     </div>

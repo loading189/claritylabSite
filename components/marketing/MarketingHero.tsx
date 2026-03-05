@@ -29,13 +29,13 @@ export function MarketingHero({
     <div className={className}>
       {withBackdrop ? <HeroBackdrop /> : null}
       {badge ? <Badge>{badge}</Badge> : null}
-      <h1 className="relative mt-4 text-balance text-[clamp(2rem,5vw,4.5rem)] font-bold leading-[1.03] text-text">
+      <h1 className="heading-xl relative mt-4 text-balance font-bold text-text">
         {title}
       </h1>
       <p className="mt-5 max-w-2xl text-base text-muted sm:text-lg">
         {description}
       </p>
-      <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+      <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
         <Button
           href={siteConfig.calendlyUrl || '/contact'}
           trackingEvent={trackingEvent}
@@ -45,6 +45,9 @@ export function MarketingHero({
         </Button>
         <Button href="/sample-report" variant="ghost">
           View Sample Report
+        </Button>
+        <Button href="/resources/ar-recovery-checklist" variant="secondary">
+          Get the AR Checklist
         </Button>
       </div>
       {children}

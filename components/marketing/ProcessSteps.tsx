@@ -15,7 +15,7 @@ export function ProcessSteps({ steps }: ProcessStepsProps) {
     <div className="mt-6 grid gap-4 md:grid-cols-4">
       {steps.map((item, index) => (
         <Reveal key={item.step} delay={index * 60}>
-          <Card interactive>
+          <Card interactive neumorphic>
             <p className="text-xs font-semibold uppercase tracking-[0.14em] text-accent">
               Step {index + 1}
             </p>
