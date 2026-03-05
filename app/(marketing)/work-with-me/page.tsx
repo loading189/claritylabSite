@@ -3,9 +3,10 @@ import { Container } from '@/components/Container';
 import { OfferCard } from '@/components/OfferCard';
 import { Reveal } from '@/components/Reveal';
 import { Section } from '@/components/Section';
-import { TrustList } from '@/components/TrustList';
 import { StartIntakeSection } from '@/components/StartIntakeSection';
+import { TrustList } from '@/components/TrustList';
 import { siteConfig } from '@/content/site';
+import styles from './page.module.css';
 
 export const metadata: Metadata = {
   title: 'Work With Me',
@@ -112,7 +113,7 @@ export default function WorkWithMePage() {
   return (
     <>
       <Section>
-        <Container className="max-w-5xl">
+        <Container className={styles.heroContainer}>
           <Reveal>
             <h1 className="text-4xl font-semibold tracking-tight text-text">
               Work With Me
@@ -129,8 +130,8 @@ export default function WorkWithMePage() {
         </Container>
       </Section>
 
-      <Section className="bg-surface">
-        <Container className="grid gap-5 lg:grid-cols-3">
+      <Section className={styles.offerSection}>
+        <Container className={styles.offerGrid}>
           {offers.map((offer) => (
             <OfferCard key={offer.id} {...offer} />
           ))}
@@ -138,7 +139,7 @@ export default function WorkWithMePage() {
       </Section>
 
       <Section>
-        <Container className="max-w-3xl">
+        <Container className={styles.trustContainer}>
           <TrustList />
           <StartIntakeSection where="work_with_me" />
         </Container>

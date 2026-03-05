@@ -1,14 +1,14 @@
 import { Metadata } from 'next';
-import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
 import { Container } from '@/components/Container';
 import { CountUp } from '@/components/CountUp';
 import { DataTable } from '@/components/DataTable';
 import { MiniMeter } from '@/components/MiniMeter';
+import { NextStepCTA } from '@/components/marketing/NextStepCTA';
 import { Reveal } from '@/components/Reveal';
 import { Section } from '@/components/Section';
-import { SectionHeader } from '@/components/SectionHeader';
-import { siteConfig } from '@/content/site';
+import { SectionHeader } from '@/components/marketing/SectionHeader';
+import styles from './page.module.css';
 
 export const metadata: Metadata = {
   title: 'Sample Report',
@@ -35,7 +35,7 @@ export default function SampleReportPage() {
         </Reveal>
 
         <Reveal delay={100}>
-          <div className="mt-6 grid gap-4 sm:grid-cols-3">
+          <div className={styles.kpiGrid}>
             <Card title="Total AR">
               <CountUp
                 value={198700}
@@ -60,9 +60,9 @@ export default function SampleReportPage() {
           </div>
         </Reveal>
 
-        <div className="mt-8 grid gap-6 lg:grid-cols-[220px_minmax(0,1fr)]">
-          <aside className="hidden lg:block">
-            <div className="sticky top-28 rounded-card border border-border bg-surface p-4 shadow-soft">
+        <div className={styles.contentLayout}>
+          <aside className={styles.sectionsNavWrap}>
+            <div className={styles.sectionsNav}>
               <p className="text-xs font-semibold uppercase tracking-[0.12em] text-muted">
                 Sections
               </p>
@@ -71,7 +71,7 @@ export default function SampleReportPage() {
                   <a
                     key={section.id}
                     href={`#${section.id}`}
-                    className="block rounded-button px-2 py-1.5 text-sm text-muted no-underline hover:bg-surfaceRaised hover:text-text"
+                    className={styles.sectionLink}
                   >
                     {section.label}
                   </a>
@@ -80,22 +80,16 @@ export default function SampleReportPage() {
             </div>
           </aside>
 
-          <div className="space-y-6">
+          <div className={styles.reportStack}>
             <Reveal variant="fadeIn">
-              <div className="rounded-card border border-accent/25 bg-gradient-subtle p-4 shadow-soft">
-                <p className="text-sm text-text">
-                  Want this for your business? We can build this with your
-                  numbers in a focused audit.
-                </p>
-                <Button
-                  href={siteConfig.calendlyUrl || '/contact'}
-                  className="mt-3"
+              <Card className={styles.ctaBanner}>
+                <NextStepCTA
+                  title="Want this for your business?"
+                  subtitle="We can build this with your numbers in a focused audit."
                   trackingEvent="sample_report_cta_click"
-                  trackingProps={{ page: 'sample_report' }}
-                >
-                  Book Audit
-                </Button>
-              </div>
+                  trackingPage="sample_report"
+                />
+              </Card>
             </Reveal>
 
             <Reveal>
@@ -120,7 +114,7 @@ export default function SampleReportPage() {
                   <MiniMeter label="31–60 days" value={24} tone="accent2" />
                   <MiniMeter label="61–90 days" value={11} tone="warn" />
                 </div>
-                <p className="mt-4 rounded-input border border-warn/30 bg-warn/10 px-3 py-2 text-sm text-text">
+                <p className={styles.warnNote}>
                   DSO: 54 days. Recommendation: launch a 90-day collections
                   sprint and tighten payment terms.
                 </p>
@@ -151,7 +145,7 @@ export default function SampleReportPage() {
                     tone="accent2"
                   />
                 </div>
-                <p className="mt-4 rounded-input border border-accent2/40 bg-accent2/10 px-3 py-2 text-sm text-text">
+                <p className={styles.accentNote}>
                   Recommendation: close dispatch gaps and track first-time-fix
                   consistency weekly.
                 </p>
@@ -174,7 +168,7 @@ export default function SampleReportPage() {
                     ['Follow-up cadence', 'Inconsistent'],
                   ]}
                 />
-                <p className="mt-4 rounded-input border border-danger/25 bg-danger/10 px-3 py-2 text-sm text-text">
+                <p className={styles.dangerNote}>
                   Recommendation: standardize closeout checklist and automate
                   post-job follow-up triggers.
                 </p>
@@ -182,27 +176,12 @@ export default function SampleReportPage() {
             </Reveal>
 
             <Reveal variant="scaleIn">
-              <div className="rounded-card border border-border bg-surface p-8 shadow-soft">
-                <SectionHeader
-                  title="Next step: get this for your business"
-                  subtitle="Bring your data, and you’ll get a deliverable-driven audit with clear next actions and optional implementation support."
+              <Card className={styles.footerCard}>
+                <NextStepCTA
+                  trackingEvent="sample_report_cta_click"
+                  trackingPage="sample_report_footer"
                 />
-                <div className="mt-5 flex flex-col gap-3 sm:flex-row">
-                  <Button
-                    href={siteConfig.calendlyUrl || '/contact'}
-                    trackingEvent="sample_report_cta_click"
-                    trackingProps={{ page: 'sample_report_footer' }}
-                  >
-                    Book Audit
-                  </Button>
-                  <Button href="/insights" variant="ghost">
-                    Read Insights
-                  </Button>
-                  <Button href="/audit" variant="secondary">
-                    See Audit Details
-                  </Button>
-                </div>
-              </div>
+              </Card>
             </Reveal>
           </div>
         </div>

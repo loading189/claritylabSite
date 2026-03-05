@@ -1,15 +1,15 @@
 import { Metadata } from 'next';
-import { Badge } from '@/components/Badge';
-import { Button } from '@/components/Button';
 import { CalloutCTA } from '@/components/CalloutCTA';
 import { Card } from '@/components/Card';
 import { Container } from '@/components/Container';
 import { FeatureList } from '@/components/FeatureList';
 import { FormEmbed } from '@/components/FormEmbed';
 import { LeadForm } from '@/components/LeadForm';
+import { MarketingHero } from '@/components/marketing/MarketingHero';
 import { Section } from '@/components/Section';
 import { runtimeConfig } from '@/content/runtime';
 import { notAFit, siteConfig, whoItsFor } from '@/content/site';
+import styles from './page.module.css';
 
 export const metadata: Metadata = {
   title: 'Audit',
@@ -21,33 +21,19 @@ export default function AuditPage() {
   return (
     <>
       <Section>
-        <Container className="max-w-4xl">
-          <Badge>Audit Offer</Badge>
-          <h1 className="mt-4 text-balance text-[clamp(2rem,5vw,3.4rem)] font-semibold tracking-tight text-text">
-            Know exactly where your cash and capacity are leaking.
-          </h1>
-          <p className="mt-4 text-lg text-muted">
-            The Clarity Labs Audit is a focused review of your key operating and
-            financial signals, designed for service trade owners who need better
-            decisions now.
-          </p>
-          <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-            <Button
-              href={siteConfig.calendlyUrl || '/contact'}
-              trackingEvent="audit_cta_click"
-              trackingProps={{ page: 'audit' }}
-            >
-              Book Audit
-            </Button>
-            <Button href="/sample-report" variant="ghost">
-              View Sample Report
-            </Button>
-          </div>
+        <Container className={styles.heroContainer}>
+          <MarketingHero
+            badge="Audit Offer"
+            title="Know exactly where your cash and capacity are leaking."
+            description="The Clarity Labs Audit is a focused review of your key operating and financial signals, designed for service trade owners who need better decisions now."
+            trackingEvent="audit_cta_click"
+            trackingPage="audit"
+          />
         </Container>
       </Section>
 
       <Section>
-        <Container className="grid gap-4 md:grid-cols-2">
+        <Container className={styles.gridTwo}>
           <Card title="What you get">
             <FeatureList
               items={[
@@ -78,7 +64,7 @@ export default function AuditPage() {
       </Section>
 
       <Section>
-        <Container className="max-w-4xl space-y-4">
+        <Container className={styles.formStack}>
           <LeadForm
             source="audit_request"
             title="Request an Audit"

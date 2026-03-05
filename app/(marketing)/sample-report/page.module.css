@@ -1,0 +1,94 @@
+.kpiGrid {
+  margin-top: 1.5rem;
+  display: grid;
+  gap: 1rem;
+}
+
+.contentLayout {
+  margin-top: 2rem;
+  display: grid;
+  gap: 1.5rem;
+}
+
+.sectionsNavWrap {
+  display: none;
+}
+
+.sectionsNav {
+  position: sticky;
+  top: 7rem;
+  border-radius: 1rem;
+  border: 1px solid hsl(var(--border));
+  background: hsl(var(--surface));
+  padding: 1rem;
+  box-shadow: var(--shadow-soft);
+}
+
+.sectionLink {
+  display: block;
+  border-radius: 0.75rem;
+  padding: 0.375rem 0.5rem;
+  text-decoration: none;
+  color: hsl(var(--muted));
+}
+
+.sectionLink:hover {
+  background: hsl(var(--surface-raised));
+  color: hsl(var(--text));
+}
+
+.reportStack {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.ctaBanner {
+  border-color: hsl(var(--accent) / 0.25);
+  background: var(--gradient-subtle);
+}
+
+.warnNote,
+.accentNote,
+.dangerNote {
+  margin-top: 1rem;
+  border-radius: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  color: hsl(var(--text));
+}
+
+.warnNote {
+  border: 1px solid hsl(var(--warn) / 0.3);
+  background: hsl(var(--warn) / 0.1);
+}
+
+.accentNote {
+  border: 1px solid hsl(var(--accent-2) / 0.4);
+  background: hsl(var(--accent-2) / 0.1);
+}
+
+.dangerNote {
+  border: 1px solid hsl(var(--danger) / 0.25);
+  background: hsl(var(--danger) / 0.1);
+}
+
+.footerCard {
+  border: 1px solid hsl(var(--border));
+  background: hsl(var(--surface));
+}
+
+@media (min-width: 640px) {
+  .kpiGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .contentLayout {
+    grid-template-columns: 220px minmax(0, 1fr);
+  }
+
+  .sectionsNavWrap {
+    display: block;
+  }
+}

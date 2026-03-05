@@ -4,6 +4,7 @@ import { Card } from '@/components/Card';
 import { Container } from '@/components/Container';
 import { FeatureList } from '@/components/FeatureList';
 import { Section } from '@/components/Section';
+import styles from './page.module.css';
 
 export const metadata: Metadata = {
   title: 'Thanks — next steps',
@@ -14,16 +15,13 @@ export const metadata: Metadata = {
 export default function ThanksPage() {
   return (
     <Section>
-      <Container className="max-w-4xl">
-        <Card
-          className="border-accent/40 bg-gradient-subtle"
-          title="You’re booked"
-        >
+      <Container className={styles.container}>
+        <Card className={styles.heroCard} title="You’re booked">
           <p className="max-w-2xl text-sm text-muted sm:text-base">
             Thanks — next steps are simple. Bring the items below so we can
             focus the call on fast, practical wins.
           </p>
-          <div className="mt-6 grid gap-4 md:grid-cols-2">
+          <div className={styles.gridTwo}>
             <Card title="Prepare these before the call">
               <FeatureList
                 items={[
@@ -44,7 +42,7 @@ export default function ThanksPage() {
               />
             </Card>
           </div>
-          <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+          <div className={styles.actions}>
             <Button href="/">Back to home</Button>
             <Button href="/sample-report" variant="ghost">
               View Sample Report

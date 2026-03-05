@@ -4,11 +4,12 @@ import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
 import { Container } from '@/components/Container';
 import { FeatureList } from '@/components/FeatureList';
+import { NextStepCTA } from '@/components/marketing/NextStepCTA';
 import { Section } from '@/components/Section';
 import { TrackOnMount } from '@/components/TrackOnMount';
 import { TrustList } from '@/components/TrustList';
 import { caseStudies } from '@/content/caseStudies';
-import { siteConfig } from '@/content/site';
+import styles from './page.module.css';
 
 type Props = { params: { slug: string } };
 
@@ -40,14 +41,10 @@ export default function CaseStudyDetailPage({ params }: Props) {
     <>
       <TrackOnMount eventName="case_study_view" props={{ slug: study.slug }} />
       <Section>
-        <Container className="max-w-5xl">
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-            {study.label}
-          </p>
-          <h1 className="mt-2 text-4xl font-semibold tracking-tight text-slate-900">
-            {study.title}
-          </h1>
-          <p className="mt-3 max-w-3xl text-slate-700">{study.summary}</p>
+        <Container className={styles.heroContainer}>
+          <p className={styles.label}>{study.label}</p>
+          <h1 className={styles.title}>{study.title}</h1>
+          <p className={styles.summary}>{study.summary}</p>
 
           <Card title="Snapshot" className="mt-8">
             <div className="grid gap-2 text-sm sm:grid-cols-2">
@@ -74,8 +71,8 @@ export default function CaseStudyDetailPage({ params }: Props) {
         </Container>
       </Section>
 
-      <Section className="bg-white">
-        <Container className="grid gap-4 md:grid-cols-3">
+      <Section>
+        <Container className={styles.threeColGrid}>
           <Card title="Symptoms">
             <FeatureList items={study.symptoms} />
           </Card>
@@ -89,11 +86,11 @@ export default function CaseStudyDetailPage({ params }: Props) {
       </Section>
 
       <Section>
-        <Container className="max-w-5xl">
+        <Container className={styles.heroContainer}>
           <Card title="Results (Sample metrics)">
             <table className="w-full text-left text-sm">
               <thead>
-                <tr className="text-slate-500">
+                <tr className={styles.tableHeadRow}>
                   <th className="pb-2">Metric</th>
                   <th className="pb-2">Before</th>
                   <th className="pb-2">After</th>
@@ -101,7 +98,7 @@ export default function CaseStudyDetailPage({ params }: Props) {
               </thead>
               <tbody>
                 {study.metrics.map((item) => (
-                  <tr key={item.metric} className="border-t border-slate-100">
+                  <tr key={item.metric} className={styles.tableBodyRow}>
                     <td className="py-2">{item.metric}</td>
                     <td className="py-2">{item.before}</td>
                     <td className="py-2">{item.after}</td>
@@ -117,10 +114,10 @@ export default function CaseStudyDetailPage({ params }: Props) {
         </Container>
       </Section>
 
-      <Section className="bg-white">
-        <Container className="grid max-w-5xl gap-4 md:grid-cols-2">
+      <Section>
+        <Container className={styles.twoColGrid}>
           <Card title="How this engagement started">
-            <p className="text-sm text-slate-700">
+            <p className="text-sm text-muted">
               This team started with a short Clarity Call, then an audit to
               identify the operational and cash flow issues creating the most
               drag.
@@ -133,35 +130,14 @@ export default function CaseStudyDetailPage({ params }: Props) {
         </Container>
       </Section>
 
-      <Section className="bg-brand-900">
-        <Container className="flex flex-col gap-3 py-10 text-white sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h2 className="text-2xl font-semibold">
-              Want this level of clarity in your business?
-            </h2>
-            <p className="mt-1 text-sm text-brand-100">
-              No pitch • Just clarity. Start with a quick call and a sample
-              report review.
-            </p>
-          </div>
-          <div className="flex flex-col gap-2 sm:flex-row">
-            <Button
-              href={siteConfig.calendlyUrl || '/contact'}
-              variant="secondary"
-              className="bg-white text-brand-900 hover:bg-brand-100"
-              trackingEvent="booking_click"
-              trackingProps={{ page: 'case_study' }}
-            >
-              Book Audit
-            </Button>
-            <Button
-              href="/sample-report"
-              variant="ghost"
-              className="border-white text-white hover:bg-brand-800"
-            >
-              View Sample Report
-            </Button>
-          </div>
+      <Section className={styles.ctaSection}>
+        <Container className={styles.ctaContainer}>
+          <NextStepCTA
+            title="Want this level of clarity in your business?"
+            subtitle="No pitch • Just clarity. Start with a quick call and a sample report review."
+            trackingEvent="booking_click"
+            trackingPage="case_study"
+          />
         </Container>
       </Section>
     </>

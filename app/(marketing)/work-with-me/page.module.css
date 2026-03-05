@@ -1,0 +1,22 @@
+.heroContainer {
+  max-width: 64rem;
+}
+
+.offerSection {
+  background: hsl(var(--surface));
+}
+
+.offerGrid {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.trustContainer {
+  max-width: 48rem;
+}
+
+@media (min-width: 1024px) {
+  .offerGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}

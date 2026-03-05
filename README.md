@@ -40,6 +40,24 @@ If you want self-hosted fonts later:
 2. Switch `app/layout.tsx` to `next/font/local` with the same CSS variables (`--font-sans`, `--font-display`, `--font-mono`).
 3. Keep `tailwind.config.ts` font family entries unchanged.
 
+## Marketing Architecture
+
+- **Marketing routes** live under `app/(marketing)` so public URLs stay unchanged while marketing code is grouped separately (`/`, `/audit`, `/sample-report`, `/insights`, `/contact`, `/thanks`, `/work-with-me`, `/case-studies/[slug]`).
+- **Reusable marketing UI components** live in `components/marketing` (hero, section headers, process/problem/findings blocks, featured insights, and standardized CTA blocks).
+- **CSS Modules vs Tailwind utilities**:
+  - Use page-level CSS Modules for page-specific layout composition, section dividers, background treatments, and spacing that repeats inside a page.
+  - Use Tailwind utility classes for semantic typography, responsive behavior, and one-off visual tweaks inside component markup.
+  - Keep color, spacing, and shadows aligned to design tokens in `app/globals.css` and Tailwind theme keys.
+- **Naming conventions**:
+  - Page files: `app/(marketing)/<route>/page.tsx` + `page.module.css`.
+  - Components: `components/marketing/<PascalCase>.tsx` with explicit, purpose-based names (`ProcessSteps`, `NextStepCTA`, etc.).
+  - CSS module classes should describe layout intent (`heroContainer`, `gridTwo`, `ctaSection`) not visual trivia.
+- **Avoiding duplication**:
+  - Reuse `MarketingHero` for top-of-page hero blocks with standardized CTA labels.
+  - Reuse `NextStepCTA` + `CalloutCTA` for end-of-page conversion blocks instead of ad-hoc button groups.
+  - Reuse `ProblemGrid`, `ProcessSteps`, `FindingsStrip`, and `FeaturedInsights` before introducing new repeated markup.
+  - Keep marketing-only refactors scoped to `app/(marketing)` and `components/marketing` unless shared primitives truly need changes.
+
 ## Integrations
 
 All integrations are configured through `content/runtime.ts` and server env vars.

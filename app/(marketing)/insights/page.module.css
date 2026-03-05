@@ -1,0 +1,15 @@
+.container {
+  max-width: 64rem;
+}
+
+.heroCard {
+  border-radius: 1rem;
+  border: 1px solid hsl(var(--border));
+  background: hsl(var(--surface));
+  padding: 2rem;
+  box-shadow: var(--shadow-soft);
+}
+
+.featuredSection {
+  margin-top: 2.5rem;
+}
