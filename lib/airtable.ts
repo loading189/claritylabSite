@@ -67,3 +67,21 @@ export async function upsertLead(lead: NormalizedLead) {
     throw new Error(`Airtable create failed: ${createResponse.status}`);
   }
 }
+
+export async function createScanDiagnostic(record: Record<string, unknown>) {
+  const tableName = process.env.AIRTABLE_SCAN_TABLE || 'Scan Diagnostics';
+  if (!hasAirtable) {
+    console.log('Scan capture fallback (no Airtable configured):', record);
+    return;
+  }
+
+  const response = await fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${encodeURIComponent(tableName)}`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({ fields: record }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Airtable scan create failed: ${response.status}`);
+  }
+}

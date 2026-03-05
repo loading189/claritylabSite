@@ -184,3 +184,12 @@ curl -X POST http://localhost:3000/api/resources/request \
 - Confirm signed download URLs expire and regenerate.
 - Verify reduced-motion preference disables heavy transforms/animations.
 - Check `/dev/status` for auth/storage/files table/resend states.
+
+## Clarity Scan lead screening
+
+- Public marketing route: `/scan` (client-side 6-step diagnostic wizard).
+- Submission endpoint: `POST /api/scan/submit` with built-in validation and in-memory rate limiting.
+- Optional integrations are env-gated so scan submissions never crash marketing pages:
+  - Airtable persistence: `AIRTABLE_API_KEY`, `AIRTABLE_BASE_ID`, `AIRTABLE_SCAN_TABLE`
+  - Email notifications: `RESEND_API_KEY`, `EMAIL_FROM`, `OWNER_EMAIL`
+- `utm_source` is normalized to one of: `direct`, `business_card_qr`, `linkedin`, `google`, `local`.

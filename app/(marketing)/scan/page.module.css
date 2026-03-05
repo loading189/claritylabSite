@@ -1,0 +1,9 @@
+.wrap {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.lead {
+  max-width: 48rem;
+  color: var(--color-muted);
+}

@@ -19,11 +19,11 @@ export const metadata: Metadata = {
 
 const actions = [
   {
-    title: 'Book Audit',
+    title: 'Start Diagnostic',
     description:
       'Best first step if you want a focused review of cash, capacity, and execution leaks.',
-    href: siteConfig.calendlyUrl || '/contact',
-    event: 'start_here_book_click',
+    href: '/scan',
+    event: 'start_here_scan_click',
   },
   {
     title: 'View Sample Report',

@@ -58,22 +58,32 @@ export default function ContactPage({
         ) : null}
 
         <div className={styles.gridTwo}>
-          <Card title="Book Audit" neumorphic>
+          <Card title="Start Diagnostic" neumorphic>
             <p className="mb-4 text-sm text-muted">
-              Pick a time directly if booking is enabled.
+              Run the 2-minute Clarity Scan first. You can book directly
+              afterward.
+            </p>
+            <Button
+              href="/scan"
+              trackingEvent="scan_cta_click"
+              trackingProps={{ page: 'contact_primary' }}
+            >
+              Start Diagnostic
+            </Button>
+            <p className="mt-3 text-xs text-muted">
+              Primary path: scan first, then receive next-step guidance.
             </p>
             {runtimeConfig.featureFlags.isBookingEnabled ? (
-              <iframe
-                src={runtimeConfig.booking.calendlyUrl}
-                title="Calendly booking"
-                className="h-[620px] w-full rounded-lg border border-border"
-                loading="lazy"
-              />
-            ) : (
-              <p className="text-sm text-muted">
-                Set NEXT_PUBLIC_CALENDLY_URL to enable the embedded calendar.
-              </p>
-            )}
+              <Button
+                href={runtimeConfig.booking.calendlyUrl}
+                variant="ghost"
+                className="mt-3"
+                trackingEvent="booking_click"
+                trackingProps={{ page: 'contact_secondary' }}
+              >
+                Book Audit (secondary)
+              </Button>
+            ) : null}
           </Card>
           <Card title="Direct contact" neumorphic>
             <p>
