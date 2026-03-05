@@ -89,3 +89,32 @@ export async function sendReportReadyNotification(params: { to: string }) {
     html: `<p>Your Clarity report is now ready in your portal.</p><p><a href="${siteUrl}/client/reports">View your report</a></p><p>Next step: book your review call.</p>`,
   });
 }
+
+export async function sendScanNotifications(params: {
+  ownerEmail?: string;
+  userEmail: string;
+  name?: string;
+  score: number;
+  tier: string;
+  qualified: boolean;
+  primarySignal: string;
+}) {
+  const ownerEmail = params.ownerEmail || process.env.OWNER_EMAIL;
+
+  const ownerPromise = ownerEmail
+    ? sendEmail({
+        to: ownerEmail,
+        subject: `New Clarity Scan: ${params.userEmail} (${params.tier})`,
+        html: `<p>New scan submission received.</p><ul><li>Name: ${params.name || 'Unknown'}</li><li>Email: ${params.userEmail}</li><li>Score: ${params.score}</li><li>Tier: ${params.tier}</li><li>Primary signal: ${params.primarySignal}</li><li>Qualified: ${params.qualified ? 'Yes' : 'No'}</li></ul>`,
+      })
+    : Promise.resolve({ delivered: false });
+
+  const userPromise = sendEmail({
+    to: params.userEmail,
+    subject: 'Your Clarity Scan result',
+    html: `<p>Thanks for running the Clarity Scan.</p><p>Your current result: <strong>${params.tier}</strong> (score ${params.score}).</p><p>Primary signal: ${params.primarySignal}.</p><p>We will follow up with tailored next steps.</p>`,
+  });
+
+  const [owner, user] = await Promise.all([ownerPromise, userPromise]);
+  return { owner, user };
+}

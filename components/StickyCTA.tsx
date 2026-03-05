@@ -7,12 +7,13 @@ import { track } from '@/lib/track';
 export function StickyCTA() {
   const pathname = usePathname();
   const isMarketingStickyRoute =
-    pathname === '/audit' || pathname === '/sample-report';
-  const hasPrimary = runtimeConfig.featureFlags.isBookingEnabled;
+    pathname === '/audit' ||
+    pathname === '/sample-report' ||
+    pathname === '/contact';
+  const hasPrimary = true;
   const hasEmail = Boolean(runtimeConfig.site.email);
   const hasPhone = runtimeConfig.site.hasPhone;
-  const eventName =
-    pathname === '/audit' ? 'audit_cta_click' : 'sample_report_cta_click';
+  const eventName = 'scan_cta_click';
 
   if (!isMarketingStickyRoute || (!hasPrimary && !hasEmail && !hasPhone)) {
     return null;
@@ -25,11 +26,11 @@ export function StickyCTA() {
         <div className="sticky-cta-shell mx-auto flex max-w-3xl items-center gap-2 rounded-card border border-border bg-surface/90 p-2 shadow-raised backdrop-blur-xl">
           {hasPrimary ? (
             <a
-              href={runtimeConfig.booking.calendlyUrl}
+              href="/scan"
               className="motion-safe-transform inline-flex flex-1 items-center justify-center rounded-button border border-accent/30 bg-accent px-3 py-2 text-sm font-semibold text-black no-underline shadow-soft transition duration-200 hover:-translate-y-px hover:shadow-raised active:translate-y-px active:shadow-pressed"
               onClick={() => track(eventName, { page: pathname })}
             >
-              Book Audit
+              Start Diagnostic
             </a>
           ) : null}
           {hasPhone ? (
