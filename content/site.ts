@@ -19,6 +19,7 @@ export const navItems = [
   { label: 'Start Here', href: '/start-here' },
   { label: 'Insights', href: '/insights' },
   { label: 'Case Studies', href: '/case-studies' },
+  { label: 'Scan', href: '/scan' },
   { label: 'Audit', href: '/audit' },
 ];
 

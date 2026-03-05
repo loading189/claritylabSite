@@ -43,7 +43,7 @@ export default function ThanksPage() {
             </Card>
           </div>
           <div className={styles.actions}>
-            <Button href="/audit">Book Audit</Button>
+            <Button href="/scan">Start Diagnostic</Button>
             <Button href="/sample-report" variant="ghost">
               View Sample Report
             </Button>

@@ -1,8 +1,8 @@
+import Link from 'next/link';
 import { ReactNode } from 'react';
 import { Badge } from '@/components/Badge';
 import { Button } from '@/components/Button';
 import { HeroBackdrop } from '@/components/HeroBackdrop';
-import { siteConfig } from '@/content/site';
 
 type MarketingHeroProps = {
   badge?: string;
@@ -20,7 +20,7 @@ export function MarketingHero({
   title,
   description,
   withBackdrop = false,
-  trackingEvent = 'booking_click',
+  trackingEvent = 'scan_click',
   trackingPage = 'marketing_hero',
   children,
   className,
@@ -37,11 +37,11 @@ export function MarketingHero({
       </p>
       <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
         <Button
-          href={siteConfig.calendlyUrl || '/contact'}
+          href="/scan"
           trackingEvent={trackingEvent}
           trackingProps={{ page: trackingPage }}
         >
-          Book Audit
+          Start Diagnostic
         </Button>
         <Button href="/sample-report" variant="ghost">
           View Sample Report
@@ -50,6 +50,14 @@ export function MarketingHero({
           Get the AR Checklist
         </Button>
       </div>
+      <p className="text-xs text-muted">
+        Explore more: <Link href="/scan">Diagnostic</Link> ·{' '}
+        <Link href="/case-studies">Case Studies</Link> ·{' '}
+        <Link href="/sample-report">Sample Report</Link> ·{' '}
+        <Link href="/insights">Insights</Link> ·{' '}
+        <Link href="/resources/ar-recovery-checklist">AR Checklist</Link> ·{' '}
+        <Link href="/start-here">Start Here</Link>
+      </p>
       {children}
     </div>
   );

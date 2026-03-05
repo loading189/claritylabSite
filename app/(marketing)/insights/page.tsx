@@ -39,7 +39,7 @@ export default function InsightsPage() {
           <Card className={styles.inlineCta} neumorphic>
             <NextStepCTA
               title="Need direct guidance?"
-              subtitle="Book your audit, review the sample report, or start with the AR checklist."
+              subtitle="Start your diagnostic, review the sample report, or start with the AR checklist."
               trackingPage="insights_inline"
             />
           </Card>

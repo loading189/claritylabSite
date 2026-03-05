@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { navItems, siteConfig } from '@/content/site';
-import { runtimeConfig } from '@/content/runtime';
 import { Button } from './Button';
 import { Container } from './Container';
 
@@ -55,16 +54,14 @@ export function Header() {
               </Link>
             );
           })}
-          {runtimeConfig.featureFlags.isBookingEnabled ? (
-            <Button
-              href={siteConfig.calendlyUrl}
-              trackingEvent="booking_click"
-              trackingProps={{ page: 'header' }}
-              className="ml-2"
-            >
-              Book Audit
-            </Button>
-          ) : null}
+          <Button
+            href="/scan"
+            trackingEvent="scan_click"
+            trackingProps={{ page: 'header' }}
+            className="ml-2"
+          >
+            Start Diagnostic
+          </Button>
         </nav>
       </Container>
 
@@ -84,15 +81,13 @@ export function Header() {
                 {item.label}
               </Link>
             ))}
-            {runtimeConfig.featureFlags.isBookingEnabled ? (
-              <Button
-                href={siteConfig.calendlyUrl}
-                trackingEvent="booking_click"
-                trackingProps={{ page: 'header_mobile' }}
-              >
-                Book Audit
-              </Button>
-            ) : null}
+            <Button
+              href="/scan"
+              trackingEvent="scan_click"
+              trackingProps={{ page: 'header_mobile' }}
+            >
+              Start Diagnostic
+            </Button>
           </Container>
         </div>
       </div>

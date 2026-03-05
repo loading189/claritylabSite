@@ -58,6 +58,15 @@ If you want self-hosted fonts later:
   - Reuse `ProblemGrid`, `ProcessSteps`, `FindingsStrip`, and `FeaturedInsights` before introducing new repeated markup.
   - Keep marketing-only refactors scoped to `app/(marketing)` and `components/marketing` unless shared primitives truly need changes.
 
+## Clarity Scan (Lead Screening)
+
+- Public route: `/scan` (interactive 6-step diagnostic).
+- Submission endpoint: `POST /api/scan/submit`.
+- Persistence is enabled when Airtable core vars + `AIRTABLE_DIAGNOSTICS_TABLE` are set.
+- Email delivery is enabled when Resend vars are set (`RESEND_API_KEY`, `EMAIL_FROM`).
+- Owner alerts use `DIAGNOSTIC_OWNER_EMAIL` with fallback to `OWNER_EMAIL` then `INTAKE_OWNER_EMAIL`.
+- If Airtable/Resend are not configured, submissions still return success and the flow stays available (`manual_delivery` fallback).
+
 ## Integrations
 
 All integrations are configured through `content/runtime.ts` and server env vars.

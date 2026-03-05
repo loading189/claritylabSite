@@ -9,26 +9,36 @@ type CalloutCTAProps = {
 };
 
 export function CalloutCTA({
-  trackingEvent = 'booking_click',
+  trackingEvent = 'scan_click',
   trackingPage = 'callout_cta',
 }: CalloutCTAProps) {
   return (
     <section className="py-sectionPaddingY">
       <Container>
         <div className="neu-card rounded-2xl border-accent/25 p-cardPad sm:p-10">
-          <h2 className="heading-lg text-text">Ready to book your audit?</h2>
+          <h2 className="heading-lg text-text">
+            Ready to diagnose the next move?
+          </h2>
           <p className="mt-3 max-w-2xl text-sm text-muted sm:text-base">
-            Bring your current numbers and we will map where margin, cash flow,
-            and operational execution are breaking.
+            Start with Clarity Scan to qualify the right next step, then book a
+            focused call if the fit is strong.
           </p>
           <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
+            <Button
+              href="/scan"
+              trackingEvent={trackingEvent}
+              trackingProps={{ page: trackingPage }}
+            >
+              Start Diagnostic
+            </Button>
             {runtimeConfig.featureFlags.isBookingEnabled ? (
               <Button
                 href={siteConfig.calendlyUrl}
-                trackingEvent={trackingEvent}
-                trackingProps={{ page: trackingPage }}
+                variant="ghost"
+                trackingEvent="booking_click"
+                trackingProps={{ page: `${trackingPage}_secondary` }}
               >
-                Book Audit
+                Book a 20-minute Clarity Call
               </Button>
             ) : null}
             <Button href="/sample-report" variant="ghost">

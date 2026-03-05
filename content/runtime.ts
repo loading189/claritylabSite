@@ -71,6 +71,14 @@ export function getIntegrationStatus() {
       enabled: Boolean(process.env.AIRTABLE_API_KEY && process.env.AIRTABLE_BASE_ID),
       required: ['AIRTABLE_API_KEY', 'AIRTABLE_BASE_ID', 'AIRTABLE_FILES_TABLE', 'AIRTABLE_CLIENTS_TABLE'],
     },
+    scanPersistence: {
+      enabled: Boolean(process.env.AIRTABLE_API_KEY && process.env.AIRTABLE_BASE_ID),
+      required: ['AIRTABLE_API_KEY', 'AIRTABLE_BASE_ID', 'AIRTABLE_DIAGNOSTICS_TABLE'],
+    },
+    scanEmail: {
+      enabled: Boolean(process.env.RESEND_API_KEY && process.env.EMAIL_FROM),
+      required: ['RESEND_API_KEY', 'EMAIL_FROM', 'DIAGNOSTIC_OWNER_EMAIL (optional fallback to OWNER_EMAIL/INTAKE_OWNER_EMAIL)'],
+    },
     resend: {
       enabled: Boolean(process.env.RESEND_API_KEY && process.env.EMAIL_FROM),
       required: ['RESEND_API_KEY', 'EMAIL_FROM'],
