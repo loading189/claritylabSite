@@ -3,11 +3,19 @@ import { siteConfig } from '@/content/site';
 import { Button } from './Button';
 import { Container } from './Container';
 
-export function CalloutCTA() {
+type CalloutCTAProps = {
+  trackingEvent?: string;
+  trackingPage?: string;
+};
+
+export function CalloutCTA({
+  trackingEvent = 'booking_click',
+  trackingPage = 'callout_cta',
+}: CalloutCTAProps) {
   return (
     <section className="py-14 sm:py-16">
       <Container>
-        <div className="rounded-2xl border border-accent/40 bg-surface p-8 sm:p-10">
+        <div className="rounded-2xl border border-accent/40 bg-surface p-8 shadow-soft sm:p-10">
           <h2 className="text-3xl font-bold text-text">
             Ready to book your audit?
           </h2>
@@ -19,12 +27,15 @@ export function CalloutCTA() {
             {runtimeConfig.featureFlags.isBookingEnabled ? (
               <Button
                 href={siteConfig.calendlyUrl}
-                trackingEvent="booking_click"
-                trackingProps={{ page: 'callout_cta' }}
+                trackingEvent={trackingEvent}
+                trackingProps={{ page: trackingPage }}
               >
                 Book Audit
               </Button>
             ) : null}
+            <Button href="/sample-report" variant="ghost">
+              View Sample Report
+            </Button>
             <a
               href={`mailto:${siteConfig.email}`}
               className="text-sm text-muted"

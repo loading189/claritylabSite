@@ -23,7 +23,7 @@ export default function AuditPage() {
       <Section>
         <Container className="max-w-4xl">
           <Badge>Audit Offer</Badge>
-          <h1 className="mt-4 text-4xl font-semibold tracking-tight text-text">
+          <h1 className="mt-4 text-balance text-[clamp(2rem,5vw,3.4rem)] font-semibold tracking-tight text-text">
             Know exactly where your cash and capacity are leaking.
           </h1>
           <p className="mt-4 text-lg text-muted">
@@ -34,13 +34,13 @@ export default function AuditPage() {
           <div className="mt-6 flex flex-col gap-3 sm:flex-row">
             <Button
               href={siteConfig.calendlyUrl || '/contact'}
-              trackingEvent="booking_click"
+              trackingEvent="audit_cta_click"
               trackingProps={{ page: 'audit' }}
             >
               Book Audit
             </Button>
             <Button href="/sample-report" variant="ghost">
-              Sample Report
+              View Sample Report
             </Button>
           </div>
         </Container>
@@ -102,7 +102,10 @@ export default function AuditPage() {
         </Container>
       </Section>
 
-      <CalloutCTA />
+      <CalloutCTA
+        trackingEvent="audit_cta_click"
+        trackingPage="audit_callout"
+      />
     </>
   );
 }

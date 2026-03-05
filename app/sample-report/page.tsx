@@ -90,7 +90,7 @@ export default function SampleReportPage() {
                 <Button
                   href={siteConfig.calendlyUrl || '/contact'}
                   className="mt-3"
-                  trackingEvent="booking_click"
+                  trackingEvent="sample_report_cta_click"
                   trackingProps={{ page: 'sample_report' }}
                 >
                   Book Audit
@@ -184,19 +184,22 @@ export default function SampleReportPage() {
             <Reveal variant="scaleIn">
               <div className="rounded-card border border-border bg-surface p-8 shadow-soft">
                 <SectionHeader
-                  title="Get this for your business"
+                  title="Next step: get this for your business"
                   subtitle="Bring your data, and you’ll get a deliverable-driven audit with clear next actions and optional implementation support."
                 />
                 <div className="mt-5 flex flex-col gap-3 sm:flex-row">
                   <Button
                     href={siteConfig.calendlyUrl || '/contact'}
-                    trackingEvent="booking_click"
+                    trackingEvent="sample_report_cta_click"
                     trackingProps={{ page: 'sample_report_footer' }}
                   >
                     Book Audit
                   </Button>
-                  <Button href="/audit" variant="ghost">
-                    Request an audit
+                  <Button href="/insights" variant="ghost">
+                    Read Insights
+                  </Button>
+                  <Button href="/audit" variant="secondary">
+                    See Audit Details
                   </Button>
                 </div>
               </div>

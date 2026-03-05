@@ -102,6 +102,31 @@ export default function ContactPage() {
         </div>
 
         <StartIntakeSection where="contact" />
+
+        <Card
+          className="mt-8 border-accent/35 bg-gradient-subtle"
+          title="Next step"
+        >
+          <p className="text-sm text-muted">
+            Prefer to move now? Book your audit, review the sample deliverable,
+            or read practical insights before we talk.
+          </p>
+          <div className="mt-5 flex flex-col gap-3 sm:flex-row">
+            <Button
+              href={siteConfig.calendlyUrl || '/contact'}
+              trackingEvent="booking_click"
+              trackingProps={{ page: 'contact_next_step' }}
+            >
+              Book Audit
+            </Button>
+            <Button href="/sample-report" variant="ghost">
+              View Sample Report
+            </Button>
+            <Button href="/insights" variant="secondary">
+              Read Insights
+            </Button>
+          </div>
+        </Card>
       </Container>
     </Section>
   );

@@ -1,14 +1,20 @@
 'use client';
 
+import { usePathname } from 'next/navigation';
 import { runtimeConfig } from '@/content/runtime';
 import { track } from '@/lib/track';
 
 export function StickyCTA() {
+  const pathname = usePathname();
+  const isMarketingStickyRoute =
+    pathname === '/audit' || pathname === '/sample-report';
   const hasPrimary = runtimeConfig.featureFlags.isBookingEnabled;
   const hasEmail = Boolean(runtimeConfig.site.email);
   const hasPhone = runtimeConfig.site.hasPhone;
+  const eventName =
+    pathname === '/audit' ? 'audit_cta_click' : 'sample_report_cta_click';
 
-  if (!hasPrimary && !hasEmail && !hasPhone) {
+  if (!isMarketingStickyRoute || (!hasPrimary && !hasEmail && !hasPhone)) {
     return null;
   }
 
@@ -20,10 +26,10 @@ export function StickyCTA() {
           {hasPrimary ? (
             <a
               href={runtimeConfig.booking.calendlyUrl}
-              className="motion-safe-transform inline-flex flex-1 items-center justify-center rounded-button border border-accent/30 bg-accent px-3 py-2 text-sm font-semibold text-white no-underline shadow-soft transition duration-200 hover:-translate-y-px hover:shadow-raised active:translate-y-px active:shadow-pressed"
-              onClick={() => track('booking_click', { page: 'sticky_cta' })}
+              className="motion-safe-transform inline-flex flex-1 items-center justify-center rounded-button border border-accent/30 bg-accent px-3 py-2 text-sm font-semibold text-black no-underline shadow-soft transition duration-200 hover:-translate-y-px hover:shadow-raised active:translate-y-px active:shadow-pressed"
+              onClick={() => track(eventName, { page: pathname })}
             >
-              Book a call
+              Book Audit
             </a>
           ) : null}
           {hasPhone ? (

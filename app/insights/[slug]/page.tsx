@@ -135,7 +135,7 @@ export default function InsightDetailPage({
           props={{ slug: post.slug, cta_type: 'book' }}
           className="block rounded-button border border-accent/30 bg-accent px-4 py-3 text-center text-sm font-semibold text-white no-underline shadow-soft"
         >
-          Book a 15-minute clarity call
+          Book Audit
         </TrackEventLink>
       </div>
       <script

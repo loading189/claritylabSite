@@ -152,14 +152,14 @@ export default function CaseStudyDetailPage({ params }: Props) {
               trackingEvent="booking_click"
               trackingProps={{ page: 'case_study' }}
             >
-              Book a call
+              Book Audit
             </Button>
             <Button
               href="/sample-report"
               variant="ghost"
-              className="hover:bg-brand-800 border-white text-white"
+              className="border-white text-white hover:bg-brand-800"
             >
-              See sample report
+              View Sample Report
             </Button>
           </div>
         </Container>
