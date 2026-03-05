@@ -4,10 +4,12 @@ import { Card } from '@/components/Card';
 import { Container } from '@/components/Container';
 import { FormEmbed } from '@/components/FormEmbed';
 import { LeadForm } from '@/components/LeadForm';
+import { NextStepCTA } from '@/components/marketing/NextStepCTA';
 import { Section } from '@/components/Section';
 import { StartIntakeSection } from '@/components/StartIntakeSection';
 import { runtimeConfig } from '@/content/runtime';
 import { siteConfig } from '@/content/site';
+import styles from './page.module.css';
 
 export const metadata: Metadata = {
   title: 'Contact',
@@ -18,7 +20,7 @@ export const metadata: Metadata = {
 export default function ContactPage() {
   return (
     <Section>
-      <Container className="max-w-4xl">
+      <Container className={styles.container}>
         <h1 className="text-4xl font-semibold tracking-tight text-text">
           Let’s talk through your next best move.
         </h1>
@@ -37,7 +39,7 @@ export default function ContactPage() {
           </p>
         ) : null}
 
-        <div className="mt-8 grid gap-4 md:grid-cols-2">
+        <div className={styles.gridTwo}>
           <Card title="Book Audit">
             <p className="mb-4 text-sm text-muted">
               Pick a time directly if booking is enabled.
@@ -78,7 +80,7 @@ export default function ContactPage() {
           </Card>
         </div>
 
-        <div className="mt-4 grid gap-4 md:grid-cols-2">
+        <div className={styles.gridTwo}>
           <LeadForm
             source="contact_form"
             title="Send a message"
@@ -103,29 +105,12 @@ export default function ContactPage() {
 
         <StartIntakeSection where="contact" />
 
-        <Card
-          className="mt-8 border-accent/35 bg-gradient-subtle"
-          title="Next step"
-        >
-          <p className="text-sm text-muted">
-            Prefer to move now? Book your audit, review the sample deliverable,
-            or read practical insights before we talk.
-          </p>
-          <div className="mt-5 flex flex-col gap-3 sm:flex-row">
-            <Button
-              href={siteConfig.calendlyUrl || '/contact'}
-              trackingEvent="booking_click"
-              trackingProps={{ page: 'contact_next_step' }}
-            >
-              Book Audit
-            </Button>
-            <Button href="/sample-report" variant="ghost">
-              View Sample Report
-            </Button>
-            <Button href="/insights" variant="secondary">
-              Read Insights
-            </Button>
-          </div>
+        <Card className={styles.nextCard} title="Next step">
+          <NextStepCTA
+            title="Prefer to move now?"
+            subtitle="Book your audit or review the sample deliverable before we talk."
+            trackingPage="contact_next_step"
+          />
         </Card>
       </Container>
     </Section>

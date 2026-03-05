@@ -1,0 +1,59 @@
+.heroContainer {
+  max-width: 64rem;
+}
+
+.label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: hsl(var(--muted));
+}
+
+.title {
+  margin-top: 0.5rem;
+  font-size: 2.25rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: hsl(var(--text));
+}
+
+.summary {
+  margin-top: 0.75rem;
+  max-width: 48rem;
+  color: hsl(var(--muted));
+}
+
+.threeColGrid,
+.twoColGrid {
+  display: grid;
+  gap: 1rem;
+}
+
+.tableHeadRow {
+  color: hsl(var(--muted));
+}
+
+.tableBodyRow {
+  border-top: 1px solid hsl(var(--border));
+}
+
+.ctaSection {
+  background: hsl(var(--surface));
+}
+
+.ctaContainer {
+  padding-top: 2.5rem;
+  padding-bottom: 2.5rem;
+}
+
+@media (min-width: 768px) {
+  .threeColGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .twoColGrid {
+    max-width: 64rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
