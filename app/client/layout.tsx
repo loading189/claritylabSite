@@ -4,7 +4,7 @@ import { ensureClientRecord } from '@/lib/vaultData';
 import { getServerUser } from '@/lib/serverAuth';
 
 export default async function ClientLayout({ children }: { children: React.ReactNode }) {
-  const user = getServerUser();
+  const user = await getServerUser();
   if (!user) redirect('/sign-in');
   await ensureClientRecord(user.userId, user.email);
 

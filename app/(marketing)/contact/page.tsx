@@ -17,7 +17,13 @@ export const metadata: Metadata = {
     'Book a short clarity call, use the contact form, or send a direct note.',
 };
 
-export default function ContactPage() {
+export default function ContactPage({
+  searchParams,
+}: {
+  searchParams?: { portal?: string };
+}) {
+  const showPortalSetup = searchParams?.portal === 'setup';
+
   return (
     <Section>
       <Container className={styles.container}>
@@ -32,6 +38,18 @@ export default function ContactPage() {
           I’m local to Fargo; if you book a call you’ll get the fastest
           response.
         </p>
+
+        {showPortalSetup ? (
+          <div className="bg-card mt-4 rounded-lg border border-border p-4 text-sm text-muted">
+            <p className="font-medium text-text">
+              Portal setup is in progress.
+            </p>
+            <p className="mt-1">
+              Client/admin access is not enabled in this environment yet. Reach
+              out here and we’ll help you get the access you need.
+            </p>
+          </div>
+        ) : null}
 
         {runtimeConfig.featureFlags.isChatEnabled ? (
           <p className="mt-3 text-sm text-accent">

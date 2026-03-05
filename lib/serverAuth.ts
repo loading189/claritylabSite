@@ -8,38 +8,53 @@ export type AppUser = {
 };
 
 const OWNER_EMAIL = (process.env.OWNER_EMAIL || '').toLowerCase();
+const isClerkConfigured =
+  Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY) &&
+  Boolean(process.env.CLERK_SECRET_KEY);
 
-type SessionClaims = {
-  email?: string;
-  primary_email_address?: string;
-  public_metadata?: {
-    role?: string;
-  };
-};
+type ClaimsRecord = Record<string, unknown>;
+
+function isRecord(value: unknown): value is ClaimsRecord {
+  return typeof value === 'object' && value !== null;
+}
 
 function getEmailFromClaims(sessionClaims: unknown) {
-  const claims = (sessionClaims || {}) as SessionClaims;
-  return (claims.email || claims.primary_email_address || '').toLowerCase();
+  if (!isRecord(sessionClaims)) return '';
+
+  const directEmail = sessionClaims.email;
+  if (typeof directEmail === 'string') return directEmail.toLowerCase();
+
+  const primaryEmail = sessionClaims.primary_email_address;
+  if (typeof primaryEmail === 'string') return primaryEmail.toLowerCase();
+
+  return '';
 }
 
 function getRoleFromClaims(sessionClaims: unknown) {
-  const claims = (sessionClaims || {}) as SessionClaims;
-  return claims.public_metadata?.role;
+  if (!isRecord(sessionClaims)) return undefined;
+  const publicMetadata = sessionClaims.public_metadata;
+  if (!isRecord(publicMetadata)) return undefined;
+
+  const role = publicMetadata.role;
+  return typeof role === 'string' ? role : undefined;
 }
 
-export function getServerUser(): AppUser | null {
-  const { userId, sessionClaims } = auth();
+export async function getServerUser(): Promise<AppUser | null> {
+  if (!isClerkConfigured) return null;
+
+  const { userId, sessionClaims } = await auth();
   if (!userId) return null;
 
   const email = getEmailFromClaims(sessionClaims);
   const metadataRole = getRoleFromClaims(sessionClaims);
-  const role: 'admin' | 'client' = metadataRole === 'admin' || email === OWNER_EMAIL ? 'admin' : 'client';
+  const role: 'admin' | 'client' =
+    metadataRole === 'admin' || email === OWNER_EMAIL ? 'admin' : 'client';
 
   return { userId, email, role };
 }
 
-export function requireServerUser() {
-  const user = getServerUser();
+export async function requireServerUser() {
+  const user = await getServerUser();
   if (!user) {
     throw new Error('Unauthorized');
   }

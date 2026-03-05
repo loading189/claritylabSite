@@ -36,9 +36,9 @@ export const metadata: Metadata = {
 
 const themeScript = `(function(){try{var s=localStorage.getItem('theme');var d=window.matchMedia('(prefers-color-scheme: dark)').matches;var t=s==='light'||s==='dark'?s:(d?'dark':'light');document.documentElement.classList.toggle('dark',t==='dark');}catch(e){}})();`;
 
-export default function RootLayout({
-  children,
-}: Readonly<{ children: React.ReactNode }>) {
+const isClerkConfigured = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
+
+function LayoutShell({ children }: { children: React.ReactNode }) {
   const localBusinessSchema = {
     '@context': 'https://schema.org',
     '@type': 'ProfessionalService',
@@ -58,24 +58,38 @@ export default function RootLayout({
   };
 
   return (
+    <html lang="en" suppressHydrationWarning>
+      <body>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        <Header />
+        <main>
+          <PageTransition>{children}</PageTransition>
+        </main>
+        <Footer />
+        <StickyCTA />
+        <Analytics />
+        <ChatCrisp websiteId={runtimeConfig.chat.crispWebsiteId} />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(localBusinessSchema),
+          }}
+        />
+      </body>
+    </html>
+  );
+}
+
+export default function RootLayout({
+  children,
+}: Readonly<{ children: React.ReactNode }>) {
+  if (!isClerkConfigured) {
+    return <LayoutShell>{children}</LayoutShell>;
+  }
+
+  return (
     <ClerkProvider>
-      <html lang="en" suppressHydrationWarning>
-        <body>
-          <script dangerouslySetInnerHTML={{ __html: themeScript }} />
-          <Header />
-          <main><PageTransition>{children}</PageTransition></main>
-          <Footer />
-          <StickyCTA />
-          <Analytics />
-          <ChatCrisp websiteId={runtimeConfig.chat.crispWebsiteId} />
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{
-              __html: JSON.stringify(localBusinessSchema),
-            }}
-          />
-        </body>
-      </html>
+      <LayoutShell>{children}</LayoutShell>
     </ClerkProvider>
   );
 }

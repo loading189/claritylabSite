@@ -5,7 +5,7 @@ import { requireServerUser } from '@/lib/serverAuth';
 
 export async function POST(req: NextRequest) {
   try {
-    const user = requireServerUser();
+    const user = await requireServerUser();
     const ip = req.headers.get('x-forwarded-for') || 'local';
     const rate = checkRateLimit(ip, user.userId);
     if (rate.limited) {
