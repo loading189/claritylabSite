@@ -5,7 +5,7 @@ import { requireServerUser } from '@/lib/serverAuth';
 
 export async function POST(req: NextRequest) {
   try {
-    const user = requireServerUser();
+    const user = await requireServerUser();
     const { storageKey } = (await req.json()) as { storageKey: string };
     const file = await findFileByStorageKey(storageKey);
     if (!file) return NextResponse.json({ error: 'Not found' }, { status: 404 });

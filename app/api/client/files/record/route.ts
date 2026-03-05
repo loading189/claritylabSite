@@ -5,7 +5,7 @@ import { sendClientUploadNotification, sendReportReadyNotification } from '@/lib
 
 export async function POST(req: NextRequest) {
   try {
-    const user = requireServerUser();
+    const user = await requireServerUser();
     const body = (await req.json()) as {
       storageKey: string;
       filename: string;

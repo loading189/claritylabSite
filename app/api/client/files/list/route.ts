@@ -4,7 +4,7 @@ import { requireServerUser } from '@/lib/serverAuth';
 
 export async function GET(req: NextRequest) {
   try {
-    const user = requireServerUser();
+    const user = await requireServerUser();
     const category = req.nextUrl.searchParams.get('category') || 'all';
     const targetClientId = req.nextUrl.searchParams.get('clientId');
     const clientId = user.role === 'admin' ? targetClientId || user.userId : user.userId;

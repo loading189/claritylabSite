@@ -1,5 +1,9 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
-import { NextResponse } from 'next/server';
+import {
+  NextResponse,
+  type NextFetchEvent,
+  type NextRequest,
+} from 'next/server';
 
 const isProtectedRoute = createRouteMatcher([
   '/client(.*)',
@@ -11,26 +15,43 @@ const isProtectedRoute = createRouteMatcher([
 const isAdminRoute = createRouteMatcher(['/admin(.*)', '/api/admin(.*)']);
 
 const OWNER_EMAIL = (process.env.OWNER_EMAIL || '').toLowerCase();
+const isClerkConfigured =
+  Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY) &&
+  Boolean(process.env.CLERK_SECRET_KEY);
 
-type SessionClaims = {
-  email?: string;
-  primary_email_address?: string;
-  public_metadata?: {
-    role?: string;
-  };
-};
+type ClaimsRecord = Record<string, unknown>;
+
+function isRecord(value: unknown): value is ClaimsRecord {
+  return typeof value === 'object' && value !== null;
+}
 
 function getEmailFromClaims(sessionClaims: unknown) {
-  const claims = (sessionClaims || {}) as SessionClaims;
-  return (claims.email || claims.primary_email_address || '').toLowerCase();
+  if (!isRecord(sessionClaims)) return '';
+
+  const directEmail = sessionClaims.email;
+  if (typeof directEmail === 'string') return directEmail.toLowerCase();
+
+  const primaryEmail = sessionClaims.primary_email_address;
+  if (typeof primaryEmail === 'string') return primaryEmail.toLowerCase();
+
+  return '';
 }
 
 function getRoleFromClaims(sessionClaims: unknown) {
-  const claims = (sessionClaims || {}) as SessionClaims;
-  return claims.public_metadata?.role;
+  if (!isRecord(sessionClaims)) return undefined;
+  const publicMetadata = sessionClaims.public_metadata;
+  if (!isRecord(publicMetadata)) return undefined;
+
+  const role = publicMetadata.role;
+  return typeof role === 'string' ? role : undefined;
 }
 
-export default clerkMiddleware(async (auth, req) => {
+function redirectPortalSetup(req: NextRequest) {
+  const url = new URL('/contact?portal=setup', req.url);
+  return NextResponse.redirect(url);
+}
+
+const configuredMiddleware = clerkMiddleware(async (auth, req) => {
   if (!isProtectedRoute(req)) {
     return NextResponse.next();
   }
@@ -56,6 +77,18 @@ export default clerkMiddleware(async (auth, req) => {
 
   return NextResponse.next();
 });
+
+export default function middleware(req: NextRequest, event: NextFetchEvent) {
+  if (!isClerkConfigured) {
+    if (!isProtectedRoute(req)) {
+      return NextResponse.next();
+    }
+
+    return redirectPortalSetup(req);
+  }
+
+  return configuredMiddleware(req, event);
+}
 
 export const config = {
   matcher: [

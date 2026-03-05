@@ -2,8 +2,8 @@ import { redirect } from 'next/navigation';
 import { PortalShell } from '@/components/client/PortalShell';
 import { getServerUser } from '@/lib/serverAuth';
 
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
-  const user = getServerUser();
+export default async function AdminLayout({ children }: { children: React.ReactNode }) {
+  const user = await getServerUser();
   if (!user) redirect('/sign-in');
   if (user.role !== 'admin') redirect('/client?denied=admin');
 
