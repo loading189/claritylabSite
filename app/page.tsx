@@ -1,159 +1,127 @@
+import Link from 'next/link';
 import { Badge } from '@/components/Badge';
 import { Button } from '@/components/Button';
 import { CalloutCTA } from '@/components/CalloutCTA';
 import { Card } from '@/components/Card';
 import { Container } from '@/components/Container';
 import { FeatureList } from '@/components/FeatureList';
-import { HeroBackdrop } from '@/components/HeroBackdrop';
-import { ProcessTimeline } from '@/components/ProcessTimeline';
 import { Reveal } from '@/components/Reveal';
 import { Section } from '@/components/Section';
-import { TrustList } from '@/components/TrustList';
 import { SectionHeader } from '@/components/SectionHeader';
 import {
   exampleInsights,
-  fifteenMinuteBreakdown,
   howItWorks,
   problems,
   siteConfig,
-  waysIHelp,
 } from '@/content/site';
+import { getAllInsights } from '@/lib/content/insights';
+
+const findings = [
+  'Revenue concentration: top 3 customers account for 48% of monthly cash inflow.',
+  'Invoice lag: average 5.8 days between job completion and invoice send.',
+  'Dispatch drag: 11% of technician hours lost to avoidable routing and handoff delays.',
+];
 
 export default function HomePage() {
+  const posts = getAllInsights().slice(0, 3);
+
   return (
     <>
-      <Section className="pb-12 pt-12 sm:pt-16">
-        <Container className="relative overflow-hidden rounded-card border border-border/70 bg-surface p-8 shadow-raised sm:p-12">
-          <HeroBackdrop />
-          <div className="relative z-10">
-            <Reveal>
-              <Badge>Operator brief · Fargo-built for service trades</Badge>
-            </Reveal>
-            <Reveal delay={80}>
-              <h1 className="mt-5 max-w-3xl text-4xl font-semibold tracking-tight text-text sm:text-6xl">
-                Audit-grade clarity for owner-operators who need control, not noise.
-              </h1>
-            </Reveal>
-            <Reveal delay={140}>
-              <p className="mt-5 max-w-2xl text-base text-muted sm:text-lg">
-                No pitch. Just clear deliverables. We surface hidden leaks in
-                margin, cash flow, and handoff execution—then hand your team a
-                practical plan.
-              </p>
-            </Reveal>
-            <Reveal delay={200}>
-              <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-                <Button
-                  href={siteConfig.calendlyUrl || '/contact'}
-                  trackingEvent="booking_click"
-                  trackingProps={{ page: 'home_hero' }}
-                >
-                  Book a 15-min Clarity Call
-                </Button>
-                <Button href="/sample-report" variant="ghost">
-                  Review the sample report
-                </Button>
-              </div>
-            </Reveal>
-            <Reveal delay={260}>
-              <p className="mt-4 text-sm text-muted">
-                {siteConfig.trustLine} · Typically 2–3 meaningful leaks identified
-                in your first review.
-              </p>
-            </Reveal>
-          </div>
-        </Container>
-      </Section>
-
-      <Section className="py-8">
-        <Container className="grid gap-4 md:grid-cols-3">
-          {waysIHelp.map((item, index) => (
-            <Reveal key={item.title} delay={index * 60}>
-              <Card title={item.title} interactive>
-                <p>{item.description}</p>
-              </Card>
-            </Reveal>
-          ))}
-          <Reveal delay={200}>
-            <Card title="Ways I Help" interactive>
-              <p>
-                See the full engagement options and choose the right starting
-                point for your team.
-              </p>
-              <Button href="/work-with-me" className="mt-4">
-                Explore Work With Me
-              </Button>
-            </Card>
-          </Reveal>
-        </Container>
-      </Section>
-
-      <Section>
-        <Container className="grid gap-8 md:grid-cols-2">
+      <Section className="pb-10 pt-12 sm:pt-16">
+        <Container className="rounded-card border border-accent/40 bg-surface p-8 shadow-raised sm:p-12">
           <Reveal>
-            <Card title="Common pressure points">
-              <FeatureList items={problems} />
-            </Card>
+            <Badge>Clarity Labs Audit</Badge>
           </Reveal>
           <Reveal delay={80}>
-            <Card title="What we do in 15 minutes">
-              <div className="space-y-4">
-                {fifteenMinuteBreakdown.map((item) => (
-                  <div key={item.title}>
-                    <p className="text-sm font-semibold text-text">{item.title}</p>
-                    <p>{item.detail}</p>
-                  </div>
-                ))}
-              </div>
-            </Card>
+            <h1 className="mt-5 max-w-4xl text-5xl font-bold leading-[1.05] text-text sm:text-7xl">
+              We diagnose exactly where cash, capacity, and execution break down
+              in your service business.
+            </h1>
+          </Reveal>
+          <Reveal delay={130}>
+            <p className="mt-6 max-w-2xl text-base text-muted sm:text-lg">
+              Conversion-focused operational audits for teams that want concrete
+              fixes, stronger margin control, and cleaner execution.
+            </p>
+          </Reveal>
+          <Reveal delay={170}>
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <Button
+                href={siteConfig.calendlyUrl || '/contact'}
+                trackingEvent="booking_click"
+                trackingProps={{ page: 'home_hero' }}
+              >
+                Book Audit
+              </Button>
+              <Button href="/sample-report" variant="ghost">
+                Sample Report
+              </Button>
+            </div>
           </Reveal>
         </Container>
       </Section>
 
-      <Section>
+      <Section className="py-8" id="problem">
         <Container>
-          <Reveal>
-            <SectionHeader
-              title="Proof and tools"
-              subtitle="What teams use right away: concrete examples, practical toolkits, and repeatable wins."
-            />
-          </Reveal>
-          <div className="mt-6 grid gap-4 md:grid-cols-2">
-            <Reveal>
-              <Card title="Case studies" interactive>
-                <p className="text-sm text-muted">
-                  Walk through sample/demonstration audits for service trade teams
-                  and see how findings turn into results.
-                </p>
-                <Button href="/case-studies" className="mt-4">
-                  See case studies
-                </Button>
-              </Card>
-            </Reveal>
-            <Reveal delay={80}>
-              <Card title="Resources" interactive>
-                <p className="text-sm text-muted">
-                  Download practical checklists and scorecards you can use this
-                  week with your office and field leads.
-                </p>
-                <Button href="/resources" className="mt-4">
-                  Browse resources
-                </Button>
-              </Card>
-            </Reveal>
+          <SectionHeader
+            title="Operational problems we find first"
+            subtitle="Three common patterns that silently reduce profitability and growth capacity."
+          />
+          <div className="mt-6 grid gap-4 md:grid-cols-3">
+            {problems.slice(0, 3).map((problem, index) => (
+              <Reveal key={problem} delay={index * 70}>
+                <Card interactive>
+                  <h3 className="text-xl font-semibold text-text">
+                    0{index + 1}
+                  </h3>
+                  <p className="mt-3 text-sm text-muted">{problem}</p>
+                </Card>
+              </Reveal>
+            ))}
           </div>
         </Container>
       </Section>
 
-      <Section>
+      <Section id="method">
         <Container>
-          <Reveal>
-            <SectionHeader
-              title="Example insights from the audit"
-              subtitle="These are the types of practical outputs you can expect. No vanity dashboards, just actionable clarity."
-            />
-          </Reveal>
-          <div className="mt-8 grid gap-4 md:grid-cols-3">
+          <SectionHeader
+            title="The Clarity Labs Process"
+            subtitle="A four-step method designed for owners who need signal, action, and sustained control."
+          />
+          <div className="mt-6 grid gap-4 md:grid-cols-4">
+            {howItWorks.map((item, index) => (
+              <Reveal key={item.step} delay={index * 60}>
+                <Card interactive>
+                  <p className="text-xs font-semibold uppercase tracking-[0.14em] text-accent">
+                    Step {index + 1}
+                  </p>
+                  <h3 className="mt-2 text-lg font-bold text-text">
+                    {item.step}
+                  </h3>
+                  <p className="mt-2 text-sm text-muted">{item.description}</p>
+                </Card>
+              </Reveal>
+            ))}
+          </div>
+        </Container>
+      </Section>
+
+      <Section id="findings">
+        <Container>
+          <SectionHeader
+            title="Example findings from audits"
+            subtitle="Real insights that create decisions in days, not months."
+          />
+          <div className="mt-6 grid gap-4 md:grid-cols-3">
+            {findings.map((finding, index) => (
+              <Reveal key={finding} delay={index * 50}>
+                <Card>
+                  <p>{finding}</p>
+                </Card>
+              </Reveal>
+            ))}
+          </div>
+          <div className="mt-6 grid gap-4 md:grid-cols-3">
             {exampleInsights.map((insight, index) => (
               <Reveal key={insight.title} delay={index * 70}>
                 <Card title={insight.title}>
@@ -165,27 +133,58 @@ export default function HomePage() {
         </Container>
       </Section>
 
-      <Section>
+      <Section id="sample-report">
         <Container>
           <Reveal>
-            <SectionHeader title="How we work" />
+            <Card className="border-accent/35 bg-gradient-subtle">
+              <h2 className="text-3xl font-bold text-text">
+                Sample Report Preview
+              </h2>
+              <p className="mt-3 max-w-2xl text-sm text-muted">
+                Download the sample report to see the structure, scorecards, and
+                recommendation format we deliver.
+              </p>
+              <div className="mt-5 flex flex-wrap gap-3">
+                <Button href="/sample-report">View Sample Report</Button>
+                <Button
+                  href={siteConfig.calendlyUrl || '/contact'}
+                  variant="ghost"
+                >
+                  Talk Through Your Metrics
+                </Button>
+              </div>
+            </Card>
           </Reveal>
-          <div className="mt-6">
-            <ProcessTimeline
-              steps={howItWorks.map((item) => ({
-                title: item.step,
-                description: item.description,
-              }))}
-            />
-          </div>
         </Container>
       </Section>
 
-      <Section>
-        <Container className="max-w-3xl">
-          <Reveal>
-            <TrustList />
-          </Reveal>
+      <Section id="insights">
+        <Container>
+          <SectionHeader
+            title="Latest insights"
+            subtitle="Short tactical writing on cash flow, workflow, and operational execution."
+          />
+          <div className="mt-6 grid gap-4 md:grid-cols-3">
+            {posts.map((post, index) => (
+              <Reveal key={post.slug} delay={index * 70}>
+                <Card interactive>
+                  <p className="text-xs uppercase tracking-[0.14em] text-accent">
+                    {post.tags[0]}
+                  </p>
+                  <h3 className="mt-2 text-lg font-semibold text-text">
+                    {post.title}
+                  </h3>
+                  <p className="mt-2 text-sm text-muted">{post.description}</p>
+                  <Link
+                    href={`/insights/${post.slug}`}
+                    className="mt-4 inline-block text-sm font-semibold no-underline"
+                  >
+                    Read insight →
+                  </Link>
+                </Card>
+              </Reveal>
+            ))}
+          </div>
         </Container>
       </Section>
 

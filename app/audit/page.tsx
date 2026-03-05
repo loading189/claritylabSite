@@ -12,8 +12,9 @@ import { runtimeConfig } from '@/content/runtime';
 import { notAFit, siteConfig, whoItsFor } from '@/content/site';
 
 export const metadata: Metadata = {
-  title: 'Quick Audit',
-  description: 'A practical financial + operations audit for established service trade businesses.',
+  title: 'Audit',
+  description:
+    'A practical financial + operations audit for established service trade businesses.',
 };
 
 export default function AuditPage() {
@@ -21,24 +22,31 @@ export default function AuditPage() {
     <>
       <Section>
         <Container className="max-w-4xl">
-          <Badge>Quick Audit Offer</Badge>
-          <h1 className="mt-4 text-4xl font-semibold tracking-tight text-slate-900">Know exactly where your cash and capacity are leaking.</h1>
-          <p className="mt-4 text-lg text-slate-700">
-            The Clarity Labs Quick Audit is a focused review of your key operating and financial signals, designed for
-            service trade owners who need better decisions now.
+          <Badge>Audit Offer</Badge>
+          <h1 className="mt-4 text-4xl font-semibold tracking-tight text-text">
+            Know exactly where your cash and capacity are leaking.
+          </h1>
+          <p className="mt-4 text-lg text-muted">
+            The Clarity Labs Audit is a focused review of your key operating and
+            financial signals, designed for service trade owners who need better
+            decisions now.
           </p>
           <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-            <Button href={siteConfig.calendlyUrl || '/contact'} trackingEvent="booking_click" trackingProps={{ page: 'audit' }}>
-              Book a 15-min Clarity Call
+            <Button
+              href={siteConfig.calendlyUrl || '/contact'}
+              trackingEvent="booking_click"
+              trackingProps={{ page: 'audit' }}
+            >
+              Book Audit
             </Button>
             <Button href="/sample-report" variant="ghost">
-              Preview sample report
+              Sample Report
             </Button>
           </div>
         </Container>
       </Section>
 
-      <Section className="bg-white">
+      <Section>
         <Container className="grid gap-4 md:grid-cols-2">
           <Card title="What you get">
             <FeatureList
@@ -79,10 +87,14 @@ export default function AuditPage() {
           />
           <Card title="Audit form embed (optional)">
             {runtimeConfig.featureFlags.isAuditFormEnabled ? (
-              <FormEmbed src={runtimeConfig.forms.auditFormUrl} title="Request an audit form" />
+              <FormEmbed
+                src={runtimeConfig.forms.auditFormUrl}
+                title="Request an audit form"
+              />
             ) : (
-              <p className="text-sm text-slate-600">
-                Add <code>NEXT_PUBLIC_AUDIT_FORM_URL</code> to enable the embedded form. For now, contact us directly at{' '}
+              <p className="text-sm text-muted">
+                Add <code>NEXT_PUBLIC_AUDIT_FORM_URL</code> to enable the
+                embedded form. For now, contact us directly at{' '}
                 <a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>.
               </p>
             )}

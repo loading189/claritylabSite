@@ -3,29 +3,28 @@
 @tailwind utilities;
 
 :root {
-  color-scheme: light;
-  --bg: 220 35% 97%;
-  --surface: 0 0% 100%;
-  --surface-raised: 222 43% 99%;
-  --border: 220 25% 88%;
-  --text: 225 36% 14%;
-  --muted: 220 15% 37%;
-  --accent: 230 67% 53%;
-  --accent-2: 189 67% 43%;
+  color-scheme: dark;
+  --bg: 0 0% 4%;
+  --surface: 0 0% 7%;
+  --surface-raised: 0 0% 10%;
+  --border: 0 0% 16%;
+  --text: 0 0% 100%;
+  --muted: 0 0% 74%;
+  --accent: 45 91% 53%;
+  --accent-2: 46 100% 65%;
   --success: 156 45% 38%;
   --warn: 32 74% 46%;
   --danger: 0 64% 48%;
   --ring-focus: 230 90% 60%;
   --gradient-subtle: linear-gradient(
     135deg,
-    hsl(var(--accent) / 0.16),
-    hsl(var(--accent-2) / 0.08)
+    hsl(var(--accent) / 0.2),
+    hsl(0 0% 100% / 0.04)
   );
-  --shadow-soft: 0 10px 28px -20px hsl(225 36% 14% / 0.45);
-  --shadow-raised: 0 20px 45px -25px hsl(225 36% 14% / 0.55);
+  --shadow-soft: 0 14px 30px -20px hsl(0 0% 0% / 0.9);
+  --shadow-raised: 0 20px 42px -22px hsl(0 0% 0% / 0.95);
   --shadow-pressed:
-    inset 0 2px 0 hsl(225 36% 14% / 0.14),
-    0 5px 12px -8px hsl(225 36% 14% / 0.35);
+    inset 0 2px 0 hsl(0 0% 100% / 0.08), 0 5px 12px -8px hsl(0 0% 0% / 0.8);
 
   --font-sans:
     ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Inter, Roboto, Arial,
@@ -39,27 +38,14 @@
 
 .dark {
   color-scheme: dark;
-  --bg: 231 27% 10%;
-  --surface: 231 24% 13%;
-  --surface-raised: 231 21% 17%;
-  --border: 229 18% 28%;
-  --text: 220 25% 93%;
-  --muted: 220 13% 70%;
-  --accent: 230 83% 67%;
-  --accent-2: 186 70% 56%;
-  --success: 152 42% 51%;
-  --warn: 38 85% 62%;
-  --danger: 0 78% 67%;
-  --ring-focus: 230 95% 70%;
-  --gradient-subtle: linear-gradient(
-    135deg,
-    hsl(var(--accent) / 0.22),
-    hsl(var(--accent-2) / 0.14)
-  );
-  --shadow-soft: 0 14px 32px -20px hsl(230 70% 4% / 0.75);
-  --shadow-raised: 0 22px 50px -26px hsl(230 70% 3% / 0.9);
-  --shadow-pressed:
-    inset 0 2px 0 hsl(0 0% 100% / 0.05), 0 4px 12px -8px hsl(230 70% 3% / 0.8);
+  --bg: 0 0% 4%;
+  --surface: 0 0% 7%;
+  --surface-raised: 0 0% 10%;
+  --border: 0 0% 16%;
+  --text: 0 0% 100%;
+  --muted: 0 0% 74%;
+  --accent: 45 91% 53%;
+  --accent-2: 46 100% 65%;
 }
 
 * {
@@ -69,9 +55,9 @@
 body {
   @apply bg-bg font-sans text-text antialiased;
   background-image: radial-gradient(
-    circle at 10% 8%,
-    hsl(var(--accent) / 0.06),
-    transparent 38%
+    circle at 12% 8%,
+    hsl(var(--accent) / 0.14),
+    transparent 34%
   );
 }
 
@@ -93,7 +79,7 @@ body::before {
 }
 
 a {
-  @apply text-accent underline decoration-accent/40 underline-offset-4 transition-colors hover:text-text hover:decoration-accent;
+  @apply text-accent underline decoration-accent/40 underline-offset-4 transition-colors hover:text-white hover:decoration-accent;
 }
 
 :focus-visible {
@@ -337,18 +323,30 @@ button {
 }
 
 @keyframes hero-drift-a {
-  from { transform: translate3d(0, 0, 0); }
-  to { transform: translate3d(26px, 18px, 0); }
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(26px, 18px, 0);
+  }
 }
 
 @keyframes hero-drift-b {
-  from { transform: translate3d(0, 0, 0); }
-  to { transform: translate3d(-20px, 24px, 0); }
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-20px, 24px, 0);
+  }
 }
 
 @keyframes hero-drift-c {
-  from { transform: translate3d(0, 0, 0); }
-  to { transform: translate3d(20px, -16px, 0); }
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(20px, -16px, 0);
+  }
 }
 
 @keyframes row-fade-in {
@@ -369,7 +367,6 @@ button {
   }
 }
 
-
 @media (prefers-reduced-motion: reduce) {
   .hero-blob,
   .table-row-reveal,
@@ -383,4 +380,14 @@ button {
 
 .hover-lift {
   @apply motion-safe-transform transition duration-200 hover:-translate-y-1 hover:shadow-raised active:translate-y-px active:shadow-pressed;
+}
+
+.button-glow {
+  box-shadow: 0 0 0 0 hsl(var(--accent) / 0);
+}
+
+.button-glow:hover {
+  box-shadow:
+    0 0 0 3px hsl(var(--accent) / 0.2),
+    var(--shadow-raised);
 }

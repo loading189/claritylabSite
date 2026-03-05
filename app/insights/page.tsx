@@ -25,11 +25,11 @@ export default function InsightsPage() {
         <Reveal>
           <div className="rounded-card border border-border bg-surface p-8 shadow-soft">
             <h1 className="text-4xl font-semibold tracking-tight text-text">
-              Insights for owner-operators
+              Clarity Labs Insights
             </h1>
             <p className="mt-4 max-w-2xl text-muted">
-              Practical notes for teams that want tighter cash flow, better
-              utilization, and less workflow chaos.
+              Operator-level notes on cash flow, team utilization, and process
+              design for service businesses.
             </p>
           </div>
         </Reveal>

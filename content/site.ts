@@ -3,8 +3,8 @@ import { runtimeConfig } from './runtime';
 export const siteConfig = {
   name: runtimeConfig.site.name,
   founder: 'Christopher Taylor',
-  tagline: 'Less chaos. More time.',
-  subTagline: 'Audit-grade clarity for service trades.',
+  tagline: 'Clarity-first operational audits.',
+  subTagline: 'Bold operational clarity for service teams.',
   location: 'Fargo area',
   trustLine: 'No pitch • Just clarity',
   description:
@@ -17,13 +17,9 @@ export const siteConfig = {
 
 export const navItems = [
   { label: 'Home', href: '/' },
-  { label: 'Work With Me', href: '/work-with-me' },
   { label: 'Audit', href: '/audit' },
-  { label: 'Process', href: '/process' },
   { label: 'Insights', href: '/insights' },
   { label: 'Sample Report', href: '/sample-report' },
-  { label: 'Case Studies', href: '/case-studies' },
-  { label: 'Resources', href: '/resources' },
   { label: 'Contact', href: '/contact' },
 ];
 
@@ -97,22 +93,22 @@ export const exampleInsights = [
 
 export const howItWorks = [
   {
-    step: 'Discover',
+    step: 'Diagnose',
     description:
       'Short call to understand goals, constraints, and where pressure shows up.',
   },
   {
-    step: 'Audit',
+    step: 'Analyze',
     description:
       'Review financial and operational signals to surface the highest-impact gaps.',
   },
   {
-    step: 'Action Plan',
+    step: 'Optimize',
     description:
       'Get a concise roadmap with owner-level priorities and team-level actions.',
   },
   {
-    step: 'Optional Implement',
+    step: 'Stabilize',
     description:
       'If useful, I can help your team execute the first phase and measure traction.',
   },
