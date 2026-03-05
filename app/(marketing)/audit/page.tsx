@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import Link from 'next/link';
 import { CalloutCTA } from '@/components/CalloutCTA';
 import { Card } from '@/components/Card';
 import { Container } from '@/components/Container';
@@ -59,6 +60,19 @@ export default function AuditPage() {
           </Card>
           <Card title="Not a fit (yet)">
             <FeatureList items={notAFit} />
+          </Card>
+
+          <Card title="Get the AR checklist">
+            <p className="text-sm text-muted">
+              Want a practical AR cadence before the full audit? Start with the
+              one-page checklist and run it with your office lead this week.
+            </p>
+            <Link
+              href="/resources/ar-recovery-checklist"
+              className="mt-3 inline-block text-sm font-semibold no-underline"
+            >
+              Get the AR Recovery Checklist →
+            </Link>
           </Card>
         </Container>
       </Section>

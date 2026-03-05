@@ -69,34 +69,42 @@ export function InsightsList({ posts, tags }: Props) {
       </div>
 
       <div className="mt-8 grid gap-4">
-        {filteredPosts.map((post, index) => (
-          <Reveal
-            key={post.slug}
-            variant="fadeIn"
-            delay={Math.min(index, 8) * 45}
-          >
-            <Card interactive>
-              <div className="flex flex-wrap items-center gap-3">
-                {post.tags.map((tag) => (
-                  <Badge key={tag}>{tag}</Badge>
-                ))}
-                <p className="text-xs text-muted">
-                  {post.date} · {post.readingTime} min read
-                </p>
-              </div>
-              <h2 className="mt-3 text-xl font-semibold text-text">
-                {post.title}
-              </h2>
-              <p className="mt-2 text-sm text-muted">{post.description}</p>
-              <Link
-                href={`/insights/${post.slug}`}
-                className="mt-4 inline-block text-sm font-semibold no-underline"
-              >
-                Read insight →
-              </Link>
-            </Card>
-          </Reveal>
-        ))}
+        {filteredPosts.length === 0 ? (
+          <Card>
+            <p className="text-sm text-muted">
+              No insights match this filter yet. Try another tag or search term.
+            </p>
+          </Card>
+        ) : (
+          filteredPosts.map((post, index) => (
+            <Reveal
+              key={post.slug}
+              variant="fadeIn"
+              delay={Math.min(index, 8) * 45}
+            >
+              <Card interactive>
+                <div className="flex flex-wrap items-center gap-3">
+                  {(post.tags || []).map((tag) => (
+                    <Badge key={tag}>{tag}</Badge>
+                  ))}
+                  <p className="text-xs text-muted">
+                    {post.date} · {post.readingTime} min read
+                  </p>
+                </div>
+                <h2 className="mt-3 text-xl font-semibold text-text">
+                  {post.title}
+                </h2>
+                <p className="mt-2 text-sm text-muted">{post.description}</p>
+                <Link
+                  href={`/insights/${post.slug}`}
+                  className="mt-4 inline-block text-sm font-semibold no-underline"
+                >
+                  Read insight →
+                </Link>
+              </Card>
+            </Reveal>
+          ))
+        )}
       </div>
     </>
   );

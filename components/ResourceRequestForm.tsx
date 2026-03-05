@@ -1,6 +1,7 @@
 'use client';
 
 import { FormEvent, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { track } from '@/lib/track';
 
 type Props = {
@@ -10,8 +11,8 @@ type Props = {
 };
 
 export function ResourceRequestForm({ resourceSlug, fallbackDownloadUrl, siteEmail }: Props) {
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState('');
   const [error, setError] = useState('');
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
@@ -39,14 +40,10 @@ export function ResourceRequestForm({ resourceSlug, fallbackDownloadUrl, siteEma
       return;
     }
 
-    setSuccess(
-      data.delivered
-        ? 'Check your email for the download.'
-        : 'Downloads are currently delivered manually — email us and we’ll send it.',
-    );
     setLoading(false);
     event.currentTarget.reset();
     track('resource_request_submit', { resource_slug: resourceSlug });
+    router.push(`/thanks?resource=${resourceSlug}&delivered=${data.delivered ? '1' : '0'}`);
   }
 
   return (
@@ -58,7 +55,6 @@ export function ResourceRequestForm({ resourceSlug, fallbackDownloadUrl, siteEma
       <button disabled={loading} className="rounded bg-brand-600 px-4 py-2 text-sm font-semibold text-white disabled:opacity-60">
         {loading ? 'Submitting…' : 'Email me the resource'}
       </button>
-      {success ? <p className="rounded bg-emerald-50 p-3 text-sm text-emerald-800">{success}</p> : null}
       {error ? (
         <p className="rounded bg-rose-50 p-3 text-sm text-rose-800">
           {error} Fallback: <a href={`mailto:${siteEmail}`}>email me directly</a>.

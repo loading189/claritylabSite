@@ -28,6 +28,16 @@ export default function ARRecoveryChecklistPage() {
           <FeatureList items={resource.includes} />
         </Card>
 
+        <Card title="Who it’s for" className="mt-4">
+          <FeatureList
+            items={[
+              'Owners with growing AR over the last 2-3 months',
+              'Office teams that need a repeatable weekly collections rhythm',
+              'Operators who want stronger cash timing without aggressive client friction',
+            ]}
+          />
+        </Card>
+
         <Card title="Get access" className="mt-4">
           <ResourceRequestForm
             resourceSlug="ar-recovery-checklist"

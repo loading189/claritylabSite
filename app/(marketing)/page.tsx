@@ -2,6 +2,7 @@ import { CalloutCTA } from '@/components/CalloutCTA';
 import { Card } from '@/components/Card';
 import { Container } from '@/components/Container';
 import { FeatureList } from '@/components/FeatureList';
+import Link from 'next/link';
 import { Reveal } from '@/components/Reveal';
 import { Section } from '@/components/Section';
 import { FeaturedInsights } from '@/components/marketing/FeaturedInsights';
@@ -22,7 +23,9 @@ const findings = [
 ];
 
 export default function HomePage() {
-  const posts = getAllInsights().slice(0, 3);
+  const allPosts = getAllInsights();
+  const latestPosts = allPosts.slice(0, 3);
+  const featuredPosts = allPosts.filter((post) => post.featured).slice(0, 3);
 
   return (
     <>
@@ -102,10 +105,37 @@ export default function HomePage() {
       <Section className={styles.dividerSection}>
         <Container>
           <SectionHeader
+            title="Start here"
+            subtitle="Featured operator notes we recommend reading first."
+          />
+          <FeaturedInsights
+            posts={featuredPosts.length ? featuredPosts : latestPosts}
+          />
+        </Container>
+      </Section>
+
+      <Section className={styles.dividerSection}>
+        <Container>
+          <SectionHeader
             title="Latest insights"
             subtitle="Practical notes from the field on cash, team throughput, and execution systems."
           />
-          <FeaturedInsights posts={posts} />
+          <FeaturedInsights posts={latestPosts} />
+          <Card className="mt-6">
+            <h3 className="text-lg font-semibold text-text">
+              Get the AR checklist
+            </h3>
+            <p className="mt-2 text-sm text-muted">
+              Use the one-page cadence to tighten collections without creating
+              friction.
+            </p>
+            <Link
+              href="/resources/ar-recovery-checklist"
+              className="mt-4 inline-block text-sm font-semibold no-underline"
+            >
+              Get the AR Recovery Checklist →
+            </Link>
+          </Card>
         </Container>
       </Section>
 
