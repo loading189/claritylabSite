@@ -9,7 +9,7 @@ import { LeadForm } from '@/components/LeadForm';
 import { MarketingHero } from '@/components/marketing/MarketingHero';
 import { Section } from '@/components/Section';
 import { runtimeConfig } from '@/content/runtime';
-import { notAFit, siteConfig, whoItsFor } from '@/content/site';
+import { siteConfig, whoItsFor, notAFit } from '@/content/site';
 import styles from './page.module.css';
 
 export const metadata: Metadata = {
@@ -17,6 +17,26 @@ export const metadata: Metadata = {
   description:
     'A practical financial + operations audit for established service trade businesses.',
 };
+
+const examples = [
+  {
+    title: 'AR stalled at $350k',
+    href: '/case-studies/ar-stalled-350k',
+    detail:
+      'How cadence, ownership, and escalation patterns tightened collections.',
+  },
+  {
+    title: 'Technician utilization at 47%',
+    href: '/case-studies/technician-utilization-47',
+    detail: 'How dispatch and closeout rhythms recovered billable capacity.',
+  },
+  {
+    title: 'Sample report preview',
+    href: '/sample-report',
+    detail:
+      'See the exact scorecard and recommendation structure before booking.',
+  },
+];
 
 export default function AuditPage() {
   return (
@@ -74,6 +94,31 @@ export default function AuditPage() {
               Get the AR Recovery Checklist →
             </Link>
           </Card>
+        </Container>
+      </Section>
+
+      <Section>
+        <Container className={styles.examplesWrap}>
+          <h2 className="text-2xl font-semibold text-text">Examples</h2>
+          <p className="mt-2 text-sm text-muted">
+            See patterns similar to what your audit could uncover.
+          </p>
+          <div className={styles.examplesGrid}>
+            {examples.map((example) => (
+              <Card key={example.href} interactive>
+                <h3 className="text-lg font-semibold text-text">
+                  {example.title}
+                </h3>
+                <p className="mt-2 text-sm text-muted">{example.detail}</p>
+                <Link
+                  href={example.href}
+                  className="mt-4 inline-block text-sm font-semibold no-underline"
+                >
+                  Open example →
+                </Link>
+              </Card>
+            ))}
+          </div>
         </Container>
       </Section>
 

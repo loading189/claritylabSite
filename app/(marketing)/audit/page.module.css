@@ -7,14 +7,24 @@
   gap: 1rem;
 }
 
-@media (min-width: 768px) {
-  .gridTwo {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
+.examplesWrap,
 .formStack {
   max-width: 64rem;
   display: grid;
   gap: 1rem;
+}
+
+.examplesGrid {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .gridTwo {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .examplesGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }

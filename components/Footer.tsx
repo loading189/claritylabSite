@@ -3,6 +3,12 @@ import { navItems, siteConfig } from '@/content/site';
 import { runtimeConfig } from '@/content/runtime';
 import { Container } from './Container';
 
+const resourceLinks = [
+  { label: 'Start Here', href: '/start-here' },
+  { label: 'Sample Report', href: '/sample-report' },
+  { label: 'AR Checklist', href: '/resources/ar-recovery-checklist' },
+];
+
 export function Footer() {
   return (
     <footer className="border-t bg-surface py-12">
@@ -16,6 +22,13 @@ export function Footer() {
           <div className="flex flex-wrap gap-3 md:justify-end">
             {navItems.map((item) => (
               <Link key={item.href} href={item.href} className="text-sm text-muted no-underline hover:text-text">
+                {item.label}
+              </Link>
+            ))}
+          </div>
+          <div className="mt-3 flex flex-wrap gap-3 md:justify-end">
+            {resourceLinks.map((item) => (
+              <Link key={item.href} href={item.href} className="text-xs text-muted no-underline hover:text-text">
                 {item.label}
               </Link>
             ))}
