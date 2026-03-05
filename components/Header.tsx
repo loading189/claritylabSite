@@ -7,32 +7,30 @@ import { navItems, siteConfig } from '@/content/site';
 import { runtimeConfig } from '@/content/runtime';
 import { Button } from './Button';
 import { Container } from './Container';
-import { ThemeToggle } from './ThemeToggle';
 
 export function Header() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border/80 bg-bg/80 backdrop-blur-xl">
+    <header className="sticky top-0 z-40 border-b border-border/80 bg-bg/85 backdrop-blur-xl">
       <Container className="flex min-h-[4.5rem] items-center justify-between py-3">
         <Link href="/" className="no-underline">
-          <p className="text-sm font-semibold text-text">{siteConfig.name}</p>
+          <p className="text-sm font-bold uppercase tracking-[0.12em] text-accent">
+            {siteConfig.name}
+          </p>
           <p className="text-xs text-muted">{siteConfig.subTagline}</p>
         </Link>
 
-        <div className="flex items-center gap-2 md:hidden">
-          <ThemeToggle />
-          <button
-            type="button"
-            className="rounded-button border border-border bg-surface px-3 py-2 text-sm shadow-soft"
-            onClick={() => setOpen((current) => !current)}
-            aria-expanded={open}
-            aria-controls="mobile-nav"
-          >
-            Menu
-          </button>
-        </div>
+        <button
+          type="button"
+          className="rounded-button border border-border bg-surface px-3 py-2 text-sm text-text shadow-soft md:hidden"
+          onClick={() => setOpen((current) => !current)}
+          aria-expanded={open}
+          aria-controls="mobile-nav"
+        >
+          Menu
+        </button>
 
         <nav
           className="hidden items-center gap-1 md:flex"
@@ -49,7 +47,7 @@ export function Header() {
                 href={item.href}
                 className={`nav-link rounded-button px-3 py-2 text-sm no-underline transition ${
                   active
-                    ? 'bg-accent/15 font-semibold text-accent shadow-soft'
+                    ? 'bg-accent text-black shadow-soft'
                     : 'text-muted hover:bg-surfaceRaised hover:text-text'
                 }`}
               >
@@ -57,7 +55,6 @@ export function Header() {
               </Link>
             );
           })}
-          <ThemeToggle />
           {runtimeConfig.featureFlags.isBookingEnabled ? (
             <Button
               href={siteConfig.calendlyUrl}
@@ -65,7 +62,7 @@ export function Header() {
               trackingProps={{ page: 'header' }}
               className="ml-2"
             >
-              Book a 15-min Clarity Call
+              Book Audit
             </Button>
           ) : null}
         </nav>
@@ -93,7 +90,7 @@ export function Header() {
                 trackingEvent="booking_click"
                 trackingProps={{ page: 'header_mobile' }}
               >
-                Book a 15-min Clarity Call
+                Book Audit
               </Button>
             ) : null}
           </Container>

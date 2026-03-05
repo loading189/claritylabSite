@@ -15,11 +15,11 @@ type ButtonProps = {
 
 const variants = {
   primary:
-    'border border-accent/30 bg-accent text-white shadow-soft hover:-translate-y-px hover:shadow-raised active:translate-y-px active:shadow-pressed',
+    'border border-accent bg-accent text-black shadow-soft hover:-translate-y-px hover:shadow-raised hover:shadow-accent/30 active:translate-y-px active:shadow-pressed',
   secondary:
-    'border border-border bg-text text-bg shadow-soft hover:-translate-y-px hover:shadow-raised active:translate-y-px active:shadow-pressed',
+    'border border-white/20 bg-white text-black shadow-soft hover:-translate-y-px hover:bg-accent2 hover:shadow-raised active:translate-y-px active:shadow-pressed',
   ghost:
-    'border border-border bg-surface text-muted shadow-soft hover:-translate-y-px hover:bg-surfaceRaised hover:text-text hover:shadow-raised active:translate-y-px active:shadow-pressed',
+    'border border-border bg-surface text-white shadow-soft hover:-translate-y-px hover:border-accent/60 hover:bg-surfaceRaised hover:text-accent2 hover:shadow-raised active:translate-y-px active:shadow-pressed',
 };
 
 export function Button({
@@ -36,7 +36,7 @@ export function Button({
       onClick={() => {
         if (trackingEvent) track(trackingEvent, trackingProps);
       }}
-      className={`hover-lift inline-flex h-11 items-center justify-center rounded-button px-4 text-sm font-semibold no-underline transition duration-200 disabled:pointer-events-none disabled:opacity-60 ${variants[variant]} ${className}`}
+      className={`hover-lift button-glow inline-flex h-11 items-center justify-center rounded-button px-4 text-sm font-semibold no-underline transition duration-200 disabled:pointer-events-none disabled:opacity-60 ${variants[variant]} ${className}`}
     >
       {children}
     </Link>
