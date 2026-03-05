@@ -1,29 +1,34 @@
 .heroSection {
-  padding-top: 3rem;
-  padding-bottom: 2.5rem;
+  padding-top: var(--space-xl);
+  padding-bottom: var(--space-lg);
 }
 
 .heroContainer {
   position: relative;
   overflow: hidden;
-  border-radius: 1rem;
-  border: 1px solid hsl(var(--accent) / 0.4);
+  border-radius: var(--radius-card);
+  border: 1px solid hsl(var(--accent-2) / 0.38);
   background: hsl(var(--surface));
   padding: 2rem;
   box-shadow: var(--shadow-raised);
 }
 
 .dividerSection {
-  padding-top: 2rem;
-  padding-bottom: 2rem;
+  padding-top: var(--space-lg);
+  padding-bottom: var(--space-lg);
 }
 
 .dividerSection::before {
   content: '';
   display: block;
   height: 1px;
-  margin-bottom: 2rem;
-  background: hsl(var(--border) / 0.75);
+  margin-bottom: var(--space-lg);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    hsl(var(--accent-2) / 0.3),
+    transparent
+  );
 }
 
 .exampleGrid {
@@ -54,8 +59,7 @@
 }
 
 .sampleCard {
-  border-color: hsl(var(--accent) / 0.35);
-  background: var(--gradient-subtle);
+  border-color: hsl(var(--accent-2) / 0.35);
 }
 
 .inlineCta {

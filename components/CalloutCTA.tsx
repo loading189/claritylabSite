@@ -15,10 +15,8 @@ export function CalloutCTA({
   return (
     <section className="py-14 sm:py-16">
       <Container>
-        <div className="rounded-2xl border border-accent/40 bg-surface p-8 shadow-soft sm:p-10">
-          <h2 className="text-3xl font-bold text-text">
-            Ready to book your audit?
-          </h2>
+        <div className="neu-card rounded-2xl border-accent/30 p-8 sm:p-10">
+          <h2 className="heading-lg text-text">Ready to book your audit?</h2>
           <p className="mt-3 max-w-2xl text-sm text-muted sm:text-base">
             Bring your current numbers and we will map where margin, cash flow,
             and operational execution are breaking.
@@ -35,6 +33,9 @@ export function CalloutCTA({
             ) : null}
             <Button href="/sample-report" variant="ghost">
               View Sample Report
+            </Button>
+            <Button href="/resources/ar-recovery-checklist" variant="secondary">
+              Get the AR Checklist
             </Button>
             <a
               href={`mailto:${siteConfig.email}`}

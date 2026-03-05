@@ -16,13 +16,13 @@ export default function ThanksPage() {
   return (
     <Section>
       <Container className={styles.container}>
-        <Card className={styles.heroCard} title="You’re booked">
+        <Card className={styles.heroCard} title="You’re booked" neumorphic>
           <p className="max-w-2xl text-sm text-muted sm:text-base">
             Thanks — next steps are simple. Bring the items below so we can
             focus the call on fast, practical wins.
           </p>
           <div className={styles.gridTwo}>
-            <Card title="Prepare these before the call">
+            <Card title="Prepare these before the call" neumorphic>
               <FeatureList
                 items={[
                   'AR aging report (current month + prior month if available)',
@@ -32,7 +32,7 @@ export default function ThanksPage() {
                 ]}
               />
             </Card>
-            <Card title="What happens next">
+            <Card title="What happens next" neumorphic>
               <FeatureList
                 items={[
                   'We align on your highest-pressure objective first',

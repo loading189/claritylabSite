@@ -1,8 +1,10 @@
 import { Metadata } from 'next';
 import { CalloutCTA } from '@/components/CalloutCTA';
+import { Card } from '@/components/Card';
 import { Container } from '@/components/Container';
 import { InsightsList } from '@/components/insights-list';
 import { FeaturedInsights } from '@/components/marketing/FeaturedInsights';
+import { NextStepCTA } from '@/components/marketing/NextStepCTA';
 import { Reveal } from '@/components/Reveal';
 import { Section } from '@/components/Section';
 import { getAllInsights, getInsightTags } from '@/lib/content/insights';
@@ -25,10 +27,8 @@ export default function InsightsPage() {
       <Section>
         <Container className={styles.container}>
           <Reveal>
-            <div className={styles.heroCard}>
-              <h1 className="text-4xl font-semibold tracking-tight text-text">
-                Clarity Labs Insights
-              </h1>
+            <div className={`${styles.heroCard} neu-card`}>
+              <h1 className="heading-lg text-text">Clarity Labs Insights</h1>
               <p className="mt-4 max-w-2xl text-muted">
                 Operator-level notes on cash flow, team utilization, and process
                 design for service businesses.
@@ -36,8 +36,16 @@ export default function InsightsPage() {
             </div>
           </Reveal>
 
+          <Card className={styles.inlineCta} neumorphic>
+            <NextStepCTA
+              title="Need direct guidance?"
+              subtitle="Book your audit, review the sample report, or start with the AR checklist."
+              trackingPage="insights_inline"
+            />
+          </Card>
+
           <div className={styles.featuredSection}>
-            <h2 className="text-xl font-semibold text-text">Start here</h2>
+            <h2 className="heading-md text-text">Start here</h2>
             <FeaturedInsights posts={fallbackFeatured} />
           </div>
 
