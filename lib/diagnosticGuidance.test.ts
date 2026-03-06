@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { getDiagnosticGuidance } from '@/lib/diagnosticGuidance';
+import { getAdvisoryBriefFromDiagnostic, getDiagnosticGuidance } from '@/lib/diagnosticGuidance';
 import type { DiagnosticRecord } from '@/lib/diagnosticsData';
 
 const baseDiagnostic: DiagnosticRecord = {
@@ -20,23 +20,35 @@ const baseDiagnostic: DiagnosticRecord = {
   },
 };
 
-test('getDiagnosticGuidance returns cashflow recommendations for cash signals', () => {
-  const guidance = getDiagnosticGuidance(baseDiagnostic);
+test('getAdvisoryBriefFromDiagnostic returns deterministic action plan fields for cash signals', () => {
+  const brief = getAdvisoryBriefFromDiagnostic(baseDiagnostic);
 
-  assert.equal(guidance.explanations.length, 4);
-  assert.ok(guidance.explanations[0]?.includes('do not need to fix everything at once'));
-  assert.ok(guidance.nextSteps[0]?.includes('weekly review of open invoices'));
-  assert.equal(guidance.resources[0]?.href, '/resources/ar-recovery-checklist');
-  assert.equal(guidance.summaryBullets.length, 3);
+  assert.ok(brief.shortSummary.includes('do not need to fix everything at once'));
+  assert.equal(brief.whereToStart.length, 3);
+  assert.equal(brief.firstStep, brief.whereToStart[0]);
+  assert.deepEqual(brief.nextTwoSteps, brief.whereToStart.slice(1, 3));
+  assert.equal(brief.resources[0]?.href, '/resources/ar-recovery-checklist');
+  assert.equal(brief.keyResponses.length, 3);
 });
 
-test('getDiagnosticGuidance falls back to systems profile for unknown signal', () => {
-  const guidance = getDiagnosticGuidance({
+test('getAdvisoryBriefFromDiagnostic falls back to systems profile for unknown signal', () => {
+  const brief = getAdvisoryBriefFromDiagnostic({
     ...baseDiagnostic,
     primarySignal: 'mystery',
     tier: 'Cool',
   });
 
-  assert.ok(guidance.explanations[0]?.includes('manageable right now'));
-  assert.ok(guidance.discussionPoints[0]?.includes('owner-dependent'));
+  assert.ok(brief.shortSummary.includes('manageable right now'));
+  assert.ok(brief.whatMayBeHappening[0]?.includes('memory instead of a repeatable process'));
+  assert.ok(brief.discussionPoints[0]?.includes('owner-dependent'));
+});
+
+test('getDiagnosticGuidance keeps compatibility shape while using advisory brief values', () => {
+  const guidance = getDiagnosticGuidance(baseDiagnostic);
+  const brief = getAdvisoryBriefFromDiagnostic(baseDiagnostic);
+
+  assert.deepEqual(guidance.nextSteps, brief.whereToStart);
+  assert.deepEqual(guidance.prepSuggestions, brief.prepItems);
+  assert.deepEqual(guidance.discussionPoints, brief.discussionPoints);
+  assert.equal(guidance.summaryBullets[0], brief.keyResponses[0]);
 });

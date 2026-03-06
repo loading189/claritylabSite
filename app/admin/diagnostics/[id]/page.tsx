@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import { Card } from '@/components/Card';
 import { DiagnosticActions } from '@/components/admin/DiagnosticActions';
 import { getClientByEmail } from '@/lib/bookingsData';
-import { getDiagnosticGuidance } from '@/lib/diagnosticGuidance';
+import { getAdvisoryBriefFromDiagnostic } from '@/lib/diagnosticGuidance';
 import { getDiagnosticById } from '@/lib/diagnosticsData';
 import { getGroupedAnswers } from '@/lib/diagnosticsPresentation';
 
@@ -13,7 +13,7 @@ export default async function AdminDiagnosticDetailPage({ params }: { params: { 
 
   const groupedAnswers = getGroupedAnswers(diagnostic.answers);
   const client = diagnostic.email ? await getClientByEmail(diagnostic.email) : null;
-  const guidance = getDiagnosticGuidance(diagnostic);
+  const brief = getAdvisoryBriefFromDiagnostic(diagnostic);
   const airtableBase = process.env.AIRTABLE_DIAGNOSTICS_TABLE_URL;
   const airtableUrl = airtableBase ? `${airtableBase}${airtableBase.includes('?') ? '&' : '?'}recordId=${diagnostic.id}` : undefined;
 
@@ -63,26 +63,38 @@ export default async function AdminDiagnosticDetailPage({ params }: { params: { 
         )}
       </Card>
 
-      <Card title="Important notes">
+      <Card title="Summary">
+        <p className="text-sm">{brief.shortSummary}</p>
+      </Card>
+
+      <Card title="Likely issue pattern">
         <ul className="list-disc space-y-1 pl-5 text-sm">
-          {guidance.explanations.map((note) => (
+          {brief.whatMayBeHappening.map((note) => (
             <li key={note}>{note}</li>
           ))}
         </ul>
       </Card>
 
-      <Card title="Suggested discussion points">
+      <Card title="Where to start">
         <ul className="list-disc space-y-1 pl-5 text-sm">
-          {guidance.discussionPoints.map((point) => (
-            <li key={point}>{point}</li>
+          {brief.whereToStart.map((step) => (
+            <li key={step}>{step}</li>
           ))}
         </ul>
       </Card>
 
-      <Card title="Prep suggestions to request from client">
+      <Card title="Prep items to request from client">
         <ul className="list-disc space-y-1 pl-5 text-sm">
-          {guidance.prepSuggestions.map((suggestion) => (
-            <li key={suggestion}>{suggestion}</li>
+          {brief.prepItems.map((item) => (
+            <li key={item}>{item}</li>
+          ))}
+        </ul>
+      </Card>
+
+      <Card title="Discussion points for the call">
+        <ul className="list-disc space-y-1 pl-5 text-sm">
+          {brief.discussionPoints.map((point) => (
+            <li key={point}>{point}</li>
           ))}
         </ul>
       </Card>
@@ -99,10 +111,10 @@ export default async function AdminDiagnosticDetailPage({ params }: { params: { 
         </ul>
       </Card>
 
-      {guidance.resources.length ? (
+      {brief.resources.length ? (
         <Card title="Linked resources">
           <ul className="list-disc space-y-1 pl-5 text-sm">
-            {guidance.resources.map((resource) => (
+            {brief.resources.map((resource) => (
               <li key={resource.href}>
                 <Link href={resource.href} className="text-accent underline-offset-2 hover:underline">
                   {resource.title}
