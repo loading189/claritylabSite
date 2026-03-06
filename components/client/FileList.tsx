@@ -27,7 +27,7 @@ export function FileList({ category, clientId }: { category: 'upload' | 'report'
   return (
     <section className="rounded-card border border-border bg-surface p-5 shadow-soft">
       <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-text">{category === 'report' ? 'Report files' : 'Uploaded files'}</h2>
+        <h2 className="text-lg font-semibold text-text">{category === 'report' ? 'Shared reports' : 'Uploaded documents'}</h2>
         <button className="rounded-input border border-border px-3 py-1.5 text-xs text-muted" onClick={() => void load()}>
           Refresh
         </button>
@@ -54,7 +54,7 @@ export function FileList({ category, clientId }: { category: 'upload' | 'report'
             </button>
           </div>
         ))}
-        {!rows.length ? <p className="rounded-input border border-dashed border-border px-3 py-6 text-center text-sm text-muted">No files available yet.</p> : null}
+        {!rows.length ? <p className="rounded-input border border-dashed border-border px-3 py-6 text-center text-sm text-muted">No files yet. New uploads and reports will show here.</p> : null}
       </div>
     </section>
   );

@@ -10,13 +10,13 @@ export default async function ClientLayout({ children }: { children: React.React
 
   return (
     <PortalShell
-      title="Client Vault"
+      title="Client Workspace"
       nav={[
-        { href: '/client', label: 'Dashboard' },
-        { href: '/client/scan', label: 'Diagnostic' },
-        { href: '/client/prep', label: 'Prep' },
-        { href: '/client/files', label: 'Files' },
+        { href: '/client', label: 'Overview' },
         { href: '/client/reports', label: 'Reports' },
+        { href: '/client/prep', label: 'Requests & prep' },
+        { href: '/client/files', label: 'Uploads & documents' },
+        { href: '/client/scan', label: 'Diagnostic context' },
         ...(user.role === 'admin' ? [{ href: '/admin/clients', label: 'Clients' }] : []),
       ]}
     >

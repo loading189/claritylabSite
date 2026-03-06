@@ -6,9 +6,9 @@ export default function ClientFilesPage() {
   return (
     <div className="space-y-6">
       <PortalPageHeader
-        eyebrow="File vault"
-        title="Documents"
-        description="Upload working files and keep source material organized for your upcoming recommendations and reviews."
+        eyebrow="Uploads"
+        title="Uploads and documents"
+        description="Share source files, statements, and notes here. You can upload what you already have."
       />
       <FileUploader category="upload" />
       <FileList category="upload" />
