@@ -13,6 +13,8 @@ export default async function ClientLayout({ children }: { children: React.React
       title="Client Vault"
       nav={[
         { href: '/client', label: 'Dashboard' },
+        { href: '/client/scan', label: 'Diagnostic' },
+        { href: '/client/prep', label: 'Call Prep' },
         { href: '/client/files', label: 'Files' },
         { href: '/client/reports', label: 'Reports' },
         { href: '/client/contracts', label: 'Contracts' },

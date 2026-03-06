@@ -25,7 +25,7 @@ export function InsightHighlight({
           href={href}
           className="mt-3 inline-block text-sm font-semibold no-underline"
         >
-          Read more →
+          View insight
         </Link>
       ) : null}
     </article>

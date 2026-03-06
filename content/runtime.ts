@@ -79,6 +79,10 @@ export function getIntegrationStatus() {
       enabled: Boolean(process.env.AIRTABLE_API_KEY && process.env.AIRTABLE_BASE_ID && (process.env.AIRTABLE_SCAN_TABLE || 'Scan Diagnostics')),
       required: ['AIRTABLE_API_KEY', 'AIRTABLE_BASE_ID', 'AIRTABLE_SCAN_TABLE'],
     },
+    diagnostics_read: {
+      enabled: Boolean(process.env.AIRTABLE_API_KEY && process.env.AIRTABLE_BASE_ID && (process.env.AIRTABLE_DIAGNOSTICS_TABLE || process.env.AIRTABLE_SCAN_TABLE || 'Diagnostics')),
+      required: ['AIRTABLE_API_KEY', 'AIRTABLE_BASE_ID', 'AIRTABLE_DIAGNOSTICS_TABLE'],
+    },
     scanEmail: {
       enabled: Boolean(process.env.RESEND_API_KEY && process.env.EMAIL_FROM),
       required: ['RESEND_API_KEY', 'EMAIL_FROM', 'OWNER_EMAIL'],

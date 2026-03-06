@@ -24,7 +24,9 @@ export default function ScanPage() {
           whether a full audit follow-up is the right next move.
         </p>
         <ScanShell>
-          <Suspense fallback={<p className="text-sm text-muted">Loading scan…</p>}>
+          <Suspense
+            fallback={<p className="text-sm text-muted">Loading scan…</p>}
+          >
             <ScanWizard />
           </Suspense>
         </ScanShell>
