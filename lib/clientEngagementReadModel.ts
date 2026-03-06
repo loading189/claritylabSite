@@ -140,7 +140,7 @@ export function buildClientEngagementReadModel(inputs: ReadModelInputs): ClientE
   }));
 
   const requestFromRecords = mappedPersistedRequests
-    .filter((request) => request.status !== 'done')
+    .filter((request) => request.status !== 'done' && request.status !== 'complete')
     .sort((a, b) => {
       const aTime = a.dueDate ? new Date(a.dueDate).getTime() : Number.POSITIVE_INFINITY;
       const bTime = b.dueDate ? new Date(b.dueDate).getTime() : Number.POSITIVE_INFINITY;

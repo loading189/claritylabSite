@@ -22,6 +22,7 @@ export type VaultFile = {
   summary_note?: string;
   period_covered?: string;
   visible_to_client?: boolean | string;
+  deliverable_visibility?: 'draft' | 'visibleToClient' | 'internalOnly';
   status?: string;
 };
 

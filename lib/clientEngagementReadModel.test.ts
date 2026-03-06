@@ -87,6 +87,17 @@ test('buildClientEngagementReadModel prioritizes persisted requests and richer d
         notes: 'Reply in the prep notes section.',
         createdAt: '2026-01-05T10:00:00.000Z',
       },
+      {
+        id: 'req_2',
+        clientId: 'client_1',
+        title: 'Completed item should not be shown.',
+        category: 'prep',
+        status: 'complete',
+        dueDate: '2026-01-04',
+        owner: 'Owner',
+        notes: null,
+        createdAt: '2026-01-04T10:00:00.000Z',
+      },
     ],
   });
 
@@ -94,6 +105,7 @@ test('buildClientEngagementReadModel prioritizes persisted requests and richer d
   assert.equal(model.outstandingRequests[0]?.id, 'req_1');
   assert.equal(model.recentDeliverables[0]?.title, 'January Revenue Snapshot');
   assert.equal(model.recentDeliverables[0]?.summaryNote, 'Highlights from delivered reporting package.');
+  assert.equal(model.outstandingRequests.some((item) => item.id === 'req_2'), false);
 });
 
 test('buildClientEngagementReadModel keeps next actions clear before booking', () => {

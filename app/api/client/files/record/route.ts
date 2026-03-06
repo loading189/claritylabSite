@@ -2,6 +2,15 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createFileRecord } from '@/lib/vaultData';
 import { requireServerUser } from '@/lib/serverAuth';
 import { sendClientUploadNotification, sendReportReadyNotification } from '@/lib/email';
+import { updateEngagementRequestStatus } from '@/lib/engagementRequestsData';
+
+type DeliverableVisibility = 'draft' | 'visibleToClient' | 'internalOnly';
+
+function normalizeVisibility(value: unknown): DeliverableVisibility {
+  const visibility = String(value || '').trim();
+  if (visibility === 'draft' || visibility === 'internalOnly' || visibility === 'visibleToClient') return visibility;
+  return 'visibleToClient';
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -15,10 +24,22 @@ export async function POST(req: NextRequest) {
       clientId?: string;
       clientEmail?: string;
       note?: string;
+      title?: string;
+      deliverableType?: string;
+      summaryNote?: string;
+      periodCovered?: string;
+      visibleToClient?: boolean;
+      visibility?: DeliverableVisibility;
+      status?: string;
+      relatedRequestId?: string;
+      markRelatedRequestSubmitted?: boolean;
     };
 
     const clientId = user.role === 'admin' ? body.clientId || user.userId : user.userId;
     const clientEmail = body.clientEmail || user.email;
+
+    const visibility = normalizeVisibility(body.visibility);
+    const visibleToClient = visibility === 'visibleToClient' ? body.visibleToClient !== false : false;
 
     await createFileRecord({
       client_id: clientId,
@@ -32,7 +53,18 @@ export async function POST(req: NextRequest) {
       size_bytes: body.sizeBytes,
       created_at: new Date().toISOString(),
       note: body.note,
+      title: body.title,
+      deliverable_type: body.deliverableType,
+      summary_note: body.summaryNote,
+      period_covered: body.periodCovered,
+      visible_to_client: visibleToClient,
+      deliverable_visibility: visibility,
+      status: body.status,
     });
+
+    if (user.role === 'admin' && body.markRelatedRequestSubmitted && body.relatedRequestId) {
+      await updateEngagementRequestStatus(body.relatedRequestId, 'submitted');
+    }
 
     if (body.category === 'upload') {
       await sendClientUploadNotification({ clientEmail, filename: body.filename, clientId });
