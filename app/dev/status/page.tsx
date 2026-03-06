@@ -4,10 +4,11 @@ import { Container } from '@/components/Container';
 import { Section } from '@/components/Section';
 import { SectionHeader } from '@/components/SectionHeader';
 import { getIntegrationStatus } from '@/content/runtime';
+import { getDevStatusSummary } from '@/lib/devStatus';
 
 export const dynamic = 'force-dynamic';
 
-export default function DevStatusPage({ searchParams }: { searchParams: { token?: string } }) {
+export default async function DevStatusPage({ searchParams }: { searchParams: { token?: string } }) {
   const adminToken = process.env.ADMIN_DIAGNOSTIC_TOKEN;
   const allowedInProd = Boolean(adminToken && searchParams.token === adminToken);
 
@@ -16,6 +17,7 @@ export default function DevStatusPage({ searchParams }: { searchParams: { token?
   }
 
   const status = getIntegrationStatus();
+  const devStatus = await getDevStatusSummary();
 
   return (
     <Section>
@@ -44,6 +46,38 @@ export default function DevStatusPage({ searchParams }: { searchParams: { token?
             </ul>
           </Card>
         </div>
+
+        <div className="grid gap-4 md:grid-cols-2">
+          <Card title="Airtable probe checks">
+            <ul className="space-y-2 text-sm">
+              {Object.entries(devStatus.airtableProbes).map(([key, value]) => (
+                <li key={key} className="flex justify-between rounded-input border bg-slate-50 px-3 py-2">
+                  <span>{key}</span>
+                  <strong>{value}</strong>
+                </li>
+              ))}
+            </ul>
+          </Card>
+          <Card title="Clerk readiness">
+            <ul className="space-y-2 text-sm">
+              {Object.entries(devStatus.clerk).map(([key, value]) => (
+                <li key={key} className="flex justify-between rounded-input border bg-slate-50 px-3 py-2">
+                  <span>{key}</span>
+                  <strong>{String(value)}</strong>
+                </li>
+              ))}
+            </ul>
+          </Card>
+        </div>
+
+        <Card title="Airtable configuration summary">
+          <p className="text-sm">
+            configured: <strong>{String(devStatus.airtableConfig.configured)}</strong>
+          </p>
+          <p className="mt-2 text-xs text-muted">missing: {devStatus.airtableConfig.missing.join(', ') || 'none'}</p>
+          <p className="text-xs text-muted">warnings: {devStatus.airtableConfig.warnings.join(' | ') || 'none'}</p>
+        </Card>
+
         <Card title="Ops checks">
           <ul className="space-y-2 text-sm">
             <li>

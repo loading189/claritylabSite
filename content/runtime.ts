@@ -58,10 +58,22 @@ export const runtimeConfig = {
 export type RuntimeConfig = typeof runtimeConfig;
 
 export function getIntegrationStatus() {
+  const clerkEnvPresent = Boolean(process.env.CLERK_SECRET_KEY && process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
+  const clerkProviderEnabled = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
+
   const server = {
     auth: {
-      enabled: Boolean(process.env.CLERK_SECRET_KEY && process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY),
+      enabled: clerkEnvPresent,
       required: ['CLERK_SECRET_KEY', 'NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY'],
+    },
+
+    clerk_provider_enabled: {
+      enabled: clerkProviderEnabled,
+      required: ['NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY'],
+    },
+    middleware_protected_mode: {
+      enabled: clerkEnvPresent,
+      required: ['NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY', 'CLERK_SECRET_KEY'],
     },
     storage: {
       enabled: Boolean(process.env.FILE_SIGNING_SECRET),

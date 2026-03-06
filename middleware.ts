@@ -4,6 +4,7 @@ import {
   type NextFetchEvent,
   type NextRequest,
 } from 'next/server';
+import { getClerkConfig } from '@/lib/clerkConfig';
 
 const isProtectedRoute = createRouteMatcher([
   '/client(.*)',
@@ -14,10 +15,7 @@ const isProtectedRoute = createRouteMatcher([
 
 const isAdminRoute = createRouteMatcher(['/admin(.*)', '/api/admin(.*)']);
 
-const OWNER_EMAIL = (process.env.OWNER_EMAIL || '').toLowerCase();
-const isClerkConfigured =
-  Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY) &&
-  Boolean(process.env.CLERK_SECRET_KEY);
+const clerkConfig = getClerkConfig();
 
 type ClaimsRecord = Record<string, unknown>;
 
@@ -68,7 +66,9 @@ const configuredMiddleware = clerkMiddleware(async (auth, req) => {
 
   const role = getRoleFromClaims(sessionClaims);
   const email = getEmailFromClaims(sessionClaims);
-  const isAdmin = role === 'admin' || (OWNER_EMAIL && email === OWNER_EMAIL);
+  const isAdmin =
+    role === 'admin' ||
+    (clerkConfig.ownerEmail && email === clerkConfig.ownerEmail);
 
   if (!isAdmin) {
     const deniedUrl = new URL('/client?denied=admin', req.url);
@@ -79,7 +79,7 @@ const configuredMiddleware = clerkMiddleware(async (auth, req) => {
 });
 
 export default function middleware(req: NextRequest, event: NextFetchEvent) {
-  if (!isClerkConfigured) {
+  if (!clerkConfig.clerkEnvPresent) {
     if (!isProtectedRoute(req)) {
       return NextResponse.next();
     }

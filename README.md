@@ -58,6 +58,46 @@ If you want self-hosted fonts later:
   - Reuse `ProblemGrid`, `ProcessSteps`, `FindingsStrip`, and `FeaturedInsights` before introducing new repeated markup.
   - Keep marketing-only refactors scoped to `app/(marketing)` and `components/marketing` unless shared primitives truly need changes.
 
+## Airtable setup and diagnostics
+
+### Required env vars
+
+- `AIRTABLE_API_KEY` (Personal Access Token)
+- `AIRTABLE_BASE_ID`
+- `AIRTABLE_DIAGNOSTICS_TABLE` (default fallback: `AIRTABLE_SCAN_TABLE` then `Diagnostics`)
+- `AIRTABLE_CLIENTS_TABLE` (default: `Clients`)
+- `AIRTABLE_FILES_TABLE` when using vault file metadata (default: `Files`)
+- `AIRTABLE_BOOKINGS_TABLE` when Calendly webhook booking flow is enabled (default: `Bookings`)
+
+### How to find Airtable values
+
+1. **Base ID**: open your Airtable base, then copy the `app...` value from the API docs URL.
+2. **PAT token**: create a Personal Access Token in Airtable developer settings.
+3. **PAT scopes** (minimum):
+   - `data.records:read`
+   - `data.records:write`
+   - `schema.bases:read` (recommended for setup/debug)
+4. **Base access**: explicitly grant the PAT access to the target base.
+
+### Common 403 causes
+
+- PAT was created without access to the target base.
+- PAT is missing `data.records:read` / `data.records:write` scopes.
+- `AIRTABLE_BASE_ID` points to the wrong base.
+- `AIRTABLE_*_TABLE` has a typo or wrong capitalization.
+
+### Table names and encoding
+
+Table names are URL-encoded in server requests. Names with spaces (for example `Scan Diagnostics`) are supported.
+
+### Dev status checks
+
+Use `/dev/status` (development or token-gated production) to check:
+
+- Airtable configuration missing envs/warnings
+- Diagnostics/Clients/Bookings probe statuses (`ok`, `missing_env`, `unauthorized`, `forbidden`, `not_found`, `skipped`)
+- Clerk readiness (`clerk_env_present`, `clerk_provider_enabled`, `middleware_protected_mode`, `admin_role_source`)
+
 ## Integrations
 
 All integrations are configured through `content/runtime.ts` and server env vars.

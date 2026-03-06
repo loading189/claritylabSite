@@ -1,9 +1,12 @@
 import { Card } from '@/components/Card';
 import { Button } from '@/components/Button';
 import { getClientByEmail } from '@/lib/bookingsData';
-import { getLatestDiagnosticByEmail } from '@/lib/diagnosticsData';
+import {
+  getLatestDiagnosticByEmailWithStatus,
+} from '@/lib/diagnosticsData';
 import { getDiagnosticInsights } from '@/lib/diagnosticsPresentation';
 import { getServerUser } from '@/lib/serverAuth';
+import { shouldShowUnavailableRecordsState } from '@/lib/clientPortalState';
 
 function formatBookedDate(startTime?: string | null, timezone?: string | null) {
   if (!startTime) return 'Scheduling details will appear soon.';
@@ -23,11 +26,26 @@ function formatBookedDate(startTime?: string | null, timezone?: string | null) {
 
 export default async function ClientDashboard({ searchParams }: { searchParams: { booked?: string } }) {
   const user = await getServerUser();
-  const diagnostic = user?.email ? await getLatestDiagnosticByEmail(user.email) : null;
+  const diagnosticResult = user?.email
+    ? await getLatestDiagnosticByEmailWithStatus(user.email)
+    : { record: null, status: 'error' as const };
+  const diagnostic = diagnosticResult.record;
   const client = user?.email ? await getClientByEmail(user.email) : null;
   const insights = diagnostic ? getDiagnosticInsights(diagnostic) : [];
   const calendlyUrl = process.env.NEXT_PUBLIC_CALENDLY_URL || '/contact';
   const isBooked = searchParams.booked === '1' || client?.status === 'booked';
+
+  if (shouldShowUnavailableRecordsState(diagnosticResult.status, Boolean(diagnostic))) {
+    return (
+      <Card title="Your Client Portal">
+        <p>Client records are not available right now.</p>
+        <p className="mt-1 text-sm text-muted">Please contact us if you need access while portal setup is still in progress.</p>
+        <Button href="/contact" className="mt-4">
+          Contact us
+        </Button>
+      </Card>
+    );
+  }
 
   if (!diagnostic) {
     return (

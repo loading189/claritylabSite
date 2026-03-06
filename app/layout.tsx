@@ -9,6 +9,7 @@ import { PageTransition } from '@/components/PageTransition';
 import { StickyCTA } from '@/components/StickyCTA';
 import { runtimeConfig } from '@/content/runtime';
 import { siteConfig } from '@/content/site';
+import { getClerkConfig } from '@/lib/clerkConfig';
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
@@ -36,7 +37,7 @@ export const metadata: Metadata = {
 
 const themeScript = `(function(){try{var s=localStorage.getItem('theme');var d=window.matchMedia('(prefers-color-scheme: dark)').matches;var t=s==='light'||s==='dark'?s:(d?'dark':'light');document.documentElement.classList.toggle('dark',t==='dark');}catch(e){}})();`;
 
-const isClerkConfigured = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
+const isClerkConfigured = getClerkConfig().clerkProviderEnabled;
 
 function LayoutShell({ children }: { children: React.ReactNode }) {
   const localBusinessSchema = {

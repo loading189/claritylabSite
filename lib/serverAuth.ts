@@ -1,5 +1,6 @@
 import 'server-only';
 import { auth } from '@clerk/nextjs/server';
+import { getClerkConfig } from '@/lib/clerkConfig';
 
 export type AppUser = {
   userId: string;
@@ -7,10 +8,7 @@ export type AppUser = {
   role: 'admin' | 'client';
 };
 
-const OWNER_EMAIL = (process.env.OWNER_EMAIL || '').toLowerCase();
-const isClerkConfigured =
-  Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY) &&
-  Boolean(process.env.CLERK_SECRET_KEY);
+const clerkConfig = getClerkConfig();
 
 type ClaimsRecord = Record<string, unknown>;
 
@@ -40,7 +38,7 @@ function getRoleFromClaims(sessionClaims: unknown) {
 }
 
 export async function getServerUser(): Promise<AppUser | null> {
-  if (!isClerkConfigured) return null;
+  if (!clerkConfig.clerkEnvPresent) return null;
 
   const { userId, sessionClaims } = await auth();
   if (!userId) return null;
@@ -48,7 +46,7 @@ export async function getServerUser(): Promise<AppUser | null> {
   const email = getEmailFromClaims(sessionClaims);
   const metadataRole = getRoleFromClaims(sessionClaims);
   const role: 'admin' | 'client' =
-    metadataRole === 'admin' || email === OWNER_EMAIL ? 'admin' : 'client';
+    metadataRole === 'admin' || (clerkConfig.ownerEmail && email === clerkConfig.ownerEmail) ? 'admin' : 'client';
 
   return { userId, email, role };
 }
