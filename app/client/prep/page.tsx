@@ -51,14 +51,14 @@ export default async function ClientPrepPage() {
   return (
     <div className="space-y-6">
       <PortalPageHeader
-        eyebrow="Call prep"
-        title="Prepare for your call"
-        description="This page helps you gather the right numbers, reports, examples, and questions before we meet."
+        eyebrow="Requests"
+        title="Requests and prep"
+        description="Here’s what we need from you next so your session and follow-up work stay productive."
       />
 
       <section className="grid gap-4 lg:grid-cols-2">
         <article className="rounded-card border border-border bg-surface p-6 shadow-soft">
-          <h2 className="text-lg font-semibold text-text">Booked session</h2>
+          <h2 className="text-lg font-semibold text-text">Session details</h2>
           <p className="mt-3 text-sm text-muted">
             <strong className="text-text">Scheduled:</strong> {formatDateTime(client?.booked_start_time, client?.booked_timezone)}
           </p>
@@ -71,20 +71,20 @@ export default async function ClientPrepPage() {
         </article>
 
         <article className="rounded-card border border-border bg-surface p-6 shadow-soft">
-          <h2 className="text-lg font-semibold text-text">What to expect</h2>
+          <h2 className="text-lg font-semibold text-text">What happens in the session</h2>
           <p className="mt-3 text-sm text-muted">
-            In 45 minutes, we will review what is slowing the business down, agree on where to start, and set practical next steps.
+            We review what is slowing things down, agree on where to start, and set practical next steps.
           </p>
           <Button href="/client/scan" variant="secondary" className="mt-4">
-            Review diagnostic results
+            Open diagnostic context
           </Button>
         </article>
       </section>
 
       {brief ? (
         <section className="rounded-card border border-border bg-surface p-6 shadow-soft">
-          <h2 className="text-lg font-semibold text-text">Prep focus from your scan</h2>
-          <p className="mt-2 text-sm text-muted">{brief.shortSummary}</p>
+          <h2 className="text-lg font-semibold text-text">Context from your earlier scan</h2>
+          <p className="mt-2 text-sm text-muted">Your earlier scan is still here for reference. {brief.shortSummary}</p>
           {startPoints.length ? (
             <ul className="mt-3 space-y-2 text-sm text-muted">
               {startPoints.map((point) => (
@@ -98,8 +98,8 @@ export default async function ClientPrepPage() {
       ) : null}
 
       <section className="rounded-card border border-border bg-surface p-6 shadow-soft">
-        <h2 className="text-lg font-semibold text-text">Bring these numbers and reports</h2>
-        <p className="mt-2 text-sm text-muted">If these numbers are hard to pull together, that tells us something too.</p>
+        <h2 className="text-lg font-semibold text-text">Please share these numbers and reports</h2>
+        <p className="mt-2 text-sm text-muted">If any of this is hard to pull together, that helps us see where the process is stuck.</p>
         <ul className="mt-4 space-y-3">
           {prepItems.map((item, index) => (
             <li key={item} className="flex gap-3 rounded-input border border-border/70 bg-surfaceRaised px-3 py-2 text-sm text-muted">
@@ -111,14 +111,12 @@ export default async function ClientPrepPage() {
       </section>
 
       <section className="rounded-card border border-border bg-surface p-6 shadow-soft">
-        <h2 className="text-lg font-semibold text-text">Bring examples and questions</h2>
+        <h2 className="text-lg font-semibold text-text">Examples and questions to bring</h2>
         <div className="grid gap-4 lg:grid-cols-2">
           <div>
-            <h3 className="text-sm font-semibold text-text">Examples to bring</h3>
+            <h3 className="text-sm font-semibold text-text">Helpful examples</h3>
             <ul className="mt-2 space-y-2 text-sm text-muted">
-              <li className="rounded-input border border-border/70 bg-surfaceRaised px-3 py-2">
-                One job or invoice that went smoothly.
-              </li>
+              <li className="rounded-input border border-border/70 bg-surfaceRaised px-3 py-2">One job or invoice that went smoothly.</li>
               <li className="rounded-input border border-border/70 bg-surfaceRaised px-3 py-2">
                 One recent case where work slowed down, was delayed, or had to be reworked.
               </li>
@@ -142,7 +140,7 @@ export default async function ClientPrepPage() {
 
       <section className="rounded-card border border-border bg-surface p-6 shadow-soft">
         <h2 className="text-lg font-semibold text-text">Upload supporting files</h2>
-        <p className="mt-2 text-sm text-muted">Bring what you already have. We can work from there.</p>
+        <p className="mt-2 text-sm text-muted">You can upload what you already have. We can work from there.</p>
         <Button href="/client/files" className="mt-4">
           Upload documents
         </Button>
