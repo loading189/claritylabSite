@@ -2,8 +2,8 @@ import { Button } from '@/components/Button';
 import { EmptyState } from '@/components/portal/EmptyState';
 import { PortalPageHeader } from '@/components/portal/PortalPageHeader';
 import { shouldShowUnavailableRecordsState } from '@/lib/clientPortalState';
+import { getDiagnosticGuidance } from '@/lib/diagnosticGuidance';
 import { getLatestDiagnosticByEmailWithStatus } from '@/lib/diagnosticsData';
-import { getDiagnosticInsights, getGroupedAnswers } from '@/lib/diagnosticsPresentation';
 import { getServerUser } from '@/lib/serverAuth';
 
 export default async function ClientScanPage() {
@@ -18,7 +18,7 @@ export default async function ClientScanPage() {
     return (
       <EmptyState
         title="Diagnostic data unavailable"
-        description="We couldn't load your response data right now. Contact support and we'll help resolve access quickly."
+        description="We couldn't load your scan right now. Contact support and we'll help fix access quickly."
         actionLabel="Contact support"
         actionHref="/contact"
       />
@@ -29,22 +29,21 @@ export default async function ClientScanPage() {
     return (
       <EmptyState
         title="No diagnostic on file"
-        description="Take the Clarity diagnostic to unlock your score summary and call planning workflow."
+        description="Take the Clarity diagnostic to get a clear score, likely causes, and next steps."
         actionLabel="Start diagnostic"
         actionHref="/scan"
       />
     );
   }
 
-  const groupedAnswers = getGroupedAnswers(diagnostic.answers);
-  const insights = getDiagnosticInsights(diagnostic);
+  const guidance = getDiagnosticGuidance(diagnostic);
 
   return (
     <div className="space-y-6">
       <PortalPageHeader
         eyebrow="Diagnostic"
-        title="Your diagnostic result"
-        description="This readout summarizes your current operating signal and gives us the baseline for your call."
+        title="Your scan results"
+        description="Here’s what may be slowing things down, and where we would start."
       />
 
       <section className="rounded-card border border-border bg-surface p-6 shadow-soft">
@@ -61,40 +60,64 @@ export default async function ClientScanPage() {
             <p className="text-xs uppercase tracking-[0.14em] text-muted">Primary signal</p>
             <p className="mt-2 text-lg font-semibold capitalize text-text">{diagnostic.primarySignal}</p>
           </div>
-          <div>
-            <p className="text-xs uppercase tracking-[0.14em] text-muted">Next action</p>
-            <Button href={calendlyUrl} className="mt-2">Book call</Button>
+          <div className="space-y-2">
+            <Button href={calendlyUrl} className="w-full justify-center">Book a call</Button>
+            <Button href="/client/prep" variant="ghost" className="w-full justify-center">
+              Continue in portal
+            </Button>
           </div>
         </div>
       </section>
 
       <section className="rounded-card border border-border bg-surface p-6 shadow-soft">
-        <h2 className="text-lg font-semibold text-text">Key signals</h2>
-        {insights.length ? (
-          <ul className="mt-3 space-y-2 text-sm text-muted">
-            {insights.map((insight) => (
-              <li key={insight} className="rounded-input border border-border/70 bg-surfaceRaised px-3 py-2">
-                {insight}
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className="mt-2 text-sm text-muted">We&apos;ll review your responses together during the call.</p>
-        )}
-      </section>
-
-      <section className="rounded-card border border-border bg-surface p-6 shadow-soft">
-        <h2 className="text-lg font-semibold text-text">Response detail</h2>
-        <ul className="mt-4 space-y-3">
-          {groupedAnswers.map((answer) => (
-            <li key={answer.key} className="rounded-input border border-border/70 bg-surfaceRaised px-4 py-3">
-              <p className="font-mono text-xs uppercase tracking-[0.12em] text-muted">{answer.step}</p>
-              <p className="mt-1 text-sm font-semibold text-text">{answer.question}</p>
-              <p className="mt-1 text-sm text-muted">{answer.value}</p>
+        <h2 className="text-lg font-semibold text-text">What may be happening</h2>
+        <ul className="mt-3 space-y-2 text-sm text-muted">
+          {guidance.explanations.map((item) => (
+            <li key={item} className="rounded-input border border-border/70 bg-surfaceRaised px-3 py-2">
+              {item}
             </li>
           ))}
         </ul>
       </section>
+
+      <section className="rounded-card border border-border bg-surface p-6 shadow-soft">
+        <h2 className="text-lg font-semibold text-text">Where to start</h2>
+        <ul className="mt-3 space-y-2 text-sm text-muted">
+          {guidance.nextSteps.map((step) => (
+            <li key={step} className="rounded-input border border-border/70 bg-surfaceRaised px-3 py-2">
+              {step}
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      {guidance.resources.length ? (
+        <section className="rounded-card border border-border bg-surface p-6 shadow-soft">
+          <h2 className="text-lg font-semibold text-text">Helpful resources</h2>
+          <ul className="mt-3 space-y-2 text-sm text-muted">
+            {guidance.resources.map((resource) => (
+              <li key={resource.href}>
+                <a href={resource.href} className="text-accent underline-offset-2 hover:underline">
+                  {resource.title}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
+
+      {guidance.summaryBullets.length ? (
+        <section className="rounded-card border border-border bg-surface p-6 shadow-soft">
+          <h2 className="text-lg font-semibold text-text">Your key responses</h2>
+          <ul className="mt-3 space-y-2 text-sm text-muted">
+            {guidance.summaryBullets.map((bullet) => (
+              <li key={bullet} className="rounded-input border border-border/70 bg-surfaceRaised px-3 py-2">
+                {bullet}
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
     </div>
   );
 }

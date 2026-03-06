@@ -36,8 +36,8 @@ export default async function ClientPrepPage() {
     <div className="space-y-6">
       <PortalPageHeader
         eyebrow="Call prep"
-        title="Prepare for your clarity session"
-        description="A focused prep checklist helps us spend the full session on high-leverage decisions."
+        title="Prepare for your call"
+        description="A short prep helps us use your call on real decisions, not background catch-up."
       />
 
       <section className="grid gap-4 lg:grid-cols-2">
@@ -56,7 +56,7 @@ export default async function ClientPrepPage() {
 
         <article className="rounded-card border border-border bg-surface p-6 shadow-soft">
           <h2 className="text-lg font-semibold text-text">What to expect</h2>
-          <p className="mt-3 text-sm text-muted">45-minute operator session, practical bottleneck triage, then a clear 90-day action path.</p>
+          <p className="mt-3 text-sm text-muted">In 45 minutes, we will review what is slowing the business down and agree on practical next steps.</p>
           <Button href="/client/scan" variant="secondary" className="mt-4">
             View diagnostic
           </Button>
@@ -64,7 +64,7 @@ export default async function ClientPrepPage() {
       </section>
 
       <section className="rounded-card border border-border bg-surface p-6 shadow-soft">
-        <h2 className="text-lg font-semibold text-text">Checklist</h2>
+        <h2 className="text-lg font-semibold text-text">Simple prep checklist</h2>
         <ul className="mt-4 space-y-3">
           {checklist.map((item, index) => (
             <li key={item} className="flex gap-3 rounded-input border border-border/70 bg-surfaceRaised px-3 py-2 text-sm text-muted">
@@ -77,7 +77,7 @@ export default async function ClientPrepPage() {
 
       <section className="rounded-card border border-border bg-surface p-6 shadow-soft">
         <h2 className="text-lg font-semibold text-text">Bring supporting documents</h2>
-        <p className="mt-2 text-sm text-muted">Upload reports or exports now so we can review context before your session.</p>
+        <p className="mt-2 text-sm text-muted">If you have reports or exports, upload them now so we can prepare before your call.</p>
         <Button href="/client/files" className="mt-4">
           Upload documents
         </Button>

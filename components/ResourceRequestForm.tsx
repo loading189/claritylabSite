@@ -51,9 +51,9 @@ export function ResourceRequestForm({ resourceSlug, fallbackDownloadUrl, siteEma
       <input name="website" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden defaultValue="" />
       <input name="name" placeholder="Name (optional)" className="w-full rounded border border-slate-300 px-3 py-2 text-sm" />
       <input name="email" type="email" required placeholder="Email" className="w-full rounded border border-slate-300 px-3 py-2 text-sm" />
-      <p className="text-xs text-slate-500">No pitch • Just clarity. We’ll send one resource and practical follow-up ideas for trades/service businesses.</p>
+      <p className="text-xs text-slate-500">No spam and no hard sell. We will send the resource plus a few practical next steps you can use right away.</p>
       <button disabled={loading} className="rounded bg-brand-600 px-4 py-2 text-sm font-semibold text-white disabled:opacity-60">
-        {loading ? 'Submitting…' : 'Email me the resource'}
+        {loading ? 'Submitting…' : 'Send me the resource'}
       </button>
       {error ? (
         <p className="rounded bg-rose-50 p-3 text-sm text-rose-800">
@@ -62,7 +62,7 @@ export function ResourceRequestForm({ resourceSlug, fallbackDownloadUrl, siteEma
       ) : null}
       {fallbackDownloadUrl ? (
         <p className="text-sm text-slate-600">
-          Prefer manual download? <a href={fallbackDownloadUrl}>Use this direct link</a>.
+          Want a direct download instead? <a href={fallbackDownloadUrl}>Use this direct link</a>.
         </p>
       ) : null}
     </form>
