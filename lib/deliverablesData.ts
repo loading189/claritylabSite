@@ -11,6 +11,7 @@ export type DeliverableRecord = {
   createdAt: string;
   visibleToClient: boolean;
   status: string;
+  visibility: 'draft' | 'visibleToClient' | 'internalOnly';
 };
 
 function parseBoolean(value: unknown, fallback: boolean) {
@@ -26,6 +27,14 @@ function parseBoolean(value: unknown, fallback: boolean) {
 export function mapFileToDeliverable(file: VaultFile): DeliverableRecord {
   const id = file.id || file.storage_key;
   const title = file.title || file.filename;
+  const visibilityRaw = String(file.deliverable_visibility || '').trim();
+  const visibility: DeliverableRecord['visibility'] =
+    visibilityRaw === 'draft' || visibilityRaw === 'internalOnly' || visibilityRaw === 'visibleToClient'
+      ? visibilityRaw
+      : parseBoolean(file.visible_to_client, true)
+        ? 'visibleToClient'
+        : 'internalOnly';
+  const visibleToClient = visibility === 'visibleToClient' && parseBoolean(file.visible_to_client, true);
 
   return {
     id,
@@ -34,8 +43,9 @@ export function mapFileToDeliverable(file: VaultFile): DeliverableRecord {
     summaryNote: file.summary_note || file.note || null,
     periodCovered: file.period_covered || null,
     createdAt: file.created_at,
-    visibleToClient: parseBoolean(file.visible_to_client, true),
+    visibleToClient,
     status: file.status || 'delivered',
+    visibility,
   };
 }
 

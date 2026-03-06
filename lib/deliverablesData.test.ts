@@ -46,3 +46,12 @@ test('listRecentDeliverables excludes records hidden from clients', () => {
   assert.equal(deliverables.length, 1);
   assert.equal(deliverables[0]?.title, 'Visible.pdf');
 });
+
+test('mapFileToDeliverable keeps draft and internal-only deliverables out of portal visibility', () => {
+  const draft = mapFileToDeliverable(makeFile({ deliverable_visibility: 'draft', visible_to_client: true }));
+  const internalOnly = mapFileToDeliverable(makeFile({ deliverable_visibility: 'internalOnly', visible_to_client: true }));
+
+  assert.equal(draft.visibleToClient, false);
+  assert.equal(internalOnly.visibleToClient, false);
+  assert.equal(draft.visibility, 'draft');
+});

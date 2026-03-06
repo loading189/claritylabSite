@@ -5,7 +5,14 @@ import { getAirtableConfig } from '@/lib/airtableConfig';
 
 const config = getAirtableConfig();
 
-export type EngagementRequestStatus = 'open' | 'in_progress' | 'submitted' | 'done' | 'blocked';
+export type EngagementRequestStatus =
+  | 'open'
+  | 'submitted'
+  | 'reviewing'
+  | 'complete'
+  | 'in_progress'
+  | 'done'
+  | 'blocked';
 
 export type EngagementRequestRecord = {
   id: string;
@@ -26,8 +33,16 @@ function sanitize(value: string) {
 }
 
 function parseStatus(value: unknown): EngagementRequestStatus {
-  const status = String(value || '').toLowerCase();
-  if (status === 'in_progress' || status === 'submitted' || status === 'done' || status === 'blocked') return status;
+  return normalizeEngagementRequestStatus(value);
+}
+
+export function normalizeEngagementRequestStatus(value: unknown): EngagementRequestStatus {
+  const status = String(value || '').trim().toLowerCase();
+  if (status === 'complete' || status === 'done') return 'complete';
+  if (status === 'reviewing' || status === 'in_review') return 'reviewing';
+  if (status === 'submitted') return 'submitted';
+  if (status === 'open') return 'open';
+  if (status === 'in_progress' || status === 'blocked') return status;
   return 'open';
 }
 
@@ -56,7 +71,7 @@ export async function listEngagementRequests(clientId: string) {
   if (!hasEngagementRequestsTable) return [] as EngagementRequestRecord[];
 
   try {
-    const formula = encodeURIComponent(`AND({client_id}='${sanitize(clientId)}',NOT({status}='done'))`);
+    const formula = encodeURIComponent(`{client_id}='${sanitize(clientId)}'`);
     const data = await airtableRequest<{ records?: { id: string; fields: Record<string, unknown> }[] }>({
       table: config.engagementRequestsTable,
       path: `?sort[0][field]=created_at&sort[0][direction]=desc&filterByFormula=${formula}`,
@@ -84,11 +99,26 @@ export async function createEngagementRequest(
         client_id: request.clientId,
         title: request.title,
         category: request.category,
-        status: request.status,
+        status: normalizeEngagementRequestStatus(request.status),
         due_date: request.dueDate,
         owner: request.owner,
         notes: request.notes,
         created_at: request.createdAt || new Date().toISOString(),
+      },
+    },
+  });
+}
+
+export async function updateEngagementRequestStatus(requestId: string, status: EngagementRequestStatus) {
+  if (!hasEngagementRequestsTable) return;
+
+  await airtableRequest({
+    table: config.engagementRequestsTable,
+    path: `/${requestId}`,
+    method: 'PATCH',
+    body: {
+      fields: {
+        status: normalizeEngagementRequestStatus(status),
       },
     },
   });

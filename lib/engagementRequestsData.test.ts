@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 
-import { mapEngagementRequestRecord } from '@/lib/engagementRequestsData';
+import { mapEngagementRequestRecord, normalizeEngagementRequestStatus } from '@/lib/engagementRequestsData';
 
 test('mapEngagementRequestRecord normalizes a persisted request record', () => {
   const mapped = mapEngagementRequestRecord({
@@ -33,4 +33,11 @@ test('mapEngagementRequestRecord returns null when required fields are missing',
   });
 
   assert.equal(mapped, null);
+});
+
+test('normalizeEngagementRequestStatus maps legacy and new states safely', () => {
+  assert.equal(normalizeEngagementRequestStatus('submitted'), 'submitted');
+  assert.equal(normalizeEngagementRequestStatus('reviewing'), 'reviewing');
+  assert.equal(normalizeEngagementRequestStatus('done'), 'complete');
+  assert.equal(normalizeEngagementRequestStatus('unexpected-state'), 'open');
 });
