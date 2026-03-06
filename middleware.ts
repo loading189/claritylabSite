@@ -31,7 +31,8 @@ const configuredMiddleware = clerkMiddleware(async (auth, req) => {
 
   if (!userId) {
     const signInUrl = new URL('/sign-in', req.url);
-    signInUrl.searchParams.set('redirect_url', req.url);
+    const localRedirect = `${req.nextUrl.pathname}${req.nextUrl.search}`;
+    signInUrl.searchParams.set('redirect_url', localRedirect || '/');
     return NextResponse.redirect(signInUrl);
   }
 

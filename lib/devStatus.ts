@@ -25,7 +25,12 @@ export async function getDevStatusSummary() {
   const airtable = getAirtableConfig();
   const clerk = getClerkConfig();
 
-  const bookingFlowEnabled = Boolean(process.env.CALENDLY_WEBHOOK_SIGNING_KEY);
+  const calendlyPublicReady = Boolean(
+    process.env.NEXT_PUBLIC_CALENDLY_URL ||
+      process.env.NEXT_PUBLIC_CALENDLY_EVENT_TYPE_URL,
+  );
+  const webhookSigningReady = Boolean(process.env.CALENDLY_WEBHOOK_SIGNING_KEY);
+  const bookingFlowEnabled = calendlyPublicReady && webhookSigningReady;
 
   return {
     airtableConfig: {
@@ -45,12 +50,31 @@ export async function getDevStatusSummary() {
       bookings: bookingFlowEnabled
         ? await probeAirtableTable(airtable.bookingsTable)
         : 'skipped',
+      files: await probeAirtableTable(airtable.filesTable),
     },
     clerk: {
       clerk_env_present: clerk.clerkEnvPresent,
       clerk_provider_enabled: clerk.clerkProviderEnabled,
       middleware_protected_mode: clerk.middlewareProtectedMode,
       admin_role_source: clerk.adminRoleSource,
+      owner_email_set: Boolean((process.env.OWNER_EMAIL || '').trim()),
+    },
+    calendly: {
+      public_booking_url_set: Boolean(process.env.NEXT_PUBLIC_CALENDLY_URL),
+      public_event_type_url_set: Boolean(
+        process.env.NEXT_PUBLIC_CALENDLY_EVENT_TYPE_URL,
+      ),
+      webhook_signing_key_set: webhookSigningReady,
+      webhook_tolerance_seconds_set: Boolean(
+        (process.env.CALENDLY_WEBHOOK_TOLERANCE_SECONDS || '').trim(),
+      ),
+      booking_flow_ready: bookingFlowEnabled,
+    },
+    resend: {
+      resend_api_key_set: Boolean((process.env.RESEND_API_KEY || '').trim()),
+      email_from_set: Boolean((process.env.EMAIL_FROM || '').trim()),
+      email_reply_to_set: Boolean((process.env.EMAIL_REPLY_TO || '').trim()),
+      owner_email_set: Boolean((process.env.OWNER_EMAIL || '').trim()),
     },
   };
 }

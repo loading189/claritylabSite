@@ -70,6 +70,30 @@ export default async function DevStatusPage({ searchParams }: { searchParams: { 
           </Card>
         </div>
 
+
+        <div className="grid gap-4 md:grid-cols-2">
+          <Card title="Calendly readiness">
+            <ul className="space-y-2 text-sm">
+              {Object.entries(devStatus.calendly).map(([key, value]) => (
+                <li key={key} className="flex justify-between rounded-input border bg-slate-50 px-3 py-2">
+                  <span>{key}</span>
+                  <strong>{String(value)}</strong>
+                </li>
+              ))}
+            </ul>
+          </Card>
+          <Card title="Resend readiness">
+            <ul className="space-y-2 text-sm">
+              {Object.entries(devStatus.resend).map(([key, value]) => (
+                <li key={key} className="flex justify-between rounded-input border bg-slate-50 px-3 py-2">
+                  <span>{key}</span>
+                  <strong>{String(value)}</strong>
+                </li>
+              ))}
+            </ul>
+          </Card>
+        </div>
+
         <Card title="Airtable configuration summary">
           <p className="text-sm">
             configured: <strong>{String(devStatus.airtableConfig.configured)}</strong>

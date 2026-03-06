@@ -75,8 +75,12 @@ export function verifyCalendlyWebhookSignature(params: {
     .update(signedPayload)
     .digest('hex');
 
-  const expectedBuffer = Buffer.from(expected);
-  const givenBuffer = Buffer.from(parsed.signature);
+  if (!/^[a-fA-F0-9]+$/.test(parsed.signature)) {
+    return { ok: false as const, reason: 'invalid_signature' as const };
+  }
+
+  const expectedBuffer = Buffer.from(expected, 'hex');
+  const givenBuffer = Buffer.from(parsed.signature, 'hex');
 
   if (expectedBuffer.length !== givenBuffer.length) {
     return { ok: false as const, reason: 'invalid_signature' as const };
