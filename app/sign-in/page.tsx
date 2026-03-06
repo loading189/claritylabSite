@@ -11,15 +11,15 @@ export default function SignInPage() {
       <Container className="max-w-5xl">
         <div className="grid overflow-hidden rounded-card border border-border bg-surface shadow-soft md:grid-cols-[1.1fr_1fr]">
           <div className="border-b border-border/80 p-8 md:border-b-0 md:border-r md:p-10">
-            <p className="text-xs uppercase tracking-[0.14em] text-muted">Secure portal access</p>
-            <h1 className="mt-3 text-3xl font-semibold text-text md:text-4xl">Sign in to your client vault</h1>
+            <p className="text-xs uppercase tracking-[0.14em] text-muted">Active client portal</p>
+            <h1 className="mt-3 text-3xl font-semibold text-text md:text-4xl">Sign in to your delivery dashboard</h1>
             <p className="mt-4 text-sm text-muted md:text-base">
-              Your diagnostic history, audit files, and delivery materials live in this secure workspace.
+              This secure workspace is for active clients who are in an audit or delivery engagement.
             </p>
             <ul className="mt-6 space-y-3 text-sm text-muted">
-              <li>• Encrypted auth and session controls.</li>
-              <li>• Centralized file vault for reports and supporting docs.</li>
-              <li>• Operator-ready dashboard for next steps.</li>
+              <li>• Secure access for you and approved team members.</li>
+              <li>• File vault for reports, uploads, and deliverables.</li>
+              <li>• Clear next steps and request tracking.</li>
             </ul>
           </div>
 

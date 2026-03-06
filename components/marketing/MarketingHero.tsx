@@ -19,7 +19,7 @@ export function MarketingHero({
   title,
   description,
   withBackdrop = false,
-  trackingEvent = 'scan_cta_click',
+  trackingEvent = 'resource_cta_click',
   trackingPage = 'marketing_hero',
   children,
   className,
@@ -36,17 +36,17 @@ export function MarketingHero({
       </p>
       <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
         <Button
-          href="/scan"
+          href="/resources/ar-recovery-checklist"
           trackingEvent={trackingEvent}
           trackingProps={{ page: trackingPage }}
         >
-          Start Diagnostic
+          Get the AR Checklist
         </Button>
         <Button href="/sample-report" variant="ghost">
           View Sample Report
         </Button>
-        <Button href="/resources/ar-recovery-checklist" variant="secondary">
-          Get the AR Checklist
+        <Button href="/scan" variant="secondary">
+          Take the Diagnostic
         </Button>
       </div>
       {children}

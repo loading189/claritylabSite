@@ -9,7 +9,7 @@ type CalloutCTAProps = {
 };
 
 export function CalloutCTA({
-  trackingEvent = 'scan_cta_click',
+  trackingEvent = 'resource_cta_click',
   trackingPage = 'callout_cta',
 }: CalloutCTAProps) {
   return (
@@ -17,19 +17,19 @@ export function CalloutCTA({
       <Container>
         <div className="neu-card rounded-2xl border-accent/30 p-8 sm:p-10">
           <h2 className="heading-lg text-text">
-            Start with a 2-minute diagnostic
+            Start with a practical resource
           </h2>
           <p className="mt-3 max-w-2xl text-sm text-muted sm:text-base">
-            Run the Clarity Scan first to identify your biggest leak and get the
-            best next step before booking.
+            Grab the AR checklist or sample report first. If you want help after
+            that, we can walk through your situation together on a call.
           </p>
           <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
             <Button
-              href="/scan"
+              href="/resources/ar-recovery-checklist"
               trackingEvent={trackingEvent}
               trackingProps={{ page: trackingPage }}
             >
-              Start Diagnostic
+              Get the AR Checklist
             </Button>
             {runtimeConfig.featureFlags.isBookingEnabled ? (
               <Button
@@ -38,7 +38,7 @@ export function CalloutCTA({
                 trackingEvent="booking_click"
                 trackingProps={{ page: `${trackingPage}_secondary` }}
               >
-                Book Audit
+                Book a Call
               </Button>
             ) : null}
             <a

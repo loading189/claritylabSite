@@ -59,12 +59,12 @@ function SignedOutNav({ mobile = false }: { mobile?: boolean }) {
     <>
       <NavItems items={navItems} />
       <Button
-        href="/scan"
-        trackingEvent="scan_cta_click"
+        href="/resources/ar-recovery-checklist"
+        trackingEvent="resource_cta_click"
         trackingProps={{ page: mobile ? 'header_mobile' : 'header' }}
         className={mobile ? '' : 'ml-2'}
       >
-        Start Diagnostic
+        Get Checklist
       </Button>
       <Button href="/sign-in" variant="ghost" className={mobile ? '' : 'ml-1'}>
         Sign In

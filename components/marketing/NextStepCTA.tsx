@@ -9,9 +9,9 @@ type NextStepCTAProps = {
 };
 
 export function NextStepCTA({
-  title = 'Next step: get this for your business',
-  subtitle = 'Run the Clarity Scan for a quick qualification and tailored next step before booking.',
-  trackingEvent = 'scan_cta_click',
+  title = 'Pick your next step',
+  subtitle = 'Start with a sample report or checklist. The diagnostic is available when you want a deeper read.',
+  trackingEvent = 'resource_cta_click',
   trackingPage = 'next_step_cta',
   className,
 }: NextStepCTAProps) {
@@ -23,17 +23,17 @@ export function NextStepCTA({
       </p>
       <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
         <Button
-          href="/scan"
+          href="/resources/ar-recovery-checklist"
           trackingEvent={trackingEvent}
           trackingProps={{ page: trackingPage }}
         >
-          Start Diagnostic
+          Get the AR Checklist
         </Button>
         <Button href="/sample-report" variant="ghost">
           View Sample Report
         </Button>
-        <Button href="/resources/ar-recovery-checklist" variant="secondary">
-          Get the AR Checklist
+        <Button href="/scan" variant="secondary">
+          Take the Diagnostic
         </Button>
       </div>
     </div>

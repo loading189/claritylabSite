@@ -26,10 +26,13 @@ function formatBookedDate(startTime?: string | null, timezone?: string | null) {
 
 export default async function ClientDashboard({ searchParams }: { searchParams: { booked?: string } }) {
   const user = await getServerUser();
+  // Transition point (Phase 3): this dashboard currently hydrates from diagnostic records.
+  // Keep this stable for existing clients, then switch readiness checks to engagement status.
   const diagnosticResult = user?.email
     ? await getLatestDiagnosticByEmailWithStatus(user.email)
     : { record: null, status: 'error' as const };
   const diagnostic = diagnosticResult.record;
+  // Transition point (Phase 3/4): use booking/engagement records as the source of truth for portal access.
   const client = user?.email ? await getClientByEmail(user.email) : null;
   const insights = diagnostic ? getDiagnosticInsights(diagnostic) : [];
   const calendlyUrl = process.env.NEXT_PUBLIC_CALENDLY_URL || '/contact';
@@ -49,10 +52,10 @@ export default async function ClientDashboard({ searchParams }: { searchParams: 
   if (!diagnostic) {
     return (
       <EmptyState
-        title="No diagnostic found"
-        description="Start your diagnostic to unlock your dashboard summary, call prep, and file vault."
-        actionLabel="Start diagnostic"
-        actionHref="/scan"
+        title="No active dashboard yet"
+        description="This portal opens when an audit engagement starts. If you already booked a call, we will send access as soon as setup is complete."
+        actionLabel="Book a call"
+        actionHref={calendlyUrl}
       />
     );
   }
@@ -60,9 +63,9 @@ export default async function ClientDashboard({ searchParams }: { searchParams: 
   return (
     <div className="space-y-6">
       <PortalPageHeader
-        eyebrow="Client vault"
-        title="Operations dashboard"
-        description="Track your diagnostic, keep prep organized, and move through your next actions in one workspace."
+        eyebrow="Client delivery dashboard"
+        title="Engagement workspace"
+        description="Review deliverables, share files, and keep next steps organized in one place."
       />
 
       <section className="grid gap-4 md:grid-cols-3">
@@ -72,8 +75,8 @@ export default async function ClientDashboard({ searchParams }: { searchParams: 
           <p className="mt-2 text-sm text-muted">{user?.email || 'Client workspace access active.'}</p>
         </article>
         <article className="rounded-card border border-border bg-surface p-5 shadow-soft">
-          <p className="text-xs uppercase tracking-[0.14em] text-muted">Status</p>
-          <p className="mt-2 text-lg font-semibold text-text">{isBooked ? 'Booked' : 'Awaiting booking'}</p>
+          <p className="text-xs uppercase tracking-[0.14em] text-muted">Call status</p>
+          <p className="mt-2 text-lg font-semibold text-text">{isBooked ? 'Booked' : 'Not booked yet'}</p>
           <p className="mt-2 text-sm text-muted">
             {isBooked
               ? `Scheduled for ${formatBookedDate(client?.booked_start_time, client?.booked_timezone)}.`
@@ -118,7 +121,7 @@ export default async function ClientDashboard({ searchParams }: { searchParams: 
           <ActionCard
             href={isBooked ? '/client/prep' : calendlyUrl}
             title={isBooked ? 'View call details' : 'Book call'}
-            description="Confirm your session timing and move into a focused execution plan."
+            description="Confirm your session timing and keep the engagement moving."
             action={isBooked ? 'View details' : 'Book call'}
           />
           <ActionCard
