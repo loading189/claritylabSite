@@ -1,13 +1,13 @@
-import { Card } from '@/components/Card';
 import { Button } from '@/components/Button';
+import { PortalPageHeader } from '@/components/portal/PortalPageHeader';
 import { getClientByEmail } from '@/lib/bookingsData';
 import { getServerUser } from '@/lib/serverAuth';
 
 const checklist = [
-  'Expect a focused 45-minute operator session with clear next steps.',
-  'Bring your top 2–3 operational bottlenecks from the last 30 days.',
-  'Have basic numbers ready: cash pressure, capacity constraints, and workflow blockers.',
-  'Bring any current KPI dashboard or weekly reporting snapshot if you use one.',
+  'Top 2-3 operational bottlenecks from the past 30 days.',
+  'Current cash pressure and AR trend snapshot.',
+  'Capacity constraints across dispatch, field, and invoicing.',
+  'Any KPI report, dashboard, or weekly scorecard you already use.',
 ];
 
 function formatDateTime(startTime?: string | null, timezone?: string | null) {
@@ -30,39 +30,58 @@ export default async function ClientPrepPage() {
   const user = await getServerUser();
   const client = user?.email ? await getClientByEmail(user.email) : null;
   const calendlyUrl = process.env.NEXT_PUBLIC_CALENDLY_URL || '/contact';
+  const isBooked = client?.status === 'booked';
 
   return (
-    <div className="space-y-4">
-      <Card title="Prep for your Clarity Call">
-        <p>Keep this simple: a little prep gives us a much sharper plan during the call.</p>
-      </Card>
+    <div className="space-y-6">
+      <PortalPageHeader
+        eyebrow="Call prep"
+        title="Prepare for your clarity session"
+        description="A focused prep checklist helps us spend the full session on high-leverage decisions."
+      />
 
-      <Card title="Booked details">
-        <p>
-          <strong>Scheduled:</strong> {formatDateTime(client?.booked_start_time, client?.booked_timezone)}
-        </p>
-        <p>
-          <strong>Timezone:</strong> {client?.booked_timezone || 'Pending'}
-        </p>
-        <Button href={calendlyUrl} variant="ghost" className="mt-4">
-          If you haven&apos;t booked yet, book now
-        </Button>
-      </Card>
+      <section className="grid gap-4 lg:grid-cols-2">
+        <article className="rounded-card border border-border bg-surface p-6 shadow-soft">
+          <h2 className="text-lg font-semibold text-text">Booked session</h2>
+          <p className="mt-3 text-sm text-muted">
+            <strong className="text-text">Scheduled:</strong> {formatDateTime(client?.booked_start_time, client?.booked_timezone)}
+          </p>
+          <p className="mt-2 text-sm text-muted">
+            <strong className="text-text">Timezone:</strong> {client?.booked_timezone || 'Pending'}
+          </p>
+          <Button href={calendlyUrl} variant="ghost" className="mt-4">
+            {isBooked ? 'View booking details' : 'Book call'}
+          </Button>
+        </article>
 
-      <Card title="Call prep checklist">
-        <ul className="list-disc space-y-2 pl-5">
-          {checklist.map((item) => (
-            <li key={item}>{item}</li>
+        <article className="rounded-card border border-border bg-surface p-6 shadow-soft">
+          <h2 className="text-lg font-semibold text-text">What to expect</h2>
+          <p className="mt-3 text-sm text-muted">45-minute operator session, practical bottleneck triage, then a clear 90-day action path.</p>
+          <Button href="/client/scan" variant="secondary" className="mt-4">
+            View diagnostic
+          </Button>
+        </article>
+      </section>
+
+      <section className="rounded-card border border-border bg-surface p-6 shadow-soft">
+        <h2 className="text-lg font-semibold text-text">Checklist</h2>
+        <ul className="mt-4 space-y-3">
+          {checklist.map((item, index) => (
+            <li key={item} className="flex gap-3 rounded-input border border-border/70 bg-surfaceRaised px-3 py-2 text-sm text-muted">
+              <span className="font-mono text-xs text-accent">{String(index + 1).padStart(2, '0')}</span>
+              <span>{item}</span>
+            </li>
           ))}
         </ul>
-      </Card>
+      </section>
 
-      <Card title="Optional documents">
-        <p>If it helps, upload any supporting files before the call.</p>
-        <Button href="/client/files" variant="ghost" className="mt-4">
-          Upload documents (optional)
+      <section className="rounded-card border border-border bg-surface p-6 shadow-soft">
+        <h2 className="text-lg font-semibold text-text">Bring supporting documents</h2>
+        <p className="mt-2 text-sm text-muted">Upload reports or exports now so we can review context before your session.</p>
+        <Button href="/client/files" className="mt-4">
+          Upload documents
         </Button>
-      </Card>
+      </section>
     </div>
   );
 }

@@ -14,10 +14,9 @@ export default async function ClientLayout({ children }: { children: React.React
       nav={[
         { href: '/client', label: 'Dashboard' },
         { href: '/client/scan', label: 'Diagnostic' },
-        { href: '/client/prep', label: 'Call Prep' },
+        { href: '/client/prep', label: 'Prep' },
         { href: '/client/files', label: 'Files' },
         { href: '/client/reports', label: 'Reports' },
-        { href: '/client/contracts', label: 'Contracts' },
         ...(user.role === 'admin' ? [{ href: '/admin/clients', label: 'Clients' }] : []),
       ]}
     >

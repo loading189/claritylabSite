@@ -41,10 +41,11 @@ export function FileUploader({ category, clientId, clientEmail, onDone }: Props)
   }
 
   return (
-    <div className="rounded-card border border-border bg-surface p-4 shadow-soft">
+    <section className="rounded-card border border-border bg-surface p-5 shadow-soft">
       <label className="mb-2 block text-sm font-semibold text-text">Upload {category === 'report' ? 'report file' : 'document'}</label>
-      <input type="file" onChange={(e) => e.target.files?.[0] && onPick(e.target.files[0])} />
-      <p className="mt-2 text-xs text-muted">{status}</p>
-    </div>
+      <p className="mb-3 text-xs text-muted">Files are stored in your secure vault and available to your delivery team.</p>
+      <input type="file" className="text-sm" onChange={(e) => e.target.files?.[0] && onPick(e.target.files[0])} />
+      <p className="mt-3 text-xs text-muted">{status}</p>
+    </section>
   );
 }
