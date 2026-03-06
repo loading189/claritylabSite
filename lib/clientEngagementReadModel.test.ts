@@ -58,6 +58,44 @@ test('buildClientEngagementReadModel infers active delivery and report progress'
   assert.equal(model.recordsUnavailable, false);
 });
 
+test('buildClientEngagementReadModel prioritizes persisted requests and richer deliverables', () => {
+  const report = makeFile({
+    title: 'January Revenue Snapshot',
+    summary_note: 'Highlights from delivered reporting package.',
+    period_covered: 'Jan 1 - Jan 31',
+    status: 'shared',
+  });
+
+  const model = buildClientEngagementReadModel({
+    diagnosticStatus: 'ok',
+    diagnostic,
+    bookedStartTime: '2026-01-04T14:00:00.000Z',
+    bookedTimezone: 'UTC',
+    isSessionBooked: true,
+    reportFiles: [report],
+    uploadFiles: [],
+    calendlyUrl: '/book',
+    persistedRequests: [
+      {
+        id: 'req_1',
+        clientId: 'client_1',
+        title: 'Please confirm current payroll run date.',
+        category: 'prep',
+        status: 'open',
+        dueDate: '2026-01-06',
+        owner: 'Owner',
+        notes: 'Reply in the prep notes section.',
+        createdAt: '2026-01-05T10:00:00.000Z',
+      },
+    ],
+  });
+
+  assert.equal(model.nextAction.label, 'Please confirm current payroll run date.');
+  assert.equal(model.outstandingRequests[0]?.id, 'req_1');
+  assert.equal(model.recentDeliverables[0]?.title, 'January Revenue Snapshot');
+  assert.equal(model.recentDeliverables[0]?.summaryNote, 'Highlights from delivered reporting package.');
+});
+
 test('buildClientEngagementReadModel keeps next actions clear before booking', () => {
   const model = buildClientEngagementReadModel({
     diagnosticStatus: 'ok',

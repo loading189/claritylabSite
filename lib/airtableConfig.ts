@@ -20,6 +20,7 @@ export type AirtableConfig = {
   clientsTable: string;
   bookingsTable: string;
   filesTable: string;
+  engagementRequestsTable: string;
 };
 
 const read = (value: string | undefined) => value?.trim() ?? '';
@@ -38,6 +39,7 @@ export function getAirtableConfig(options?: {
   const clientsTable = read(process.env.AIRTABLE_CLIENTS_TABLE) || 'Clients';
   const bookingsTable = read(process.env.AIRTABLE_BOOKINGS_TABLE) || 'Bookings';
   const filesTable = read(process.env.AIRTABLE_FILES_TABLE) || 'Files';
+  const engagementRequestsTable = read(process.env.AIRTABLE_ENGAGEMENT_REQUESTS_TABLE) || 'Engagement Requests';
 
   const missing: string[] = [];
   const warnings: string[] = [];
@@ -64,6 +66,9 @@ export function getAirtableConfig(options?: {
   if (!read(process.env.AIRTABLE_FILES_TABLE)) {
     warnings.push('AIRTABLE_FILES_TABLE not set; using default "Files".');
   }
+  if (!read(process.env.AIRTABLE_ENGAGEMENT_REQUESTS_TABLE)) {
+    warnings.push('AIRTABLE_ENGAGEMENT_REQUESTS_TABLE not set; using default "Engagement Requests".');
+  }
 
   return {
     configured: missing.length === 0,
@@ -76,5 +81,6 @@ export function getAirtableConfig(options?: {
     clientsTable,
     bookingsTable,
     filesTable,
+    engagementRequestsTable,
   };
 }

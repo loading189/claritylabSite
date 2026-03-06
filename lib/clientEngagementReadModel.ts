@@ -2,9 +2,11 @@ import 'server-only';
 
 import { getClientByEmail } from '@/lib/bookingsData';
 import { shouldShowUnavailableRecordsState } from '@/lib/clientPortalState';
+import { listRecentDeliverables, type DeliverableRecord } from '@/lib/deliverablesData';
 import { getAdvisoryBriefFromDiagnostic } from '@/lib/diagnosticGuidance';
 import { getLatestDiagnosticByEmailWithStatus, type DiagnosticRecord } from '@/lib/diagnosticsData';
 import { getDiagnosticInsights } from '@/lib/diagnosticsPresentation';
+import { listEngagementRequests, type EngagementRequestRecord } from '@/lib/engagementRequestsData';
 import { listFiles, type VaultFile } from '@/lib/vaultData';
 
 export type LifecycleStage =
@@ -28,15 +30,17 @@ export type EngagementMilestone = {
 export type EngagementRequest = {
   id: string;
   title: string;
+  category: string;
+  status: string;
+  dueDate: string | null;
+  owner: string | null;
+  notes: string | null;
+  createdAt: string;
   source: 'booking' | 'diagnostic' | 'delivery';
   href: string;
 };
 
-export type EngagementDeliverable = {
-  id: string;
-  title: string;
-  createdAt: string;
-};
+export type EngagementDeliverable = DeliverableRecord;
 
 export type ClientEngagementReadModel = {
   lifecycleStage: LifecycleStage;
@@ -71,6 +75,7 @@ type ReadModelInputs = {
   isSessionBooked: boolean;
   reportFiles: VaultFile[];
   uploadFiles: VaultFile[];
+  persistedRequests?: EngagementRequestRecord[];
   calendlyUrl: string;
 };
 
@@ -99,6 +104,7 @@ function summarizeFile(file: VaultFile | undefined, emptyLabel: string) {
 export function buildClientEngagementReadModel(inputs: ReadModelInputs): ClientEngagementReadModel {
   const { diagnosticStatus, diagnostic, bookedStartTime, bookedTimezone, isSessionBooked, reportFiles, uploadFiles, calendlyUrl } =
     inputs;
+  const persistedRequests = inputs.persistedRequests || [];
 
   const brief = diagnostic ? getAdvisoryBriefFromDiagnostic(diagnostic) : null;
   const insights = diagnostic ? getDiagnosticInsights(diagnostic) : [];
@@ -120,7 +126,34 @@ export function buildClientEngagementReadModel(inputs: ReadModelInputs): ClientE
           ? 'Scan complete'
           : 'Getting started';
 
-  const nextAction = isSessionBooked
+  const mappedPersistedRequests: EngagementRequest[] = persistedRequests.map((request) => ({
+    id: request.id,
+    title: request.title,
+    category: request.category,
+    status: request.status,
+    dueDate: request.dueDate,
+    owner: request.owner,
+    notes: request.notes,
+    createdAt: request.createdAt,
+    source: 'delivery',
+    href: request.category === 'files' ? '/client/files' : '/client/prep',
+  }));
+
+  const requestFromRecords = mappedPersistedRequests
+    .filter((request) => request.status !== 'done')
+    .sort((a, b) => {
+      const aTime = a.dueDate ? new Date(a.dueDate).getTime() : Number.POSITIVE_INFINITY;
+      const bTime = b.dueDate ? new Date(b.dueDate).getTime() : Number.POSITIVE_INFINITY;
+      return aTime - bTime;
+    });
+
+  const nextAction = requestFromRecords[0]
+    ? {
+        label: requestFromRecords[0].title,
+        description: 'Here’s what we still need from you to keep work moving this week.',
+        href: requestFromRecords[0].href,
+      }
+    : isSessionBooked
     ? {
         label: 'Share prep details',
         description: 'Please add your prep notes and any current reports before our session.',
@@ -132,53 +165,73 @@ export function buildClientEngagementReadModel(inputs: ReadModelInputs): ClientE
         href: calendlyUrl,
       };
 
-  const outstandingRequests: EngagementRequest[] = [];
+  const outstandingRequests: EngagementRequest[] = requestFromRecords.length ? [...requestFromRecords] : [];
 
-  if (!isSessionBooked) {
+  if (!requestFromRecords.length && !isSessionBooked) {
     outstandingRequests.push({
       id: 'book-call',
       title: 'Book your kickoff call so we can begin delivery.',
+      category: 'booking',
+      status: 'open',
+      dueDate: null,
+      owner: null,
+      notes: null,
+      createdAt: new Date().toISOString(),
       source: 'booking',
       href: calendlyUrl,
     });
   }
 
-  if (!uploadFiles.length) {
+  if (!requestFromRecords.length && !uploadFiles.length) {
     outstandingRequests.push({
       id: 'upload-files',
       title: 'Upload any current reports, exports, or screenshots you already have.',
+      category: 'files',
+      status: 'open',
+      dueDate: null,
+      owner: null,
+      notes: null,
+      createdAt: new Date().toISOString(),
       source: 'delivery',
       href: '/client/files',
     });
   }
 
   const prepItems = brief?.prepItems?.slice(0, 3) || [];
-  prepItems.forEach((item, index) => {
-    outstandingRequests.push({
-      id: `prep-${index + 1}`,
-      title: item,
-      source: 'diagnostic',
-      href: '/client/prep',
+  if (!requestFromRecords.length) {
+    prepItems.forEach((item, index) => {
+      outstandingRequests.push({
+        id: `prep-${index + 1}`,
+        title: item,
+        category: 'prep',
+        status: 'open',
+        dueDate: null,
+        owner: null,
+        notes: null,
+        createdAt: new Date().toISOString(),
+        source: 'diagnostic',
+        href: '/client/prep',
+      });
     });
-  });
+  }
 
-  const recentDeliverables = reportFiles.slice(0, 4).map((file) => ({
-    id: file.id || file.storage_key,
-    title: file.filename,
-    createdAt: file.created_at,
-  }));
+  const recentDeliverables = listRecentDeliverables(reportFiles);
 
   const milestones: EngagementMilestone[] = [
     { key: 'scan_completed', label: 'Scan completed', completed: Boolean(diagnostic) },
     { key: 'call_booked', label: 'Call booked', completed: isSessionBooked },
     { key: 'engagement_active', label: 'Engagement active', completed: isSessionBooked },
-    { key: 'documents_requested', label: 'Documents requested', completed: Boolean(diagnostic) || isSessionBooked },
+    { key: 'documents_requested', label: 'Documents requested', completed: Boolean(diagnostic) || isSessionBooked || requestFromRecords.length > 0 },
     {
       key: 'report_in_progress',
       label: 'Report in progress',
       completed: isSessionBooked && (uploadFiles.length > 0 || Boolean(diagnostic)),
     },
-    { key: 'report_delivered', label: 'Report delivered', completed: reportFiles.length > 0 },
+    {
+      key: 'report_delivered',
+      label: 'Report delivered',
+      completed: recentDeliverables.some((item) => item.status === 'delivered' || item.status === 'shared'),
+    },
   ];
 
   const nextMilestone = milestones.find((item) => !item.completed)?.label || 'Report delivered';
@@ -216,11 +269,12 @@ export async function getClientEngagementReadModel({
 }): Promise<ClientEngagementReadModel> {
   const calendlyUrl = process.env.NEXT_PUBLIC_CALENDLY_URL || '/contact';
 
-  const [diagnosticResult, client, reportFiles, uploadFiles] = await Promise.all([
+  const [diagnosticResult, client, reportFiles, uploadFiles, persistedRequests] = await Promise.all([
     getLatestDiagnosticByEmailWithStatus(email),
     getClientByEmail(email),
     listFiles(userId, 'report'),
     listFiles(userId, 'upload'),
+    listEngagementRequests(userId),
   ]);
 
   return buildClientEngagementReadModel({
@@ -231,6 +285,7 @@ export async function getClientEngagementReadModel({
     isSessionBooked: client?.status === 'booked',
     reportFiles,
     uploadFiles,
+    persistedRequests,
     calendlyUrl,
   });
 }

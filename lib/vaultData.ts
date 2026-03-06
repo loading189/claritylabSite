@@ -17,6 +17,12 @@ export type VaultFile = {
   size_bytes: number;
   created_at: string;
   note?: string;
+  deliverable_type?: string;
+  title?: string;
+  summary_note?: string;
+  period_covered?: string;
+  visible_to_client?: boolean | string;
+  status?: string;
 };
 
 export const hasVaultTables = Boolean(config.apiKey && config.baseId);
