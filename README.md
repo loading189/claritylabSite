@@ -25,6 +25,7 @@ Next.js 14 App Router site for Clarity Labs.
    - `http://localhost:3000/client`
 3. To grant admin access, set user public metadata in Clerk to:
    - `{"role":"admin"}`
+4. If role claims are expected in middleware/session claims, ensure Clerk metadata/custom claims are attached to the session token; this app resolves role defensively from `role`, `public_metadata.role`, and `publicMetadata.role`.
 
 ## Font strategy (build-safe)
 
