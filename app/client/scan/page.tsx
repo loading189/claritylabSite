@@ -1,9 +1,10 @@
-import { Card } from '@/components/Card';
 import { Button } from '@/components/Button';
+import { EmptyState } from '@/components/portal/EmptyState';
+import { PortalPageHeader } from '@/components/portal/PortalPageHeader';
+import { shouldShowUnavailableRecordsState } from '@/lib/clientPortalState';
 import { getLatestDiagnosticByEmailWithStatus } from '@/lib/diagnosticsData';
 import { getDiagnosticInsights, getGroupedAnswers } from '@/lib/diagnosticsPresentation';
 import { getServerUser } from '@/lib/serverAuth';
-import { shouldShowUnavailableRecordsState } from '@/lib/clientPortalState';
 
 export default async function ClientScanPage() {
   const user = await getServerUser();
@@ -13,24 +14,25 @@ export default async function ClientScanPage() {
   const diagnostic = diagnosticResult.record;
   const calendlyUrl = process.env.NEXT_PUBLIC_CALENDLY_URL || '/contact';
 
-
   if (shouldShowUnavailableRecordsState(diagnosticResult.status, Boolean(diagnostic))) {
     return (
-      <Card title="Portal setup is still in progress"> 
-        <p>Client records are not available right now.</p>
-        <Button href="/contact" className="mt-4">Contact us</Button>
-      </Card>
+      <EmptyState
+        title="Diagnostic data unavailable"
+        description="We couldn't load your response data right now. Contact support and we'll help resolve access quickly."
+        actionLabel="Contact support"
+        actionHref="/contact"
+      />
     );
   }
 
   if (!diagnostic) {
     return (
-      <Card title="No diagnostic found">
-        <p>Take the Clarity Scan first so we can personalize your call prep.</p>
-        <Button href="/scan" className="mt-4">
-          Start Diagnostic
-        </Button>
-      </Card>
+      <EmptyState
+        title="No diagnostic on file"
+        description="Take the Clarity diagnostic to unlock your score summary and call planning workflow."
+        actionLabel="Start diagnostic"
+        actionHref="/scan"
+      />
     );
   }
 
@@ -38,44 +40,61 @@ export default async function ClientScanPage() {
   const insights = getDiagnosticInsights(diagnostic);
 
   return (
-    <div className="space-y-4">
-      <Card title="Diagnostic score">
-        <p>
-          Score <strong>{diagnostic.score}</strong> places you in the <strong className="capitalize">{diagnostic.tier}</strong> tier, with{' '}
-          <strong className="capitalize">{diagnostic.primarySignal}</strong> as the primary signal.
-        </p>
-      </Card>
+    <div className="space-y-6">
+      <PortalPageHeader
+        eyebrow="Diagnostic"
+        title="Your diagnostic result"
+        description="This readout summarizes your current operating signal and gives us the baseline for your call."
+      />
 
-      <Card title="Your answers">
-        <ul className="space-y-3">
-          {groupedAnswers.map((answer) => (
-            <li key={answer.key} className="rounded-input border border-border/70 bg-surface px-3 py-2">
-              <p className="text-xs uppercase tracking-wide text-muted">{answer.step}</p>
-              <p className="text-sm font-semibold text-text">{answer.question}</p>
-              <p>{answer.value}</p>
-            </li>
-          ))}
-        </ul>
-      </Card>
+      <section className="rounded-card border border-border bg-surface p-6 shadow-soft">
+        <div className="grid gap-4 md:grid-cols-4">
+          <div>
+            <p className="text-xs uppercase tracking-[0.14em] text-muted">Score</p>
+            <p className="mt-2 font-mono text-4xl font-semibold text-text">{diagnostic.score}</p>
+          </div>
+          <div>
+            <p className="text-xs uppercase tracking-[0.14em] text-muted">Tier</p>
+            <p className="mt-2 text-lg font-semibold capitalize text-text">{diagnostic.tier}</p>
+          </div>
+          <div>
+            <p className="text-xs uppercase tracking-[0.14em] text-muted">Primary signal</p>
+            <p className="mt-2 text-lg font-semibold capitalize text-text">{diagnostic.primarySignal}</p>
+          </div>
+          <div>
+            <p className="text-xs uppercase tracking-[0.14em] text-muted">Next action</p>
+            <Button href={calendlyUrl} className="mt-2">Book call</Button>
+          </div>
+        </div>
+      </section>
 
-      <Card title="Key insights">
+      <section className="rounded-card border border-border bg-surface p-6 shadow-soft">
+        <h2 className="text-lg font-semibold text-text">Key signals</h2>
         {insights.length ? (
-          <ul className="list-disc space-y-1 pl-5">
+          <ul className="mt-3 space-y-2 text-sm text-muted">
             {insights.map((insight) => (
-              <li key={insight}>{insight}</li>
+              <li key={insight} className="rounded-input border border-border/70 bg-surfaceRaised px-3 py-2">
+                {insight}
+              </li>
             ))}
           </ul>
         ) : (
-          <p>We&apos;ll review your responses together during the call.</p>
+          <p className="mt-2 text-sm text-muted">We&apos;ll review your responses together during the call.</p>
         )}
-      </Card>
+      </section>
 
-      <div className="flex flex-wrap gap-2">
-        <Button href={calendlyUrl}>Book Call</Button>
-        <Button href="/scan" variant="ghost">
-          Start Over
-        </Button>
-      </div>
+      <section className="rounded-card border border-border bg-surface p-6 shadow-soft">
+        <h2 className="text-lg font-semibold text-text">Response detail</h2>
+        <ul className="mt-4 space-y-3">
+          {groupedAnswers.map((answer) => (
+            <li key={answer.key} className="rounded-input border border-border/70 bg-surfaceRaised px-4 py-3">
+              <p className="font-mono text-xs uppercase tracking-[0.12em] text-muted">{answer.step}</p>
+              <p className="mt-1 text-sm font-semibold text-text">{answer.question}</p>
+              <p className="mt-1 text-sm text-muted">{answer.value}</p>
+            </li>
+          ))}
+        </ul>
+      </section>
     </div>
   );
 }

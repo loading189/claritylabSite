@@ -1,18 +1,123 @@
 'use client';
 
+import { SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { navItems, siteConfig } from '@/content/site';
 import { Button } from './Button';
 import { Container } from './Container';
+
+type NavLink = { href: string; label: string };
+
+const clientNav: NavLink[] = [
+  { href: '/client', label: 'Dashboard' },
+  { href: '/client/scan', label: 'Diagnostic' },
+  { href: '/client/prep', label: 'Prep' },
+  { href: '/client/files', label: 'Files' },
+  { href: '/client/reports', label: 'Reports' },
+];
+
+const adminNav: NavLink[] = [
+  { href: '/admin/diagnostics', label: 'Diagnostics' },
+  { href: '/admin/clients', label: 'Clients' },
+  { href: '/admin', label: 'Dashboard' },
+  { href: '/', label: 'Public Site' },
+];
+
+function NavItems({
+  items,
+  onClick,
+}: {
+  items: NavLink[];
+  onClick?: () => void;
+}) {
+  const pathname = usePathname();
+
+  return items.map((item) => {
+    const active =
+      item.href === '/' ? pathname === '/' : pathname.startsWith(item.href);
+    return (
+      <Link
+        key={item.href}
+        href={item.href}
+        className={`rounded-button px-3 py-2 text-sm no-underline transition ${
+          active
+            ? 'bg-surfaceRaised text-accent shadow-soft'
+            : 'text-muted hover:bg-surfaceRaised hover:text-text'
+        }`}
+        onClick={onClick}
+      >
+        {item.label}
+      </Link>
+    );
+  });
+}
+
+function SignedOutNav({ mobile = false }: { mobile?: boolean }) {
+  return (
+    <>
+      <NavItems items={navItems} />
+      <Button
+        href="/scan"
+        trackingEvent="scan_cta_click"
+        trackingProps={{ page: mobile ? 'header_mobile' : 'header' }}
+        className={mobile ? '' : 'ml-2'}
+      >
+        Start Diagnostic
+      </Button>
+      <Button href="/sign-in" variant="ghost" className={mobile ? '' : 'ml-1'}>
+        Sign In
+      </Button>
+    </>
+  );
+}
+
+const isClerkEnabled = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
 
 export function Header() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
 
+  const routeContext = useMemo(() => {
+    if (pathname.startsWith('/client')) return 'client';
+    if (pathname.startsWith('/admin')) return 'admin';
+    return 'marketing';
+  }, [pathname]);
+
+  const signedInMarketingLink = routeContext === 'admin' ? '/admin' : '/client';
+
+  const signedInNav = (
+    <>
+      {routeContext === 'client' ? <NavItems items={clientNav} /> : null}
+      {routeContext === 'admin' ? <NavItems items={adminNav} /> : null}
+      {routeContext === 'marketing' ? (
+        <>
+          <NavItems items={navItems.slice(0, 4)} />
+          <Button
+            href={signedInMarketingLink}
+            variant="secondary"
+            className="ml-2"
+          >
+            Go to Dashboard
+          </Button>
+        </>
+      ) : null}
+      <UserButton
+        afterSignOutUrl="/"
+        appearance={{
+          elements: {
+            avatarBox: 'h-9 w-9 border border-border shadow-soft',
+            userButtonPopoverCard: 'bg-surface border border-border',
+            userButtonPopoverActionButton: 'text-text',
+          },
+        }}
+      />
+    </>
+  );
+
   return (
-    <header className="sticky top-0 z-40 border-b border-border/80 bg-bg/85 backdrop-blur-xl">
+    <header className="sticky top-0 z-40 border-b border-border/80 bg-bg/90 backdrop-blur-xl">
       <Container className="flex min-h-[4.5rem] items-center justify-between gap-4 py-3">
         <Link href="/" className="no-underline">
           <p className="text-sm font-bold uppercase leading-none tracking-[0.12em] text-accent">
@@ -37,35 +142,16 @@ export function Header() {
           className="hidden items-center gap-1 md:flex"
           aria-label="Main navigation"
         >
-          {navItems.map((item) => {
-            const active =
-              item.href === '/'
-                ? pathname === '/'
-                : pathname.startsWith(item.href);
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`nav-link rounded-button px-3 py-2 text-sm no-underline transition ${
-                  active
-                    ? 'bg-surfaceRaised text-accent shadow-soft'
-                    : 'text-muted hover:bg-surfaceRaised hover:text-text'
-                }`}
-              >
-                <span>{item.label}</span>
-              </Link>
-            );
-          })}
-          {
-            <Button
-              href="/scan"
-              trackingEvent="scan_cta_click"
-              trackingProps={{ page: 'header' }}
-              className="ml-2"
-            >
-              Start Diagnostic
-            </Button>
-          }
+          {!isClerkEnabled ? (
+            <SignedOutNav />
+          ) : (
+            <>
+              <SignedOut>
+                <SignedOutNav />
+              </SignedOut>
+              <SignedIn>{signedInNav}</SignedIn>
+            </>
+          )}
         </nav>
       </Container>
 
@@ -75,25 +161,40 @@ export function Header() {
       >
         <div className="overflow-hidden">
           <Container className="flex flex-col gap-2 py-4">
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="rounded-button px-3 py-2 text-sm text-muted no-underline hover:bg-surfaceRaised hover:text-text"
-                onClick={() => setOpen(false)}
-              >
-                {item.label}
-              </Link>
-            ))}
-            {
-              <Button
-                href="/scan"
-                trackingEvent="scan_cta_click"
-                trackingProps={{ page: 'header_mobile' }}
-              >
-                Start Diagnostic
-              </Button>
-            }
+            {!isClerkEnabled ? (
+              <SignedOutNav mobile />
+            ) : (
+              <>
+                <SignedOut>
+                  <SignedOutNav mobile />
+                </SignedOut>
+                <SignedIn>
+                  {routeContext === 'client' ? (
+                    <NavItems
+                      items={clientNav}
+                      onClick={() => setOpen(false)}
+                    />
+                  ) : null}
+                  {routeContext === 'admin' ? (
+                    <NavItems items={adminNav} onClick={() => setOpen(false)} />
+                  ) : null}
+                  {routeContext === 'marketing' ? (
+                    <>
+                      <NavItems
+                        items={navItems.slice(0, 4)}
+                        onClick={() => setOpen(false)}
+                      />
+                      <Button href={signedInMarketingLink} variant="secondary">
+                        Go to Dashboard
+                      </Button>
+                    </>
+                  ) : null}
+                  <div className="pt-2">
+                    <UserButton afterSignOutUrl="/" />
+                  </div>
+                </SignedIn>
+              </>
+            )}
           </Container>
         </div>
       </div>
