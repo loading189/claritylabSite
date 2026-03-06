@@ -140,8 +140,8 @@ export async function sendResourceEmail({
   return sendEmail({
     to,
     subject: `${resourceTitle} — download link`,
-    text: `${greeting}\n\nThanks for requesting ${resourceTitle}.\nDownload your resource: ${safeDownloadUrl}\n\nNo pitch. Just clarity.`,
-    html: `<p>${greeting}</p><p>Thanks for requesting <strong>${safeTitle}</strong>.</p><p><a href="${safeDownloadUrl}">Download your resource</a></p><p>No pitch • Just clarity.</p><p style="font-size:12px;color:#555;">Not accounting or legal advice; operational guidance.</p>`,
+    text: `${greeting}\n\nThanks for requesting ${resourceTitle}.\nHere is your download link: ${safeDownloadUrl}\n\nIf you want help applying it, reply to this email and tell us where you are stuck.`,
+    html: `<p>${greeting}</p><p>Thanks for requesting <strong>${safeTitle}</strong>.</p><p><a href="${safeDownloadUrl}">Download your resource</a></p><p>If you want help applying it, reply to this email and tell us where you are stuck.</p><p style="font-size:12px;color:#555;">Not accounting or legal advice; operational guidance.</p>`,
   });
 }
 
@@ -297,14 +297,14 @@ export async function sendClientBookedConfirm(params: {
   return sendEmail({
     to: params.to,
     subject: `You're booked — Clarity Call confirmation`,
-    text: `You're booked. Your Clarity Call is confirmed.\nScheduled: ${scheduled}\n\nBefore we meet, please complete a short prep checklist:\n- Your top 2–3 bottlenecks from the last 30 days\n- Current cash/capacity/system pressure points\n- Any KPI snapshot or workflow report you already use\n\nPrep for your call: ${params.prepUrl}\nOpen your client portal: ${params.portalUrl}`,
-    html: `<p>You’re booked. Your Clarity Call is confirmed.</p>
+    text: `You're booked. Your call is confirmed.\nScheduled: ${scheduled}\n\nBefore we meet, please gather:\n- The top 2–3 issues slowing your team down\n- Current cash, capacity, or workflow pressure points\n- Any report or scorecard you already use\n\nPrep for your call: ${params.prepUrl}\nOpen your client portal: ${params.portalUrl}`,
+    html: `<p>You’re booked. Your call is confirmed.</p>
     <p><strong>Scheduled:</strong> ${escapeHtml(scheduled)}</p>
-    <p>Before we meet, please complete a short prep checklist:</p>
+    <p>Before we meet, please gather:</p>
     <ul>
-      <li>Your top 2–3 bottlenecks from the last 30 days</li>
-      <li>Current cash/capacity/system pressure points</li>
-      <li>Any KPI snapshot or workflow report you already use</li>
+      <li>The top 2–3 issues slowing your team down</li>
+      <li>Current cash, capacity, or workflow pressure points</li>
+      <li>Any report or scorecard you already use</li>
     </ul>
     <p><a href="${escapeHtml(params.prepUrl)}">Prep for your call</a></p>
     <p><a href="${escapeHtml(params.portalUrl)}">Open your client portal</a></p>`,

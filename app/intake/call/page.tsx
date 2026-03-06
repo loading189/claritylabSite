@@ -18,8 +18,7 @@ export default function CallIntakePage() {
           Clarity Call Intake
         </h1>
         <p className="mt-2 text-sm text-muted">
-          Give me context now so we can use your call for decisions, not
-          discovery theater.
+          Share a little context now so we can spend your call on clear decisions.
         </p>
         <div className="mt-6 rounded-card border border-border bg-surface p-4 shadow-soft">
           <IntakeForm type="call" />

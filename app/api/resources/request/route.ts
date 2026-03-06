@@ -60,8 +60,8 @@ export async function POST(request: NextRequest) {
       ok: true,
       delivered: emailResult.delivered,
       message: emailResult.delivered
-        ? 'Check your inbox for the resource.'
-        : 'Request received. Check your inbox and contact us if it does not arrive.',
+        ? 'Check your inbox for your resource link.'
+        : 'We received your request. If the email does not arrive soon, contact us and we will send it manually.',
     });
   } catch (error) {
     console.error('Resource request error', error);
