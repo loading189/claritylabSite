@@ -13,6 +13,11 @@ function formatListDate(value: string) {
   }).format(parsed);
 }
 
+function formatDueDate(value?: string | null) {
+  if (!value) return null;
+  return formatListDate(value);
+}
+
 export default async function ClientDashboard() {
   const user = await getServerUser();
   const calendlyUrl = process.env.NEXT_PUBLIC_CALENDLY_URL || '/contact';
@@ -80,7 +85,7 @@ export default async function ClientDashboard() {
         <article className="rounded-card border border-border bg-surface p-5 shadow-soft">
           <p className="text-xs uppercase tracking-[0.14em] text-muted">Next milestone</p>
           <p className="mt-2 text-lg font-semibold text-text">{model.nextMilestone}</p>
-          <p className="mt-2 text-sm text-muted">{model.latestReportSummary}</p>
+          <p className="mt-2 text-sm text-muted">{model.outstandingRequests[0]?.title || model.latestReportSummary}</p>
         </article>
       </section>
 
@@ -92,7 +97,10 @@ export default async function ClientDashboard() {
             <ul className="mt-4 space-y-2 text-sm text-muted">
               {model.outstandingRequests.map((request) => (
                 <li key={request.id} className="rounded-input border border-border/70 bg-surfaceRaised px-3 py-2">
-                  {request.title}
+                  <p className="font-medium text-text">{request.title}</p>
+                  <p className="text-xs text-muted">
+                    {formatDueDate(request.dueDate) ? `Due ${formatDueDate(request.dueDate)}` : 'No due date set yet.'}
+                  </p>
                 </li>
               ))}
             </ul>
@@ -114,6 +122,8 @@ export default async function ClientDashboard() {
               {model.recentDeliverables.map((item) => (
                 <li key={item.id} className="rounded-input border border-border/70 bg-surfaceRaised px-3 py-2">
                   <p className="font-medium text-text">{item.title}</p>
+                  {item.summaryNote ? <p className="text-xs text-muted">{item.summaryNote}</p> : null}
+                  {item.periodCovered ? <p className="text-xs text-muted">Period: {item.periodCovered}</p> : null}
                   <p className="text-xs text-muted">Delivered {formatListDate(item.createdAt)}</p>
                 </li>
               ))}
