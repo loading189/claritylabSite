@@ -11,15 +11,15 @@ export default function SignUpPage() {
       <Container className="max-w-5xl">
         <div className="grid overflow-hidden rounded-card border border-border bg-surface shadow-soft md:grid-cols-[1.1fr_1fr]">
           <div className="border-b border-border/80 p-8 md:border-b-0 md:border-r md:p-10">
-            <p className="text-xs uppercase tracking-[0.14em] text-muted">Client onboarding</p>
-            <h1 className="mt-3 text-3xl font-semibold text-text md:text-4xl">Create secure portal access</h1>
+            <p className="text-xs uppercase tracking-[0.14em] text-muted">Active client setup</p>
+            <h1 className="mt-3 text-3xl font-semibold text-text md:text-4xl">Create your client portal access</h1>
             <p className="mt-4 text-sm text-muted md:text-base">
-              Set up your account to access diagnostic results, prep checklists, and protected delivery files.
+              We set up accounts when an audit engagement starts so your delivery workspace is ready from day one.
             </p>
             <ul className="mt-6 space-y-3 text-sm text-muted">
-              <li>• Access your diagnostic and score interpretation.</li>
-              <li>• Upload and manage audit materials in one vault.</li>
-              <li>• Track next actions without leaving the workspace.</li>
+              <li>• Review reports and delivery files in one place.</li>
+              <li>• Upload requested documents and supporting exports.</li>
+              <li>• Track requests and next steps with our team.</li>
             </ul>
           </div>
 

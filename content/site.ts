@@ -3,10 +3,10 @@ import { runtimeConfig } from './runtime';
 export const siteConfig = {
   name: runtimeConfig.site.name,
   founder: 'Christopher Taylor',
-  tagline: 'Clarity-first operational audits.',
-  subTagline: 'Bold operational clarity for service teams.',
+  tagline: 'Clear financial and operations guidance for service businesses.',
+  subTagline: 'Find what is slowing you down, then fix it step by step.',
   location: 'Fargo area',
-  trustLine: 'No pitch • Just clarity',
+  trustLine: 'No pressure • Clear next steps',
   description:
     'Clarity Labs helps HVAC, plumbing, electrical, and mechanical service business owners find where cash, time, and margin leak, then turn that into a practical action plan.',
   url: runtimeConfig.site.url,
@@ -18,12 +18,49 @@ export const siteConfig = {
 export const navItems = [
   { label: 'Home', href: '/' },
   { label: 'Start Here', href: '/start-here' },
-  { label: 'Scan', href: '/scan' },
+  { label: 'Diagnostic', href: '/scan' },
   { label: 'Audit', href: '/audit' },
   { label: 'Insights', href: '/insights' },
   { label: 'Sample Report', href: '/sample-report' },
   { label: 'Contact', href: '/contact' },
 ];
+
+/**
+ * Product-direction alignment notes (phased, low-risk migration path)
+ *
+ * Phase 1 (now): make top-of-funnel paths email/trust-first with clearer CTAs and plain-language copy.
+ * Phase 2: keep diagnostic available, but position it as a mid-funnel qualification tool.
+ * Phase 3: move account creation to post-call engagement start (auth kept intact in this sprint).
+ * Phase 4: refine /client into a delivery dashboard for active clients (reports, uploads, requests, next steps).
+ * Phase 5: expand report/export delivery workflows from admin to client-facing delivery states.
+ */
+export const routeRoleMap = {
+  publicTrustPages: [
+    '/',
+    '/about',
+    '/process',
+    '/case-studies',
+    '/insights',
+    '/contact',
+    '/work-with-me',
+  ],
+  resourceCapturePages: [
+    '/resources',
+    '/resources/ar-recovery-checklist',
+    '/resources/cash-flow-snapshot',
+    '/sample-report',
+  ],
+  diagnosticPages: ['/scan', '/audit', '/intake/audit'],
+  bookingAndPrepPages: ['/intake/call', '/intake/success', '/client/prep'],
+  activeClientPortalPages: [
+    '/client',
+    '/client/files',
+    '/client/reports',
+    '/client/contracts',
+    '/client/scan',
+  ],
+  adminOperatorPages: ['/admin', '/admin/diagnostics', '/admin/clients'],
+} as const;
 
 export const waysIHelp = [
   {

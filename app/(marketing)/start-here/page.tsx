@@ -11,20 +11,13 @@ import styles from './page.module.css';
 export const metadata: Metadata = {
   title: 'Start Here',
   description:
-    'New here? Start with the audit path, sample report preview, or AR checklist in under two minutes.',
+    'New here? Start with a practical resource, then choose the next step that fits your situation.',
   alternates: {
     canonical: `${siteConfig.url}/start-here`,
   },
 };
 
 const actions = [
-  {
-    title: 'Start Diagnostic',
-    description:
-      'Best first step if you want a focused review of cash, capacity, and execution leaks.',
-    href: '/scan',
-    event: 'start_here_scan_click',
-  },
   {
     title: 'View Sample Report',
     description:
@@ -39,6 +32,13 @@ const actions = [
     href: '/resources/ar-recovery-checklist',
     event: 'start_here_checklist_click',
   },
+  {
+    title: 'Take the Diagnostic',
+    description:
+      'Use this when you want a quick read on where cash, capacity, and execution may be getting stuck.',
+    href: '/scan',
+    event: 'start_here_scan_click',
+  },
 ];
 
 export default function StartHerePage() {
@@ -50,8 +50,8 @@ export default function StartHerePage() {
           <p className={styles.intro}>
             This page is for service business owners who know something is
             leaking but want a clean next step. Pick one path below and move
-            immediately: book the audit, review the sample output, or start with
-            the AR checklist.
+            immediately: grab a resource, review the sample output, or take the
+            diagnostic when you want a deeper read.
           </p>
         </Reveal>
 

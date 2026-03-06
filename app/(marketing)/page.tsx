@@ -56,9 +56,9 @@ export default function HomePage() {
       <Section className={styles.heroSection}>
         <Container className={styles.heroContainer}>
           <MarketingHero
-            badge="Clarity Labs Audit"
-            title="We diagnose exactly where cash, capacity, and execution break down in your service business."
-            description="Conversion-focused operational audits for teams that want concrete fixes, stronger margin control, and cleaner execution."
+            badge="Clarity Labs"
+            title="We help you see what is slowing cash flow and execution in your service business."
+            description="Get practical guidance you can act on. Start with a free resource, then decide if a deeper diagnostic and call make sense."
             withBackdrop
             trackingPage="home_hero"
           />
@@ -78,8 +78,8 @@ export default function HomePage() {
       <Section className={styles.dividerSection} id="method">
         <Container>
           <SectionHeader
-            title="The Clarity Labs Process"
-            subtitle="A four-step method designed for owners who need signal, action, and sustained control."
+            title="How we work"
+            subtitle="Simple steps: learn what is happening, decide what to fix first, and move forward."
           />
           <ProcessSteps steps={howItWorks} />
         </Container>
@@ -144,7 +144,7 @@ export default function HomePage() {
         <Container>
           <SectionHeader
             title="Case studies"
-            subtitle="Pattern-based examples of what changes after a focused audit."
+            subtitle="Pattern-based examples of what changes after focused work together."
           />
           <div className={styles.caseStudyGrid}>
             {caseStudies.slice(0, 2).map((study, index) => (
