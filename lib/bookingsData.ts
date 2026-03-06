@@ -1,15 +1,9 @@
 import 'server-only';
 import { randomUUID } from 'crypto';
+import { airtableRequest } from '@/lib/airtableClient';
+import { getAirtableConfig } from '@/lib/airtableConfig';
 
-const AIRTABLE_API_KEY = process.env.AIRTABLE_API_KEY;
-const AIRTABLE_BASE_ID = process.env.AIRTABLE_BASE_ID;
-const BOOKINGS_TABLE = process.env.AIRTABLE_BOOKINGS_TABLE || 'Bookings';
-const CLIENTS_TABLE = process.env.AIRTABLE_CLIENTS_TABLE || 'Clients';
-
-const headers = {
-  Authorization: `Bearer ${AIRTABLE_API_KEY}`,
-  'Content-Type': 'application/json',
-};
+const config = getAirtableConfig({ bookingFlowEnabled: true });
 
 export type BookingRecord = {
   id?: string;
@@ -37,24 +31,7 @@ export type ClientBookingState = {
 
 type AirtableRecord = { id: string; fields: Record<string, unknown> };
 
-const hasBookingsTables = Boolean(AIRTABLE_API_KEY && AIRTABLE_BASE_ID);
-
-async function at<T>(tableOrPath: string, init?: RequestInit): Promise<T> {
-  const res = await fetch(
-    `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${tableOrPath}`,
-    {
-      ...init,
-      headers,
-      cache: 'no-store',
-    },
-  );
-
-  if (!res.ok) {
-    throw new Error(`Airtable request failed (${res.status})`);
-  }
-
-  return res.json() as Promise<T>;
-}
+const hasBookingsTables = Boolean(config.apiKey && config.baseId);
 
 function esc(value: string) {
   return value.replace(/'/g, "\\'");
@@ -82,9 +59,10 @@ export async function getBookingById(bookingId: string) {
 
   try {
     const formula = encodeURIComponent(`{booking_id}='${esc(bookingId)}'`);
-    const data = await at<{ records?: AirtableRecord[] }>(
-      `${encodeURIComponent(BOOKINGS_TABLE)}?maxRecords=1&filterByFormula=${formula}`,
-    );
+    const data = await airtableRequest<{ records?: AirtableRecord[] }>({
+      table: config.bookingsTable,
+      path: `?maxRecords=1&filterByFormula=${formula}`,
+    });
     return data.records?.[0] || null;
   } catch (error) {
     if (process.env.NODE_ENV !== 'production') {
@@ -112,23 +90,20 @@ export async function upsertBooking(booking: BookingRecord) {
 
   try {
     if (existing) {
-      await at<{ id: string }>(
-        `${encodeURIComponent(BOOKINGS_TABLE)}/${existing.id}`,
-        {
-          method: 'PATCH',
-          body: JSON.stringify({ fields }),
-        },
-      );
+      await airtableRequest<{ id: string }>({
+        table: config.bookingsTable,
+        path: `/${existing.id}`,
+        method: 'PATCH',
+        body: { fields },
+      });
       return { ok: true as const, id: existing.id, created: false as const };
     }
 
-    const created = await at<{ id: string }>(
-      encodeURIComponent(BOOKINGS_TABLE),
-      {
-        method: 'POST',
-        body: JSON.stringify({ fields }),
-      },
-    );
+    const created = await airtableRequest<{ id: string }>({
+      table: config.bookingsTable,
+      method: 'POST',
+      body: { fields },
+    });
 
     return { ok: true as const, id: created.id, created: true as const };
   } catch (error) {
@@ -145,9 +120,10 @@ export async function getClientByEmail(email: string) {
     const formula = encodeURIComponent(
       `LOWER({primary_email})='${esc(normalized)}'`,
     );
-    const data = await at<{ records?: AirtableRecord[] }>(
-      `${encodeURIComponent(CLIENTS_TABLE)}?maxRecords=1&filterByFormula=${formula}`,
-    );
+    const data = await airtableRequest<{ records?: AirtableRecord[] }>({
+      table: config.clientsTable,
+      path: `?maxRecords=1&filterByFormula=${formula}`,
+    });
 
     const record = data.records?.[0];
     return record ? toClientRecord(record) : null;
@@ -189,13 +165,12 @@ export async function updateClientBookingState(
     };
 
     if (existing?.id) {
-      await at<{ id: string }>(
-        `${encodeURIComponent(CLIENTS_TABLE)}/${existing.id}`,
-        {
-          method: 'PATCH',
-          body: JSON.stringify({ fields }),
-        },
-      );
+      await airtableRequest<{ id: string }>({
+        table: config.clientsTable,
+        path: `/${existing.id}`,
+        method: 'PATCH',
+        body: { fields },
+      });
 
       return {
         ok: true as const,
@@ -205,16 +180,17 @@ export async function updateClientBookingState(
     }
 
     const clientId = randomUUID();
-    await at<{ id: string }>(encodeURIComponent(CLIENTS_TABLE), {
+    await airtableRequest<{ id: string }>({
+      table: config.clientsTable,
       method: 'POST',
-      body: JSON.stringify({
+      body: {
         fields: {
           ...fields,
           client_id: clientId,
           created_at: new Date().toISOString(),
           status: bookingSummary.status === 'booked' ? 'booked' : 'active',
         },
-      }),
+      },
     });
 
     return { ok: true as const, clientId, created: true as const };

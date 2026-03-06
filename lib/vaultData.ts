@@ -1,14 +1,8 @@
 import 'server-only';
+import { airtableRequest } from '@/lib/airtableClient';
+import { getAirtableConfig } from '@/lib/airtableConfig';
 
-const AIRTABLE_API_KEY = process.env.AIRTABLE_API_KEY;
-const AIRTABLE_BASE_ID = process.env.AIRTABLE_BASE_ID;
-const FILES_TABLE = process.env.AIRTABLE_FILES_TABLE || 'Files';
-const CLIENTS_TABLE = process.env.AIRTABLE_CLIENTS_TABLE || 'Clients';
-
-const headers = {
-  Authorization: `Bearer ${AIRTABLE_API_KEY}`,
-  'Content-Type': 'application/json',
-};
+const config = getAirtableConfig();
 
 export type VaultFile = {
   id?: string;
@@ -25,65 +19,104 @@ export type VaultFile = {
   note?: string;
 };
 
-export const hasVaultTables = Boolean(AIRTABLE_API_KEY && AIRTABLE_BASE_ID);
-
-async function at<T>(table: string, init?: RequestInit): Promise<T> {
-  const res = await fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${encodeURIComponent(table)}`, {
-    ...init,
-    headers,
-    cache: 'no-store',
-  });
-  if (!res.ok) throw new Error(`Airtable ${table} failed: ${res.status}`);
-  return res.json() as Promise<T>;
-}
+export const hasVaultTables = Boolean(config.apiKey && config.baseId);
 
 export async function ensureClientRecord(clientId: string, email: string) {
-  if (!hasVaultTables) return;
-  const formula = encodeURIComponent(`{client_id}='${clientId.replace(/'/g, "\\'")}'`);
-  const existing = await at<{ records?: { id: string }[] }>(`${CLIENTS_TABLE}?maxRecords=1&filterByFormula=${formula}`);
-  if (existing.records?.[0]) return;
-  await at(CLIENTS_TABLE, {
-    method: 'POST',
-    body: JSON.stringify({
-      fields: {
-        client_id: clientId,
-        primary_email: email,
-        status: 'active',
-        created_at: new Date().toISOString(),
+  if (!hasVaultTables) return { ok: false as const, skipped: 'no_airtable' as const };
+
+  try {
+    const formula = encodeURIComponent(`{client_id}='${clientId.replace(/'/g, "\\'")}'`);
+    const existing = await airtableRequest<{ records?: { id: string }[] }>({
+      table: config.clientsTable,
+      path: `?maxRecords=1&filterByFormula=${formula}`,
+    });
+
+    if (existing.records?.[0]) return { ok: true as const, created: false as const };
+
+    await airtableRequest({
+      table: config.clientsTable,
+      method: 'POST',
+      body: {
+        fields: {
+          client_id: clientId,
+          primary_email: email,
+          status: 'active',
+          created_at: new Date().toISOString(),
+        },
       },
-    }),
-  });
+    });
+
+    return { ok: true as const, created: true as const };
+  } catch (error) {
+    if (process.env.NODE_ENV !== 'production') {
+      console.warn('[vaultData] ensureClientRecord failed', error);
+    }
+    return { ok: false as const, reason: 'request_failed' as const };
+  }
 }
 
 export async function createFileRecord(file: VaultFile) {
   if (!hasVaultTables) return;
-  await at(FILES_TABLE, {
+  await airtableRequest({
+    table: config.filesTable,
     method: 'POST',
-    body: JSON.stringify({ fields: file }),
+    body: { fields: file },
   });
 }
 
 export async function listFiles(clientId: string, category?: string) {
   if (!hasVaultTables) return [] as VaultFile[];
-  const clause = category && category !== 'all' ? `,{category}='${category}'` : '';
-  const formula = encodeURIComponent(`AND({client_id}='${clientId.replace(/'/g, "\\'")}'${clause})`);
-  const data = await at<{ records?: { id: string; fields: Record<string, unknown> }[] }>(
-    `${FILES_TABLE}?sort[0][field]=created_at&sort[0][direction]=desc&filterByFormula=${formula}`,
-  );
-  return (data.records || []).map((r) => ({ id: r.id, ...(r.fields as unknown as VaultFile) }));
+
+  try {
+    const clause = category && category !== 'all' ? `,{category}='${category}'` : '';
+    const formula = encodeURIComponent(`AND({client_id}='${clientId.replace(/'/g, "\\'")}'${clause})`);
+    const data = await airtableRequest<{ records?: { id: string; fields: Record<string, unknown> }[] }>({
+      table: config.filesTable,
+      path: `?sort[0][field]=created_at&sort[0][direction]=desc&filterByFormula=${formula}`,
+    });
+
+    return (data.records || []).map((r) => ({ id: r.id, ...(r.fields as unknown as VaultFile) }));
+  } catch (error) {
+    if (process.env.NODE_ENV !== 'production') {
+      console.warn('[vaultData] listFiles failed', error);
+    }
+    return [];
+  }
 }
 
 export async function findFileByStorageKey(storageKey: string) {
   if (!hasVaultTables) return null;
-  const formula = encodeURIComponent(`{storage_key}='${storageKey.replace(/'/g, "\\'")}'`);
-  const data = await at<{ records?: { id: string; fields: Record<string, unknown> }[] }>(`${FILES_TABLE}?maxRecords=1&filterByFormula=${formula}`);
-  const record = data.records?.[0];
-  if (!record) return null;
-  return { id: record.id, ...(record.fields as unknown as VaultFile) };
+
+  try {
+    const formula = encodeURIComponent(`{storage_key}='${storageKey.replace(/'/g, "\\'")}'`);
+    const data = await airtableRequest<{ records?: { id: string; fields: Record<string, unknown> }[] }>({
+      table: config.filesTable,
+      path: `?maxRecords=1&filterByFormula=${formula}`,
+    });
+    const record = data.records?.[0];
+    if (!record) return null;
+    return { id: record.id, ...(record.fields as unknown as VaultFile) };
+  } catch (error) {
+    if (process.env.NODE_ENV !== 'production') {
+      console.warn('[vaultData] findFileByStorageKey failed', error);
+    }
+    return null;
+  }
 }
 
 export async function listClients() {
   if (!hasVaultTables) return [];
-  const data = await at<{ records?: { id: string; fields: Record<string, unknown> }[] }>(`${CLIENTS_TABLE}?sort[0][field]=created_at&sort[0][direction]=desc`);
-  return (data.records || []).map((r) => ({ id: r.id, ...(r.fields as Record<string, string>) }));
+
+  try {
+    const data = await airtableRequest<{ records?: { id: string; fields: Record<string, unknown> }[] }>({
+      table: config.clientsTable,
+      path: '?sort[0][field]=created_at&sort[0][direction]=desc',
+    });
+    return (data.records || []).map((r) => ({ id: r.id, ...(r.fields as Record<string, string>) }));
+  } catch (error) {
+    if (process.env.NODE_ENV !== 'production') {
+      console.warn('[vaultData] listClients failed', error);
+    }
+    return [];
+  }
 }

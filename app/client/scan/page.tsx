@@ -1,13 +1,27 @@
 import { Card } from '@/components/Card';
 import { Button } from '@/components/Button';
-import { getLatestDiagnosticByEmail } from '@/lib/diagnosticsData';
+import { getLatestDiagnosticByEmailWithStatus } from '@/lib/diagnosticsData';
 import { getDiagnosticInsights, getGroupedAnswers } from '@/lib/diagnosticsPresentation';
 import { getServerUser } from '@/lib/serverAuth';
+import { shouldShowUnavailableRecordsState } from '@/lib/clientPortalState';
 
 export default async function ClientScanPage() {
   const user = await getServerUser();
-  const diagnostic = user?.email ? await getLatestDiagnosticByEmail(user.email) : null;
+  const diagnosticResult = user?.email
+    ? await getLatestDiagnosticByEmailWithStatus(user.email)
+    : { record: null, status: 'error' as const };
+  const diagnostic = diagnosticResult.record;
   const calendlyUrl = process.env.NEXT_PUBLIC_CALENDLY_URL || '/contact';
+
+
+  if (shouldShowUnavailableRecordsState(diagnosticResult.status, Boolean(diagnostic))) {
+    return (
+      <Card title="Portal setup is still in progress"> 
+        <p>Client records are not available right now.</p>
+        <Button href="/contact" className="mt-4">Contact us</Button>
+      </Card>
+    );
+  }
 
   if (!diagnostic) {
     return (

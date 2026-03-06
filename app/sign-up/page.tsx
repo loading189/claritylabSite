@@ -2,8 +2,9 @@ import { SignUp } from '@clerk/nextjs';
 import { Card } from '@/components/Card';
 import { Container } from '@/components/Container';
 import { Section } from '@/components/Section';
+import { getClerkConfig } from '@/lib/clerkConfig';
 
-const isClerkConfigured = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
+const isClerkConfigured = getClerkConfig().clerkProviderEnabled;
 
 export default function SignUpPage() {
   return (
