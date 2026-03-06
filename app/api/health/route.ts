@@ -1,23 +1,32 @@
 import 'server-only';
 import { NextRequest, NextResponse } from 'next/server';
+import { getAirtableConfig } from '@/lib/airtableConfig';
 
 type HealthState = 'ok' | 'missing_env' | 'error';
 
-const hasAirtableEnv = Boolean(process.env.AIRTABLE_API_KEY && process.env.AIRTABLE_BASE_ID && process.env.AIRTABLE_TABLE_NAME);
 const hasResendEnv = Boolean(process.env.RESEND_API_KEY && process.env.EMAIL_FROM);
 const hasNewsletterEnv =
-  (process.env.NEWSLETTER_PROVIDER || 'none') !== 'none' && Boolean(process.env.NEWSLETTER_ENDPOINT_URL && process.env.NEWSLETTER_API_KEY);
+  (process.env.NEWSLETTER_PROVIDER || 'none') !== 'none' &&
+  Boolean(process.env.NEWSLETTER_ENDPOINT_URL && process.env.NEWSLETTER_API_KEY);
 const hasUploadsEnv = Boolean(process.env.NEXT_PUBLIC_INTAKE_UPLOAD_URL);
+const hasCalendlyEnv = Boolean(
+  process.env.NEXT_PUBLIC_CALENDLY_URL ||
+    process.env.NEXT_PUBLIC_CALENDLY_EVENT_TYPE_URL,
+);
+const hasClerkEnv = Boolean(
+  process.env.CLERK_SECRET_KEY && process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
+);
 
 async function checkAirtableDeep(): Promise<HealthState> {
-  if (!hasAirtableEnv) return 'missing_env';
+  const config = getAirtableConfig();
+  if (!config.apiKey || !config.baseId) return 'missing_env';
 
-  const tableName = encodeURIComponent(process.env.AIRTABLE_TABLE_NAME || 'Leads');
-  const url = `https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/${tableName}?maxRecords=1`;
+  const tableName = encodeURIComponent(config.diagnosticsTable);
+  const url = `https://api.airtable.com/v0/${config.baseId}/${tableName}?maxRecords=1`;
 
   const response = await fetch(url, {
     headers: {
-      Authorization: `Bearer ${process.env.AIRTABLE_API_KEY}`,
+      Authorization: `Bearer ${config.apiKey}`,
     },
     cache: 'no-store',
   });
@@ -45,7 +54,10 @@ export async function GET(request: NextRequest) {
     const token = request.nextUrl.searchParams.get('token');
 
     if (!process.env.HEALTH_TOKEN) {
-      return NextResponse.json({ ok: false, error: 'HEALTH_TOKEN is not configured.' }, { status: 503 });
+      return NextResponse.json(
+        { ok: false, error: 'HEALTH_TOKEN is not configured.' },
+        { status: 503 },
+      );
     }
 
     if (!token || token !== process.env.HEALTH_TOKEN) {
@@ -54,11 +66,24 @@ export async function GET(request: NextRequest) {
   }
 
   const services = {
-    airtable: (deep ? await checkAirtableDeep() : hasAirtableEnv ? 'ok' : 'missing_env') as HealthState,
-    resend: (deep ? await checkResendDeep() : hasResendEnv ? 'ok' : 'missing_env') as HealthState,
+    airtable: (deep
+      ? await checkAirtableDeep()
+      : getAirtableConfig().configured
+        ? 'ok'
+        : 'missing_env') as HealthState,
+    resend: (deep
+      ? await checkResendDeep()
+      : hasResendEnv
+        ? 'ok'
+        : 'missing_env') as HealthState,
     newsletter: (hasNewsletterEnv ? 'ok' : 'missing_env') as HealthState,
     uploads: (hasUploadsEnv ? 'ok' : 'missing_env') as HealthState,
-    sentry: process.env.NEXT_PUBLIC_SENTRY_DSN || process.env.SENTRY_DSN ? 'configured' : 'not_configured',
+    calendly: (hasCalendlyEnv ? 'ok' : 'missing_env') as HealthState,
+    auth: (hasClerkEnv ? 'ok' : 'missing_env') as HealthState,
+    sentry:
+      process.env.NEXT_PUBLIC_SENTRY_DSN || process.env.SENTRY_DSN
+        ? 'configured'
+        : 'not_configured',
   };
 
   const ok = Object.entries(services)

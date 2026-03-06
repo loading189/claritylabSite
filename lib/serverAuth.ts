@@ -1,7 +1,8 @@
 import 'server-only';
-import { auth } from '@clerk/nextjs/server';
+import { auth, currentUser } from '@clerk/nextjs/server';
+import { isAdminFromClerkUser } from '@/lib/auth/admin';
 import { getClerkConfig } from '@/lib/clerkConfig';
-import { resolveAppRole, resolveClerkEmail } from '@/lib/clerkRole';
+import { resolveClerkEmail } from '@/lib/clerkRole';
 
 export type AppUser = {
   userId: string;
@@ -17,8 +18,13 @@ export async function getServerUser(): Promise<AppUser | null> {
   const { userId, sessionClaims } = await auth();
   if (!userId) return null;
 
-  const email = resolveClerkEmail(sessionClaims);
-  const role = resolveAppRole(sessionClaims, clerkConfig.ownerEmail);
+  const user = await currentUser();
+  const email =
+    user?.primaryEmailAddress?.emailAddress?.trim().toLowerCase() ||
+    resolveClerkEmail(sessionClaims);
+  const role = isAdminFromClerkUser(user, clerkConfig.ownerEmail)
+    ? 'admin'
+    : 'client';
 
   return { userId, email, role };
 }

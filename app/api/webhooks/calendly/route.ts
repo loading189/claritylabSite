@@ -1,12 +1,16 @@
 import { NextResponse } from 'next/server';
-import { getBookingById, upsertBooking, updateClientBookingState } from '@/lib/bookingsData';
-import { getCalendlySignatureHeader, verifyCalendlyWebhookSignature } from '@/lib/calendlyWebhook';
+import {
+  getBookingById,
+  upsertBooking,
+  updateClientBookingState,
+} from '@/lib/bookingsData';
+import {
+  getCalendlySignatureHeader,
+  verifyCalendlyWebhookSignature,
+} from '@/lib/calendlyWebhook';
 import { getLatestDiagnosticByEmail } from '@/lib/diagnosticsData';
 import { getDiagnosticInsights } from '@/lib/diagnosticsPresentation';
 import { sendClientBookedConfirm, sendOwnerBookedBrief } from '@/lib/email';
-
-const SIGNING_KEY = process.env.CALENDLY_WEBHOOK_SIGNING_KEY;
-const TOLERANCE_SECONDS = process.env.CALENDLY_WEBHOOK_TOLERANCE_SECONDS || '300';
 
 type CalendlyPayload = {
   event?: string;
@@ -32,11 +36,24 @@ type CalendlyPayload = {
   };
 };
 
-const allowedSources = new Set(['direct', 'business_card_qr', 'linkedin', 'google', 'local']);
+const allowedSources = new Set([
+  'direct',
+  'business_card_qr',
+  'linkedin',
+  'google',
+  'local',
+]);
 
 function normalizeSource(source?: string) {
   const normalized = (source || '').trim().toLowerCase();
-  return allowedSources.has(normalized) ? (normalized as 'direct' | 'business_card_qr' | 'linkedin' | 'google' | 'local') : 'direct';
+  return allowedSources.has(normalized)
+    ? (normalized as
+        | 'direct'
+        | 'business_card_qr'
+        | 'linkedin'
+        | 'google'
+        | 'local')
+    : 'direct';
 }
 
 function deriveBookingId(payload: CalendlyPayload) {
@@ -45,15 +62,23 @@ function deriveBookingId(payload: CalendlyPayload) {
   const scheduledEventUri = payload.payload?.scheduled_event?.uri || '';
   const timestamp = payload.time || payload.payload?.scheduled_event?.start_time || '';
 
-  return [eventType, inviteeUri, scheduledEventUri, timestamp].filter(Boolean).join('|');
+  return [eventType, inviteeUri, scheduledEventUri, timestamp]
+    .filter(Boolean)
+    .join('|');
 }
 
 export async function POST(req: Request) {
+  const signingKey = process.env.CALENDLY_WEBHOOK_SIGNING_KEY;
+  const toleranceSeconds =
+    process.env.CALENDLY_WEBHOOK_TOLERANCE_SECONDS || '300';
+
   const rawBody = await req.text();
 
-  if (!SIGNING_KEY) {
+  if (!signingKey) {
     if (process.env.NODE_ENV !== 'production') {
-      console.warn('[calendly:webhook] CALENDLY_WEBHOOK_SIGNING_KEY missing; skipping persistence.');
+      console.warn(
+        '[calendly:webhook] CALENDLY_WEBHOOK_SIGNING_KEY missing; skipping persistence.',
+      );
     }
     return NextResponse.json({ ok: true, skipped: 'no_signing_key' });
   }
@@ -62,11 +87,14 @@ export async function POST(req: Request) {
   const verified = verifyCalendlyWebhookSignature({
     rawBody,
     signatureHeader: signature,
-    signingKey: SIGNING_KEY,
-    toleranceSeconds: TOLERANCE_SECONDS,
+    signingKey,
+    toleranceSeconds,
   });
 
   if (!verified.ok) {
+    console.warn('[calendly:webhook] signature verification failed', {
+      reason: verified.reason,
+    });
     return NextResponse.json({ ok: false, error: 'invalid_signature' }, { status: 401 });
   }
 
@@ -85,6 +113,11 @@ export async function POST(req: Request) {
   const email = (body.payload?.invitee?.email || '').trim().toLowerCase();
   const bookingId = deriveBookingId(body);
   if (!email || !bookingId) {
+    console.warn('[calendly:webhook] missing booking identity', {
+      hasEmail: Boolean(email),
+      hasBookingId: Boolean(bookingId),
+      eventType,
+    });
     return NextResponse.json({ ok: true, skipped: 'missing_identity' });
   }
 
@@ -94,7 +127,9 @@ export async function POST(req: Request) {
   }
 
   const diagnostic = await getLatestDiagnosticByEmail(email);
-  const source = normalizeSource(body.payload?.tracking?.utm_source || diagnostic?.source);
+  const source = normalizeSource(
+    body.payload?.tracking?.utm_source || diagnostic?.source,
+  );
 
   const status = eventType === 'invitee.created' ? 'booked' : 'canceled';
   const startTime = body.payload?.scheduled_event?.start_time || null;
@@ -124,16 +159,29 @@ export async function POST(req: Request) {
     created_at: new Date().toISOString(),
   });
 
+  if (!bookingResult.ok) {
+    return NextResponse.json({ ok: false, error: 'booking_write_failed' }, { status: 500 });
+  }
+
+  if (!clientStateResult.ok) {
+    console.warn('[calendly:webhook] client state update failed', {
+      reason: clientStateResult.reason,
+      email,
+    });
+  }
+
   if (status === 'booked') {
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
-    const diagnosticInsights = diagnostic ? getDiagnosticInsights(diagnostic).slice(0, 5) : [];
+    const diagnosticInsights = diagnostic
+      ? getDiagnosticInsights(diagnostic).slice(0, 5)
+      : [];
     const summaryPairs = diagnostic
       ? Object.entries(diagnostic.answers)
           .slice(0, 5)
           .map(([key, value]) => `${key}: ${String(value ?? '')}`)
       : [];
 
-    await Promise.all([
+    const [ownerEmailResult, clientEmailResult] = await Promise.all([
       sendOwnerBookedBrief({
         booking: {
           bookingId,
@@ -165,6 +213,13 @@ export async function POST(req: Request) {
         to: email,
       }),
     ]);
+
+    if (!ownerEmailResult.delivered || !clientEmailResult.delivered) {
+      console.warn('[calendly:webhook] booking emails partially delivered', {
+        ownerDelivered: ownerEmailResult.delivered,
+        clientDelivered: clientEmailResult.delivered,
+      });
+    }
   }
 
   return NextResponse.json({ ok: true, booking: bookingResult, client: clientStateResult });

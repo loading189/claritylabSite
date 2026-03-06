@@ -1,15 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { checkRateLimit } from '@/app/api/_utils/rateLimit';
 import { ensureClientFromDiagnostic, getDiagnosticById } from '@/lib/diagnosticsData';
-import { getServerUser } from '@/lib/serverAuth';
+import { requireAdminUser } from '@/lib/auth/admin';
 
 const readIp = (request: NextRequest) => request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
 
 export async function POST(request: NextRequest) {
   try {
-    const user = await getServerUser();
-    if (!user || user.role !== 'admin') {
-      return NextResponse.json({ ok: false, error: 'Unauthorized' }, { status: 401 });
+    const admin = await requireAdminUser();
+    if (!admin.ok) {
+      const status = admin.reason === 'signed_out' ? 401 : 403;
+      return NextResponse.json({ ok: false, error: 'Unauthorized' }, { status });
     }
 
     const ip = readIp(request);

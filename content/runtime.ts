@@ -7,6 +7,7 @@ const env = {
   siteEmail: readEnv(process.env.NEXT_PUBLIC_SITE_EMAIL),
   sitePhone: readEnv(process.env.NEXT_PUBLIC_SITE_PHONE),
   calendlyUrl: readEnv(process.env.NEXT_PUBLIC_CALENDLY_URL),
+  calendlyEventTypeUrl: readEnv(process.env.NEXT_PUBLIC_CALENDLY_EVENT_TYPE_URL),
   auditFormUrl: readEnv(process.env.NEXT_PUBLIC_AUDIT_FORM_URL),
   contactFormUrl: readEnv(process.env.NEXT_PUBLIC_CONTACT_FORM_URL),
   crispWebsiteId: readEnv(process.env.NEXT_PUBLIC_CRISP_WEBSITE_ID),
@@ -34,7 +35,7 @@ export const runtimeConfig = {
     signInUrl: env.clerkSignInUrl || '/sign-in',
     signUpUrl: env.clerkSignUpUrl || '/sign-up',
   },
-  booking: { calendlyUrl: env.calendlyUrl },
+  booking: { calendlyUrl: env.calendlyUrl, calendlyEventTypeUrl: env.calendlyEventTypeUrl },
   forms: { auditFormUrl: env.auditFormUrl, contactFormUrl: env.contactFormUrl },
   chat: { crispWebsiteId: env.crispWebsiteId },
   resources: { arUrl: env.arUrl, cashflowUrl: env.cashflowUrl },
@@ -42,7 +43,7 @@ export const runtimeConfig = {
   monitoring: { sentryDsn: env.sentryDsn },
   uploads: { intakeUploadUrl: env.uploadUrl },
   featureFlags: {
-    isBookingEnabled: has(env.calendlyUrl),
+    isBookingEnabled: has(env.calendlyUrl) || has(env.calendlyEventTypeUrl),
     isChatEnabled: has(env.crispWebsiteId),
     isAnalyticsEnabled: env.analyticsProvider === 'plausible' && has(env.plausibleDomain),
     isAuditFormEnabled: has(env.auditFormUrl),
@@ -103,6 +104,11 @@ export function getIntegrationStatus() {
       enabled: Boolean(process.env.NEXT_PUBLIC_SENTRY_DSN),
       required: ['NEXT_PUBLIC_SENTRY_DSN'],
     },
+
+    calendly_public_urls: {
+      enabled: Boolean(process.env.NEXT_PUBLIC_CALENDLY_URL || process.env.NEXT_PUBLIC_CALENDLY_EVENT_TYPE_URL),
+      required: ['NEXT_PUBLIC_CALENDLY_URL', 'NEXT_PUBLIC_CALENDLY_EVENT_TYPE_URL'],
+    },
     calendly_webhook_configured: {
       enabled: Boolean(process.env.CALENDLY_WEBHOOK_SIGNING_KEY),
       required: ['CALENDLY_WEBHOOK_SIGNING_KEY'],
@@ -118,6 +124,7 @@ export function getIntegrationStatus() {
     booking_flow_ready: {
       enabled: Boolean(
         process.env.CALENDLY_WEBHOOK_SIGNING_KEY &&
+          (process.env.NEXT_PUBLIC_CALENDLY_URL || process.env.NEXT_PUBLIC_CALENDLY_EVENT_TYPE_URL) &&
           process.env.AIRTABLE_API_KEY &&
           process.env.AIRTABLE_BASE_ID &&
           process.env.AIRTABLE_BOOKINGS_TABLE &&
@@ -126,6 +133,7 @@ export function getIntegrationStatus() {
       ),
       required: [
         'CALENDLY_WEBHOOK_SIGNING_KEY',
+        'NEXT_PUBLIC_CALENDLY_URL or NEXT_PUBLIC_CALENDLY_EVENT_TYPE_URL',
         'AIRTABLE_API_KEY',
         'AIRTABLE_BASE_ID',
         'AIRTABLE_BOOKINGS_TABLE',
