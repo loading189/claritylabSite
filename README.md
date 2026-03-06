@@ -62,7 +62,7 @@ If you want self-hosted fonts later:
 
 All integrations are configured through `content/runtime.ts` and server env vars.
 
-- **Calendly**: booking CTA/embed when `NEXT_PUBLIC_CALENDLY_URL` is set.
+- **Calendly**: booking CTA/embed when `NEXT_PUBLIC_CALENDLY_URL` is set, plus webhook ingestion at `POST /api/webhooks/calendly` when `CALENDLY_WEBHOOK_SIGNING_KEY` is configured.
 - **Embedded forms (Tally or equivalent)**: contact/audit embeds use `NEXT_PUBLIC_CONTACT_FORM_URL` and `NEXT_PUBLIC_AUDIT_FORM_URL`.
 - **Crisp chat**: client chat widget enabled by `NEXT_PUBLIC_CRISP_WEBSITE_ID`.
 - **Airtable writes**: lead + intake persistence via `AIRTABLE_API_KEY`, `AIRTABLE_BASE_ID`, table vars.
@@ -200,3 +200,65 @@ curl -X POST http://localhost:3000/api/resources/request \
   - Airtable persistence: `AIRTABLE_API_KEY`, `AIRTABLE_BASE_ID`, `AIRTABLE_SCAN_TABLE`
   - Email notifications: `RESEND_API_KEY`, `EMAIL_FROM`, `OWNER_EMAIL`
 - `utm_source` is normalized to one of: `direct`, `business_card_qr`, `linkedin`, `google`, `local`.
+
+## Calendly booking automation (v1)
+
+### Env vars
+
+Add these env vars for booking automation:
+
+- `CALENDLY_WEBHOOK_SIGNING_KEY`
+- `CALENDLY_WEBHOOK_EVENTS=invitee.created,invitee.canceled`
+- `CALENDLY_WEBHOOK_TOLERANCE_SECONDS=300`
+- `AIRTABLE_BOOKINGS_TABLE=Bookings` (optional; fallback-safe if missing)
+- `AIRTABLE_BOOKINGS_TABLE_URL=` (optional admin convenience link)
+- `NEXT_PUBLIC_CALENDLY_URL=`
+- `NEXT_PUBLIC_CALENDLY_EVENT_TYPE_URL=`
+
+If `CALENDLY_WEBHOOK_SIGNING_KEY` is missing, the webhook endpoint returns 200 with `skipped: no_signing_key` and does not persist bookings.
+
+### Airtable schema
+
+Optional `Bookings` table (recommended) fields:
+
+- `booking_id` (single line text; idempotency key)
+- `client_email` (email)
+- `client_id` (single line text)
+- `status` (single select: `booked`, `canceled`)
+- `start_time` (date/time)
+- `end_time` (date/time)
+- `timezone` (single line text)
+- `calendly_event_uri` (url/text)
+- `calendly_invitee_uri` (url/text)
+- `source` (single select: `direct`, `business_card_qr`, `linkedin`, `google`, `local`)
+- `created_at` (date/time)
+
+`Clients` table booking metadata fields:
+
+- `status` (`invited`, `active`, `booked`, `inactive`)
+- `booked_start_time` (date/time)
+- `booked_end_time` (date/time)
+- `booked_timezone` (single line text)
+- `last_booking_id` (single line text)
+- `last_booking_status` (single select)
+
+### Booking webhook behavior
+
+- Verifies raw-body signature (`Calendly-Webhook-Signature` variants) using HMAC-SHA256 and timestamp tolerance.
+- Handles `invitee.created` and `invitee.canceled`.
+- Uses idempotent `booking_id` derivation + Airtable upsert guard.
+- Updates client booking status fields and writes booking row when Airtable is configured.
+- Sends owner pre-call brief + client confirmation emails when Resend is configured.
+
+### Booking QA checklist
+
+1. Start app with no Clerk keys (marketing-safe mode): `/scan` should still work.
+2. Sign in with Clerk enabled and ensure `/client` shows scan state.
+3. Replay a saved `invitee.created` payload to `/api/webhooks/calendly` with valid signature:
+   - client status updates to `booked`
+   - booking row is created
+   - `/client` shows booked banner/card
+   - owner and client emails are sent when Resend is configured
+4. Replay `invitee.canceled` payload:
+   - booking row status updates to `canceled`
+   - client remains active (`status=active`) with last booking status updated
