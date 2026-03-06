@@ -45,6 +45,12 @@ function resolveEmail(input: unknown): string {
 function resolveRole(input: unknown): string | undefined {
   if (!isRecord(input)) return undefined;
 
+  const metadata = input.metadata;
+  if (isRecord(metadata)) {
+    const role = metadata.role;
+    if (typeof role === 'string') return role;
+  }
+
   const directRole = input.role;
   if (typeof directRole === 'string') return directRole;
 
