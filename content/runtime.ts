@@ -91,6 +91,36 @@ export function getIntegrationStatus() {
       enabled: Boolean(process.env.NEXT_PUBLIC_SENTRY_DSN),
       required: ['NEXT_PUBLIC_SENTRY_DSN'],
     },
+    calendly_webhook_configured: {
+      enabled: Boolean(process.env.CALENDLY_WEBHOOK_SIGNING_KEY),
+      required: ['CALENDLY_WEBHOOK_SIGNING_KEY'],
+    },
+    bookings_write: {
+      enabled: Boolean(process.env.AIRTABLE_API_KEY && process.env.AIRTABLE_BASE_ID && process.env.AIRTABLE_BOOKINGS_TABLE),
+      required: ['AIRTABLE_API_KEY', 'AIRTABLE_BASE_ID', 'AIRTABLE_BOOKINGS_TABLE'],
+    },
+    booking_emails: {
+      enabled: Boolean(process.env.RESEND_API_KEY && process.env.EMAIL_FROM),
+      required: ['RESEND_API_KEY', 'EMAIL_FROM', 'OWNER_EMAIL'],
+    },
+    booking_flow_ready: {
+      enabled: Boolean(
+        process.env.CALENDLY_WEBHOOK_SIGNING_KEY &&
+          process.env.AIRTABLE_API_KEY &&
+          process.env.AIRTABLE_BASE_ID &&
+          process.env.AIRTABLE_BOOKINGS_TABLE &&
+          process.env.RESEND_API_KEY &&
+          process.env.EMAIL_FROM,
+      ),
+      required: [
+        'CALENDLY_WEBHOOK_SIGNING_KEY',
+        'AIRTABLE_API_KEY',
+        'AIRTABLE_BASE_ID',
+        'AIRTABLE_BOOKINGS_TABLE',
+        'RESEND_API_KEY',
+        'EMAIL_FROM',
+      ],
+    },
   };
 
   const publicEnv = [
@@ -98,6 +128,7 @@ export function getIntegrationStatus() {
     'NEXT_PUBLIC_CLERK_SIGN_IN_URL',
     'NEXT_PUBLIC_CLERK_SIGN_UP_URL',
     'NEXT_PUBLIC_CALENDLY_URL',
+    'NEXT_PUBLIC_CALENDLY_EVENT_TYPE_URL',
     'NEXT_PUBLIC_AUDIT_FORM_URL',
     'NEXT_PUBLIC_CONTACT_FORM_URL',
     'NEXT_PUBLIC_CRISP_WEBSITE_ID',
