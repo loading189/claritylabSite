@@ -1,4 +1,6 @@
 import { Button } from '@/components/Button';
+import { sharedMarketingContent } from '@/content/marketing';
+import { pickVariant } from '@/content/variants';
 
 type NextStepCTAProps = {
   title?: string;
@@ -9,12 +11,14 @@ type NextStepCTAProps = {
 };
 
 export function NextStepCTA({
-  title = 'Pick your next step',
-  subtitle = 'Start with a sample report or checklist. The diagnostic is available when you want a deeper read.',
+  title = sharedMarketingContent.nextStep.title,
+  subtitle = sharedMarketingContent.nextStep.subtitle,
   trackingEvent = 'resource_cta_click',
   trackingPage = 'next_step_cta',
   className,
 }: NextStepCTAProps) {
+  const ctas = pickVariant(sharedMarketingContent.hero.ctas);
+
   return (
     <div className={className}>
       <h2 className="heading-md text-text">{title}</h2>
@@ -22,19 +26,17 @@ export function NextStepCTA({
         {subtitle}
       </p>
       <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-        <Button
-          href="/resources/ar-recovery-checklist"
-          trackingEvent={trackingEvent}
-          trackingProps={{ page: trackingPage }}
-        >
-          Get the AR Checklist
-        </Button>
-        <Button href="/sample-report" variant="ghost">
-          View Sample Report
-        </Button>
-        <Button href="/scan" variant="secondary">
-          Take the Diagnostic
-        </Button>
+        {ctas.map((cta, index) => (
+          <Button
+            key={cta.href}
+            href={cta.href}
+            variant={cta.variant}
+            trackingEvent={index === 0 ? trackingEvent : undefined}
+            trackingProps={index === 0 ? { page: trackingPage } : undefined}
+          >
+            {cta.label}
+          </Button>
+        ))}
       </div>
     </div>
   );

@@ -1,4 +1,5 @@
 import { runtimeConfig } from '@/content/runtime';
+import { sharedMarketingContent } from '@/content/marketing';
 import { siteConfig } from '@/content/site';
 import { Button } from './Button';
 import { Container } from './Container';
@@ -17,11 +18,10 @@ export function CalloutCTA({
       <Container>
         <div className="neu-card rounded-2xl border-accent/30 p-8 sm:p-10">
           <h2 className="heading-lg text-text">
-            Start with a practical resource
+            {sharedMarketingContent.callout.title}
           </h2>
           <p className="mt-3 max-w-2xl text-sm text-muted sm:text-base">
-            Grab the AR checklist or sample report first. If you want help after
-            that, we can walk through your situation together on a call.
+            {sharedMarketingContent.callout.description}
           </p>
           <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
             <Button

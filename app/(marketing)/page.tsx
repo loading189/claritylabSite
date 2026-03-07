@@ -15,36 +15,10 @@ import { ProcessSteps } from '@/components/marketing/ProcessSteps';
 import { SectionHeader } from '@/components/marketing/SectionHeader';
 import { StatCard } from '@/components/marketing/StatCard';
 import { caseStudies } from '@/content/caseStudies';
+import { homePageContent } from '@/content/marketing';
 import { exampleInsights, howItWorks, problems } from '@/content/site';
 import { getAllInsights } from '@/lib/content/insights';
 import styles from './page.module.css';
-
-const findings = [
-  'Revenue concentration: top 3 customers account for 48% of monthly cash inflow.',
-  'Invoice lag: average 5.8 days between job completion and invoice send.',
-  'Dispatch drag: 11% of technician hours lost to avoidable routing and handoff delays.',
-];
-
-const proofPatterns = [
-  {
-    metric: '$350k AR outstanding',
-    note: 'When AR ownership is unclear, old balances linger and payroll weeks get tighter.',
-    href: '/case-studies/ar-stalled-350k',
-    label: 'Read AR pattern',
-  },
-  {
-    metric: '47% technician utilization',
-    note: 'Busy schedules can still hide dead time, overtime drift, and dispatch misses.',
-    href: '/case-studies/technician-utilization-47',
-    label: 'Read utilization pattern',
-  },
-  {
-    metric: '54-day DSO pattern',
-    note: 'Invoice lag plus weak follow-up usually shows up before owners feel it in cash.',
-    href: '/sample-report',
-    label: 'View sample report',
-  },
-];
 
 export default function HomePage() {
   const allPosts = getAllInsights();
@@ -56,9 +30,9 @@ export default function HomePage() {
       <Section className={styles.heroSection}>
         <Container className={styles.heroContainer}>
           <MarketingHero
-            badge="Clarity Labs"
-            title="We help you see what is slowing cash flow and execution in your service business."
-            description="Get practical guidance you can act on. Start with a free resource, then decide if a deeper diagnostic and call make sense."
+            badge={homePageContent.hero.badge}
+            title={homePageContent.hero.title}
+            description={homePageContent.hero.description}
             withBackdrop
             trackingPage="home_hero"
           />
@@ -68,8 +42,8 @@ export default function HomePage() {
       <Section className={styles.dividerSection} id="problem">
         <Container>
           <SectionHeader
-            title="Operational problems we find first"
-            subtitle="Three common patterns that silently reduce profitability and growth capacity."
+            title={homePageContent.problemSection.title}
+            subtitle={homePageContent.problemSection.subtitle}
           />
           <ProblemGrid items={problems.slice(0, 3)} />
         </Container>
@@ -78,8 +52,8 @@ export default function HomePage() {
       <Section className={styles.dividerSection} id="method">
         <Container>
           <SectionHeader
-            title="How we work"
-            subtitle="Simple steps: learn what is happening, decide what to fix first, and move forward."
+            title={homePageContent.methodSection.title}
+            subtitle={homePageContent.methodSection.subtitle}
           />
           <ProcessSteps steps={howItWorks} />
         </Container>
@@ -88,11 +62,11 @@ export default function HomePage() {
       <Section className={styles.dividerSection} id="findings">
         <Container>
           <SectionHeader
-            title="Proof patterns we see every week"
-            subtitle="Short signals that show where cash, capacity, and execution are breaking down."
+            title={homePageContent.findingsSection.title}
+            subtitle={homePageContent.findingsSection.subtitle}
           />
           <div className={styles.proofGrid}>
-            {proofPatterns.map((item, index) => (
+            {homePageContent.proofPatterns.map((item, index) => (
               <Reveal key={item.metric} delay={index * 70}>
                 <StatCard
                   label={item.label}
@@ -104,10 +78,10 @@ export default function HomePage() {
           </div>
 
           <SectionHeader
-            title="Example findings from audits"
-            subtitle="Real insights that create decisions in days, not months."
+            title={homePageContent.findingsAuditSection.title}
+            subtitle={homePageContent.findingsAuditSection.subtitle}
           />
-          <FindingsStrip findings={findings} />
+          <FindingsStrip findings={homePageContent.findings} />
           <div className={styles.exampleGrid}>
             {exampleInsights.map((insight, index) => (
               <Reveal key={insight.title} delay={index * 70}>
@@ -124,14 +98,15 @@ export default function HomePage() {
         <Container>
           <Reveal>
             <Card className={styles.sampleCard} neumorphic>
-              <h2 className="heading-lg text-text">Sample Report Preview</h2>
+              <h2 className="heading-lg text-text">
+                {homePageContent.sampleReportSection.heading}
+              </h2>
               <p className="mt-3 max-w-2xl text-sm text-muted">
-                Download the sample report to see the structure, scorecards, and
-                recommendation format we deliver.
+                {homePageContent.sampleReportSection.description}
               </p>
               <NextStepCTA
-                title="Get the sample report format"
-                subtitle="Review the exact structure, scorecards, and recommendation style before you book."
+                title={homePageContent.sampleReportSection.ctaTitle}
+                subtitle={homePageContent.sampleReportSection.ctaSubtitle}
                 className={styles.inlineCta}
                 trackingPage="home_sample"
               />
@@ -143,8 +118,8 @@ export default function HomePage() {
       <Section className={styles.dividerSection}>
         <Container>
           <SectionHeader
-            title="Case studies"
-            subtitle="Pattern-based examples of what changes after focused work together."
+            title={homePageContent.caseStudiesSection.title}
+            subtitle={homePageContent.caseStudiesSection.subtitle}
           />
           <div className={styles.caseStudyGrid}>
             {caseStudies.slice(0, 2).map((study, index) => (
@@ -159,8 +134,8 @@ export default function HomePage() {
           </div>
 
           <SectionHeader
-            title="Start with these operator notes"
-            subtitle="Featured operator notes we recommend reading first."
+            title={homePageContent.operatorNotesSection.title}
+            subtitle={homePageContent.operatorNotesSection.subtitle}
           />
           <FeaturedInsights
             posts={featuredPosts.length ? featuredPosts : latestPosts}
@@ -171,21 +146,20 @@ export default function HomePage() {
       <Section className={styles.dividerSection}>
         <Container>
           <SectionHeader
-            title="Latest insights"
-            subtitle="Practical notes from the field on cash, team throughput, and execution systems."
+            title={homePageContent.latestInsightsSection.title}
+            subtitle={homePageContent.latestInsightsSection.subtitle}
           />
           <FeaturedInsights posts={latestPosts} />
           <Card className="mt-6" neumorphic>
-            <h3 className="heading-md text-text">Get the AR checklist</h3>
+            <h3 className="heading-md text-text">{homePageContent.checklistCard.title}</h3>
             <p className="mt-2 text-sm text-muted">
-              Use the one-page cadence to tighten collections without creating
-              friction.
+              {homePageContent.checklistCard.description}
             </p>
             <Link
-              href="/resources/ar-recovery-checklist"
+              href={homePageContent.checklistCard.href}
               className="mt-4 inline-block text-sm font-semibold no-underline"
             >
-              Get the AR Recovery Checklist →
+              {homePageContent.checklistCard.linkLabel}
             </Link>
           </Card>
         </Container>
