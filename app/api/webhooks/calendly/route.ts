@@ -139,6 +139,7 @@ export async function POST(req: Request) {
       ? {
           diagnosticId: diagnostic.id,
           signal: diagnostic.primarySignal,
+          secondarySignal: diagnostic.secondarySignal,
           score: diagnostic.score,
           tier: diagnostic.tier,
         }
@@ -203,7 +204,7 @@ export async function POST(req: Request) {
           .map(([key, value]) => `${key}: ${String(value ?? '')}`)
       : [];
 
-    const confirmationUrl = `${siteUrl}/booking/confirmed?diagnosticId=${encodeURIComponent(context.diagnosticId || '')}&signal=${encodeURIComponent(context.signal || '')}&score=${encodeURIComponent(String(context.score || ''))}&tier=${encodeURIComponent(context.tier || '')}`;
+    const confirmationUrl = `${siteUrl}/booking/confirmed?diagnosticId=${encodeURIComponent(context.diagnosticId || '')}&signal=${encodeURIComponent(context.signal || '')}&secondarySignal=${encodeURIComponent(context.secondarySignal || diagnostic?.secondarySignal || '')}&score=${encodeURIComponent(String(context.score || ''))}&tier=${encodeURIComponent(context.tier || '')}&startTime=${encodeURIComponent(startTime || '')}&endTime=${encodeURIComponent(endTime || '')}&timezone=${encodeURIComponent(timezone || '')}&bookingSummary=${encodeURIComponent('Clarity Diagnostic Call')}`;
 
     const [ownerEmailResult, clientEmailResult] = await Promise.all([
       sendOwnerBookedBrief({

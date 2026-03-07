@@ -43,6 +43,7 @@ export default async function ClientScanPage() {
   const bookingUrl = buildDiagnosticBookingUrl(calendlyUrl, {
     id: diagnostic.id,
     primarySignal: diagnostic.primarySignal,
+    secondarySignal: diagnostic.secondarySignal || scored?.secondarySignal,
     score: diagnostic.score,
     tier: diagnostic.tier,
   });

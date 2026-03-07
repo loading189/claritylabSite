@@ -1,6 +1,7 @@
 export type BookingDiagnosticContext = {
   diagnosticId?: string;
   signal?: string;
+  secondarySignal?: string;
   score?: number;
   tier?: string;
 };
@@ -34,6 +35,8 @@ export function deriveBookingDiagnosticContext(
       readQueryParam(payload.eventUri, 'utm_campaign') ||
       fallback?.diagnosticId,
     signal: readQueryParam(payload.eventUri, 'a2') || fallback?.signal,
+    secondarySignal:
+      readQueryParam(payload.eventUri, 'a5') || fallback?.secondarySignal,
     score: toScore(readQueryParam(payload.eventUri, 'a3')) ?? fallback?.score,
     tier: readQueryParam(payload.eventUri, 'a4') || fallback?.tier,
   };

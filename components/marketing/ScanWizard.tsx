@@ -95,6 +95,7 @@ export function ScanWizard() {
       ? buildDiagnosticBookingUrl(bookingBase, {
           id: diagnosticId || 'pending_diagnostic',
           primarySignal: result.primarySignal,
+          secondarySignal: result.secondarySignal,
           score: result.score,
           tier: result.tier,
         })
