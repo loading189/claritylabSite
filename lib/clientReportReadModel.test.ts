@@ -23,6 +23,7 @@ function makeFile(overrides: Partial<VaultFile> = {}): VaultFile {
     summary_note: 'Here’s what we found. Collections follow-through is the main cash pressure point.',
     period_covered: 'Jan 1 - Mar 31',
     visible_to_client: true,
+    report_publish_state: 'client_visible',
     status: 'delivered',
     ...overrides,
   };
@@ -61,9 +62,30 @@ test('buildClientReportReadModel maps report and diagnostic into deterministic s
 test('buildClientReportReadModel excludes non-client-visible files', () => {
   const report = buildClientReportReadModel({
     clientId: 'client_1',
-    reportFile: makeFile({ visible_to_client: false, deliverable_visibility: 'internalOnly' }),
+    reportFile: makeFile({ visible_to_client: false, report_publish_state: 'internal' }),
     diagnostic: makeDiagnostic(),
   });
 
   assert.equal(report, null);
+});
+
+test('buildClientReportReadModel uses authored content when available', () => {
+  const report = buildClientReportReadModel({
+    clientId: 'client_1',
+    reportFile: makeFile({
+      report_content_json: JSON.stringify({
+        subtitle: 'Q1 review for your leadership team',
+        executiveSummary: 'Here’s what we found. The largest pressure is in delayed follow-through.',
+        keyFindings: [{ area: 'Cash flow', finding: 'Collections lag by 18 days.', impact: 'high' }],
+        priorityActions: [{ action: 'Set weekly collections review.', owner: 'Owner', timing: 'This week', priority: 'high' }],
+        sections: [{ id: 's1', title: 'Context', content: 'Sales held steady while collections slowed.' }],
+      }),
+    }),
+    diagnostic: makeDiagnostic(),
+  });
+
+  assert.ok(report);
+  assert.equal(report?.subtitle, 'Q1 review for your leadership team');
+  assert.equal(report?.keyFindings[0]?.finding, 'Collections lag by 18 days.');
+  assert.equal(report?.sections[0]?.title, 'Context');
 });

@@ -1,5 +1,6 @@
 import 'server-only';
 
+import { normalizeReportPublishState, type ReportPublishState } from '@/lib/reportAuthoring';
 import type { VaultFile } from '@/lib/vaultData';
 
 export type DeliverableRecord = {
@@ -11,7 +12,9 @@ export type DeliverableRecord = {
   createdAt: string;
   visibleToClient: boolean;
   status: string;
-  visibility: 'draft' | 'visibleToClient' | 'internalOnly';
+  visibility: ReportPublishState;
+  publishedAt: string | null;
+  reportContentJson: string | null;
 };
 
 function parseBoolean(value: unknown, fallback: boolean) {
@@ -24,17 +27,21 @@ function parseBoolean(value: unknown, fallback: boolean) {
   return fallback;
 }
 
+function normalizeLegacyVisibility(file: VaultFile): ReportPublishState {
+  const publishStateRaw = String(file.report_publish_state || '').trim();
+  if (publishStateRaw) return normalizeReportPublishState(publishStateRaw);
+
+  const visibilityRaw = String(file.deliverable_visibility || '').trim();
+  if (visibilityRaw) return normalizeReportPublishState(visibilityRaw);
+
+  return parseBoolean(file.visible_to_client, true) ? 'client_visible' : 'internal';
+}
+
 export function mapFileToDeliverable(file: VaultFile): DeliverableRecord {
   const id = file.id || file.storage_key;
   const title = file.title || file.filename;
-  const visibilityRaw = String(file.deliverable_visibility || '').trim();
-  const visibility: DeliverableRecord['visibility'] =
-    visibilityRaw === 'draft' || visibilityRaw === 'internalOnly' || visibilityRaw === 'visibleToClient'
-      ? visibilityRaw
-      : parseBoolean(file.visible_to_client, true)
-        ? 'visibleToClient'
-        : 'internalOnly';
-  const visibleToClient = visibility === 'visibleToClient' && parseBoolean(file.visible_to_client, true);
+  const visibility = normalizeLegacyVisibility(file);
+  const visibleToClient = visibility === 'client_visible' && parseBoolean(file.visible_to_client, true);
 
   return {
     id,
@@ -46,6 +53,8 @@ export function mapFileToDeliverable(file: VaultFile): DeliverableRecord {
     visibleToClient,
     status: file.status || 'delivered',
     visibility,
+    publishedAt: file.report_published_at || null,
+    reportContentJson: file.report_content_json || null,
   };
 }
 

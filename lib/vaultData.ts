@@ -22,7 +22,10 @@ export type VaultFile = {
   summary_note?: string;
   period_covered?: string;
   visible_to_client?: boolean | string;
-  deliverable_visibility?: 'draft' | 'visibleToClient' | 'internalOnly';
+  deliverable_visibility?: 'draft' | 'internal' | 'client_visible' | 'visibleToClient' | 'internalOnly';
+  report_publish_state?: 'draft' | 'internal' | 'client_visible';
+  report_published_at?: string;
+  report_content_json?: string;
   status?: string;
 };
 
@@ -109,6 +112,33 @@ export async function findFileByStorageKey(storageKey: string) {
     }
     return null;
   }
+}
+
+export async function findFileById(recordId: string) {
+  if (!hasVaultTables) return null;
+
+  try {
+    const data = await airtableRequest<{ id: string; fields: Record<string, unknown> }>({
+      table: config.filesTable,
+      path: `/${recordId}`,
+    });
+    return { id: data.id, ...(data.fields as unknown as VaultFile) };
+  } catch (error) {
+    if (process.env.NODE_ENV !== 'production') {
+      console.warn('[vaultData] findFileById failed', error);
+    }
+    return null;
+  }
+}
+
+export async function updateFileRecord(recordId: string, fields: Partial<VaultFile>) {
+  if (!hasVaultTables) return;
+  await airtableRequest({
+    table: config.filesTable,
+    method: 'PATCH',
+    path: `/${recordId}`,
+    body: { fields },
+  });
 }
 
 export async function listClients() {

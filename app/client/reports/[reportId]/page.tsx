@@ -32,7 +32,7 @@ export default async function ClientReportPage({ params }: { params: { reportId:
       <PortalPageHeader
         eyebrow="Report summary"
         title={report.title}
-        description="Here’s what we found, what matters most, and where we would start."
+        description={report.subtitle || 'Here’s what we found, what matters most, and where we would start.'}
       />
 
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
@@ -55,10 +55,17 @@ export default async function ClientReportPage({ params }: { params: { reportId:
       </ReportSection>
 
       <ReportSection title="Signal chart" description="A quick view of where pressure is strongest right now.">
+        {report.chartNotes ? <p className="mb-3 text-sm text-muted">{report.chartNotes}</p> : null}
         {report.charts.map((chart) => (
           <ReportChartBlock key={chart.id} chart={chart} />
         ))}
       </ReportSection>
+
+      {report.sections.map((section) => (
+        <ReportSection key={section.id} title={section.title} description="Additional context from your delivery team.">
+          <p className="text-sm text-text">{section.content}</p>
+        </ReportSection>
+      ))}
 
       <ReportSection title="Download the full report." description="The PDF is your formal consulting deliverable with full detail and recommendations.">
         <p className="text-sm text-muted">Use the PDF for your complete report package. Use this page for quick review and follow-through.</p>

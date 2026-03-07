@@ -3,13 +3,15 @@ import 'server-only';
 import { getAdvisoryBriefFromDiagnostic } from '@/lib/diagnosticGuidance';
 import { getLatestDiagnosticByEmail, type DiagnosticRecord } from '@/lib/diagnosticsData';
 import { mapFileToDeliverable } from '@/lib/deliverablesData';
+import { parseAuthoredReportContent, type ReportPublishState } from '@/lib/reportAuthoring';
 import { listFiles, type VaultFile } from '@/lib/vaultData';
 
-export type ReportVisibility = 'draft' | 'visibleToClient' | 'internalOnly';
+export type ReportVisibility = ReportPublishState;
 
 export type ClientReportSummary = {
   id: string;
   title: string;
+  subtitle: string | null;
   reportType: string;
   createdAt: string;
   periodCovered: string | null;
@@ -48,22 +50,32 @@ export type ReportTable = {
   rows: string[][];
 };
 
+export type ReportSection = {
+  id: string;
+  title: string;
+  content: string;
+};
+
 export type ClientReportReadModel = {
   id: string;
   clientId: string;
   title: string;
+  subtitle: string | null;
   reportType: string;
   createdAt: string;
+  publishedAt: string | null;
   periodCovered: string | null;
   primarySignal: string;
   secondarySignal: string | null;
   score: number | null;
   tier: string;
   executiveSummary: string;
+  chartNotes: string | null;
   keyFindings: ReportFinding[];
   priorityActions: ReportPriorityAction[];
   charts: ReportChart[];
   tables: ReportTable[];
+  sections: ReportSection[];
   pdfFileId: string | null;
   status: string;
   visibility: ReportVisibility;
@@ -129,9 +141,12 @@ function buildTables(
 function toReportSummary(file: VaultFile): ClientReportSummary | null {
   const deliverable = mapFileToDeliverable(file);
   if (!deliverable.visibleToClient || deliverable.deliverableType !== 'report') return null;
+  const authored = parseAuthoredReportContent(deliverable.reportContentJson);
+
   return {
     id: deliverable.id,
     title: deliverable.title,
+    subtitle: authored?.subtitle || authored?.shortSummary || deliverable.summaryNote,
     reportType: deliverable.deliverableType,
     createdAt: deliverable.createdAt,
     periodCovered: deliverable.periodCovered,
@@ -151,13 +166,14 @@ export function buildClientReportReadModel({
   const deliverable = mapFileToDeliverable(reportFile);
   if (!deliverable.visibleToClient) return null;
 
+  const authored = parseAuthoredReportContent(deliverable.reportContentJson);
   const primarySignal = titleCaseSignal(diagnostic?.primarySignal || 'operations');
   const secondarySignal = diagnostic?.secondarySignal ? titleCaseSignal(diagnostic.secondarySignal) : null;
   const score = diagnostic?.score ?? null;
   const tier = diagnostic?.tier || scoreToTier(score, 'monitor');
   const brief = diagnostic ? getAdvisoryBriefFromDiagnostic(diagnostic) : null;
 
-  const keyFindings: ReportFinding[] = (brief?.whatMayBeHappening || [
+  const defaultFindings: ReportFinding[] = (brief?.whatMayBeHappening || [
     'We reviewed your latest engagement information and focused on the areas creating the most pressure right now.',
     'You have opportunities to reduce day-to-day pressure by tightening follow-through and ownership.',
   ])
@@ -168,7 +184,7 @@ export function buildClientReportReadModel({
       impact: index === 0 ? 'high' : index === 1 ? 'medium' : 'low',
     }));
 
-  const priorityActions: ReportPriorityAction[] = (brief?.whereToStart || [
+  const defaultActions: ReportPriorityAction[] = (brief?.whereToStart || [
     'Pick one issue causing the most pressure this week and assign a clear owner.',
     'Set a short weekly review rhythm so progress stays visible.',
     'Track one to three numbers that show if pressure is going down.',
@@ -181,38 +197,48 @@ export function buildClientReportReadModel({
       priority: index === 0 ? 'high' : index === 1 ? 'medium' : 'low',
     }));
 
+  const keyFindings = authored?.keyFindings?.length ? authored.keyFindings : defaultFindings;
+  const priorityActions = authored?.priorityActions?.length ? authored.priorityActions : defaultActions;
+
   const breakdown = pressureBreakdown(score);
 
   return {
     id: deliverable.id,
     clientId,
     title: deliverable.title,
+    subtitle: authored?.subtitle || authored?.shortSummary || deliverable.summaryNote,
     reportType: deliverable.deliverableType,
     createdAt: deliverable.createdAt,
+    publishedAt: deliverable.publishedAt,
     periodCovered: deliverable.periodCovered,
     primarySignal,
     secondarySignal,
     score,
     tier,
     executiveSummary:
+      authored?.executiveSummary ||
       deliverable.summaryNote ||
       brief?.shortSummary ||
       'Here’s what we found. You can reduce pressure fastest by starting with one clear issue and a short action plan.',
+    chartNotes: authored?.chartNotes || null,
     keyFindings,
     priorityActions,
-    charts: [
-      {
-        id: 'pressure-by-signal',
-        title: 'Where pressure is strongest',
-        description: 'This view highlights where we see the most pressure so you can focus first steps.',
-        series: [
-          { label: primarySignal, value: breakdown.highest },
-          { label: secondarySignal || 'Follow-through', value: breakdown.next },
-          { label: 'Baseline operations', value: breakdown.baseline },
+    charts: authored?.charts?.length
+      ? authored.charts
+      : [
+          {
+            id: 'pressure-by-signal',
+            title: 'Where pressure is strongest',
+            description: 'This view highlights where we see the most pressure so you can focus first steps.',
+            series: [
+              { label: primarySignal, value: breakdown.highest },
+              { label: secondarySignal || 'Follow-through', value: breakdown.next },
+              { label: 'Baseline operations', value: breakdown.baseline },
+            ],
+          },
         ],
-      },
-    ],
-    tables: buildTables(primarySignal, secondarySignal, keyFindings, priorityActions),
+    tables: authored?.tables?.length ? authored.tables : buildTables(primarySignal, secondarySignal, keyFindings, priorityActions),
+    sections: authored?.sections || [],
     pdfFileId: reportFile.id || null,
     status: deliverable.status,
     visibility: deliverable.visibility,

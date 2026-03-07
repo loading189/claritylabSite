@@ -49,6 +49,16 @@ export default async function AdminClientDetail({ params }: { params: { clientId
       <h1 className="text-2xl">Client: {params.clientId}</h1>
       <Link href={`/admin/clients/${params.clientId}/upload-report`}>Upload report</Link>
 
+
+
+      <section className="rounded-card border border-border bg-surface p-4 shadow-soft">
+        <h2 className="mb-2 text-lg font-semibold">Report publishing</h2>
+        <p className="mb-2 text-sm text-muted">Edit report summaries, review them, and control when clients can see them.</p>
+        <Link className="text-sm underline" href={`/admin/clients/${params.clientId}/upload-report`}>
+          Open report upload and editor
+        </Link>
+      </section>
+
       <section className="rounded-card border border-border bg-surface p-4 shadow-soft">
         <h2 className="mb-2 text-lg font-semibold">Create request</h2>
         <form action={createRequest} className="grid gap-2 sm:grid-cols-2">

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { mapFileToDeliverable } from '@/lib/deliverablesData';
 import { listFiles } from '@/lib/vaultData';
 import { requireServerUser } from '@/lib/serverAuth';
 
@@ -10,7 +11,15 @@ export async function GET(req: NextRequest) {
     const clientId = user.role === 'admin' ? targetClientId || user.userId : user.userId;
 
     const files = await listFiles(clientId, category);
-    return NextResponse.json({ files });
+    const filtered =
+      user.role === 'admin'
+        ? files
+        : files.filter((file) => {
+            if (file.category !== 'report') return true;
+            return mapFileToDeliverable(file).visibleToClient;
+          });
+
+    return NextResponse.json({ files: filtered });
   } catch {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
