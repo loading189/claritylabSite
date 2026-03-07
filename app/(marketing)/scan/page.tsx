@@ -3,28 +3,31 @@ import { Suspense } from 'react';
 import { Container } from '@/components/Container';
 import { Section } from '@/components/Section';
 import { ScanShell } from '@/components/marketing/ScanShell';
+import { scanLandingContent } from '@/content/scan';
+import { pickVariant } from '@/content/variants';
 import { ScanWizard } from '@/components/marketing/ScanWizard';
 import styles from './page.module.css';
 
 export const metadata: Metadata = {
-  title: 'Clarity Scan',
-  description:
-    'Use the Clarity Scan to get a fast operational read before booking a call.',
+  title: scanLandingContent.metadataTitle,
+  description: scanLandingContent.metadataDescription,
 };
 
 export default function ScanPage() {
+  const lead = pickVariant(scanLandingContent.lead);
+
   return (
     <Section>
       <Container className={styles.wrap}>
         <h1 className="text-4xl font-semibold tracking-tight text-text">
-          Clarity Scan
+          {scanLandingContent.heading}
         </h1>
-        <p className={styles.lead}>
-          In about three minutes, spot your strongest pressure signals and get a practical starting point before you book.
-        </p>
+        <p className={styles.lead}>{lead}</p>
         <ScanShell>
           <Suspense
-            fallback={<p className="text-sm text-muted">Loading scan…</p>}
+            fallback={
+              <p className="text-sm text-muted">{scanLandingContent.loadingLabel}</p>
+            }
           >
             <ScanWizard />
           </Suspense>

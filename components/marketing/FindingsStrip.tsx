@@ -2,7 +2,7 @@ import { Card } from '@/components/Card';
 import { Reveal } from '@/components/Reveal';
 
 type FindingsStripProps = {
-  findings: string[];
+  findings: readonly string[];
 };
 
 export function FindingsStrip({ findings }: FindingsStripProps) {
