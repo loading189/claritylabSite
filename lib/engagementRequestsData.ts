@@ -2,6 +2,7 @@ import 'server-only';
 
 import { airtableRequest } from '@/lib/airtableClient';
 import { getAirtableConfig } from '@/lib/airtableConfig';
+import { requireFields } from '@/lib/airtableSchema';
 
 const config = getAirtableConfig();
 
@@ -91,6 +92,16 @@ export async function createEngagementRequest(
 ) {
   if (!hasEngagementRequestsTable) return;
 
+  const required = requireFields(request as unknown as Record<string, unknown>, ['clientId', 'title']);
+  if (!required.ok) {
+    console.error('[engagementRequestsData] createEngagementRequest missing required fields', {
+      missing: required.missing,
+      clientId: request.clientId,
+      title: request.title,
+    });
+    return;
+  }
+
   await airtableRequest({
     table: config.engagementRequestsTable,
     method: 'POST',
@@ -111,7 +122,6 @@ export async function createEngagementRequest(
 
 export async function updateEngagementRequestStatus(requestId: string, status: EngagementRequestStatus) {
   if (!hasEngagementRequestsTable) return;
-
   await airtableRequest({
     table: config.engagementRequestsTable,
     path: `/${requestId}`,

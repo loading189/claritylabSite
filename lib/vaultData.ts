@@ -1,6 +1,8 @@
 import 'server-only';
 import { airtableRequest } from '@/lib/airtableClient';
 import { getAirtableConfig } from '@/lib/airtableConfig';
+import { normalizeReportPublishState } from '@/lib/reportAuthoring';
+import { requireFields, safeJsonString } from '@/lib/airtableSchema';
 
 const config = getAirtableConfig();
 
@@ -67,10 +69,44 @@ export async function ensureClientRecord(clientId: string, email: string) {
 
 export async function createFileRecord(file: VaultFile) {
   if (!hasVaultTables) return;
+
+  const required = requireFields(file as unknown as Record<string, unknown>, [
+    'client_id',
+    'client_email',
+    'uploader_role',
+    'uploader_user_id',
+    'category',
+    'filename',
+    'storage_key',
+    'mime_type',
+    'size_bytes',
+  ]);
+
+  if (!required.ok) {
+    console.error('[vaultData] createFileRecord missing required fields', {
+      missing: required.missing,
+      storageKey: file.storage_key,
+      category: file.category,
+    });
+    return;
+  }
+
+  const publishState = normalizeReportPublishState(
+    file.report_publish_state || file.deliverable_visibility || (file.visible_to_client ? 'client_visible' : 'internal'),
+  );
+
+  const normalizedFile: VaultFile = {
+    ...file,
+    client_email: String(file.client_email || '').trim().toLowerCase(),
+    report_publish_state: publishState,
+    deliverable_visibility: publishState,
+    report_content_json: safeJsonString(file.report_content_json),
+  };
+
   await airtableRequest({
     table: config.filesTable,
     method: 'POST',
-    body: { fields: file },
+    body: { fields: normalizedFile },
   });
 }
 

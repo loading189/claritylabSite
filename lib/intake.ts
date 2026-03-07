@@ -4,6 +4,7 @@ import { upsertLead } from './airtable';
 import { sendIntakeEmails } from './intakeEmail';
 import { checkRateLimit } from '@/app/api/_utils/rateLimit';
 import { LeadInput, LeadPainArea, LeadSource, validateLead } from './leads';
+import { safeJoinedText } from './airtableSchema';
 
 export type IntakeType = 'call' | 'audit';
 export type TeamSize = '1' | '2-5' | '6-15' | '16+';
@@ -121,7 +122,7 @@ async function createIntakeRecord(intakeType: IntakeType, payload: IntakePayload
         industry: clean(payload.industry),
         team_size: clean(payload.team_size),
         annual_revenue_range: clean(payload.annual_revenue_range),
-        current_tools: (payload.current_tools || []).join(', '),
+        current_tools: safeJoinedText(payload.current_tools, ', '),
         biggest_pain: clean(payload.biggest_pain),
         problem_description: clean(payload.problem_description),
         urgency: clean(payload.urgency),
@@ -129,8 +130,8 @@ async function createIntakeRecord(intakeType: IntakeType, payload: IntakePayload
         audit_goal: clean(payload.audit_goal),
         share_data: clean(payload.share_data),
         upload_preference: clean(payload.upload_preference),
-        uploaded_files: (payload.uploaded_files || []).join('\n'),
-        uploaded_file_names: (payload.uploaded_file_names || []).join(', '),
+        uploaded_files: safeJoinedText(payload.uploaded_files, '\n'),
+        uploaded_file_names: safeJoinedText(payload.uploaded_file_names, ', '),
         notes: clean(payload.notes),
         qualification_score: score,
         qualification_tier: tier,
@@ -140,7 +141,8 @@ async function createIntakeRecord(intakeType: IntakeType, payload: IntakePayload
   });
 
   if (!response.ok) {
-    throw new Error(`Airtable intake create failed: ${response.status}`);
+    const details = await response.text();
+    throw new Error(`Airtable intake create failed: ${response.status}${details ? ` - ${details}` : ''}`);
   }
 
   const data = (await response.json()) as { id: string };

@@ -1,6 +1,7 @@
 import 'server-only';
 import { randomUUID } from 'crypto';
 import { airtableRequest } from '@/lib/airtableClient';
+import { BOOKING_SOURCES, BOOKING_STATUSES, CLIENT_STATUSES, normalizeSingleSelect, requireFields } from '@/lib/airtableSchema';
 import { getAirtableConfig } from '@/lib/airtableConfig';
 
 const config = getAirtableConfig({ bookingFlowEnabled: true });
@@ -36,6 +37,18 @@ export type ClientBookingState = {
 type AirtableRecord = { id: string; fields: Record<string, unknown> };
 
 const hasBookingsTables = Boolean(config.apiKey && config.baseId);
+
+function normalizeBookingStatus(value: unknown): BookingRecord['status'] {
+  return normalizeSingleSelect(value, BOOKING_STATUSES, 'booked');
+}
+
+function normalizeBookingSource(value: unknown): BookingRecord['source'] {
+  return normalizeSingleSelect(value, BOOKING_SOURCES, 'direct');
+}
+
+function normalizeClientStatus(value: unknown): ClientBookingState['status'] {
+  return normalizeSingleSelect(value, CLIENT_STATUSES, 'active');
+}
 
 function esc(value: string) {
   return value.replace(/'/g, "\\'");
@@ -86,9 +99,21 @@ export async function upsertBooking(booking: BookingRecord) {
     return { ok: true as const, skipped: 'no_airtable' as const };
   }
 
+  const required = requireFields(booking as unknown as Record<string, unknown>, ['booking_id', 'client_email']);
+  if (!required.ok) {
+    console.error('[bookingsData] upsertBooking missing required fields', {
+      missing: required.missing,
+      bookingId: booking.booking_id,
+    });
+    return { ok: false as const, reason: 'invalid_payload' as const };
+  }
+
   const existing = await getBookingById(booking.booking_id);
   const fields = {
     ...booking,
+    status: normalizeBookingStatus(booking.status),
+    source: normalizeBookingSource(booking.source),
+    client_email: booking.client_email.trim().toLowerCase(),
     created_at: booking.created_at || new Date().toISOString(),
   };
 
@@ -158,9 +183,11 @@ export async function updateClientBookingState(
 
   try {
     const existing = await getClientByEmail(normalized);
+    const normalizedStatus = normalizeClientStatus(bookingSummary.status);
+
     const fields: Record<string, string | null> = {
       primary_email: normalized,
-      status: bookingSummary.status,
+      status: normalizedStatus,
       booked_start_time: bookingSummary.booked_start_time || null,
       booked_end_time: bookingSummary.booked_end_time || null,
       booked_timezone: bookingSummary.booked_timezone || null,
@@ -192,7 +219,7 @@ export async function updateClientBookingState(
           ...fields,
           client_id: clientId,
           created_at: new Date().toISOString(),
-          status: bookingSummary.status === 'booked' ? 'booked' : 'active',
+          status: normalizedStatus === 'booked' ? 'booked' : 'active',
         },
       },
     });
