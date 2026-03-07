@@ -8,6 +8,7 @@ import {
   scoreScan,
   type ScanAnswers,
 } from '@/lib/scan';
+import { safeJsonString } from '@/lib/airtableSchema';
 
 const readIp = (request: NextRequest) =>
   request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
@@ -72,7 +73,7 @@ export async function POST(request: NextRequest) {
       secondary_signal: result.secondarySignal,
       qualified: result.qualified,
       insights: result.insights,
-      answers_json: JSON.stringify(answers),
+      answers_json: safeJsonString(answers),
     };
 
     const [created, emailResult] = await Promise.all([

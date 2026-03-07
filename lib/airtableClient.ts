@@ -6,6 +6,7 @@ type AirtableErrorCode =
   | 'unauthorized'
   | 'forbidden'
   | 'not_found'
+  | 'unprocessable'
   | 'request_failed';
 
 export class AirtableRequestError extends Error {
@@ -23,10 +24,32 @@ function toErrorCode(status: number): AirtableErrorCode {
   if (status === 401) return 'unauthorized';
   if (status === 403) return 'forbidden';
   if (status === 404) return 'not_found';
+  if (status === 422) return 'unprocessable';
   return 'request_failed';
 }
 
-function logAirtableIssue(status: number, path: string, table: string) {
+async function readAirtableError(response: Response) {
+  const text = await response.text();
+  if (!text.trim()) return '';
+
+  try {
+    const parsed = JSON.parse(text) as {
+      error?: { type?: string; message?: string };
+    };
+    const type = parsed.error?.type ? `[${parsed.error.type}] ` : '';
+    return `${type}${parsed.error?.message || text}`;
+  } catch {
+    return text;
+  }
+}
+
+function logAirtableIssue(
+  status: number,
+  path: string,
+  table: string,
+  method: string,
+  details: string,
+) {
   if (process.env.NODE_ENV === 'production') return;
 
   const hint =
@@ -36,10 +59,12 @@ function logAirtableIssue(status: number, path: string, table: string) {
         ? 'Airtable token lacks scope or base/table access.'
         : status === 404
           ? 'Airtable base, table, or record path is incorrect.'
-          : 'Airtable request failed.';
+          : status === 422
+            ? 'Airtable rejected the payload. Check field names/types/select options.'
+            : 'Airtable request failed.';
 
   console.warn(
-    `[airtable] ${status} for table "${table}" at path "${path}". ${hint}`,
+    `[airtable] ${method} ${status} for table "${table}" at path "${path}". ${hint}${details ? ` Details: ${details}` : ''}`,
   );
 }
 
@@ -77,11 +102,18 @@ export async function airtableRequest<T>(options: {
   });
 
   if (!response.ok) {
-    logAirtableIssue(response.status, options.path || '', options.table);
+    const details = await readAirtableError(response);
+    logAirtableIssue(
+      response.status,
+      options.path || '',
+      options.table,
+      options.method || (options.body ? 'POST' : 'GET'),
+      details,
+    );
     const code = toErrorCode(response.status);
     throw new AirtableRequestError(
       code,
-      `Airtable request failed (${response.status})`,
+      `Airtable request failed (${response.status})${details ? `: ${details}` : ''}`,
       response.status,
     );
   }

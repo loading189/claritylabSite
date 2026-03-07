@@ -3,17 +3,11 @@ import { createFileRecord } from '@/lib/vaultData';
 import { requireServerUser } from '@/lib/serverAuth';
 import { sendClientUploadNotification, sendReportReadyNotification } from '@/lib/email';
 import { updateEngagementRequestStatus } from '@/lib/engagementRequestsData';
+import { normalizeReportPublishState } from '@/lib/reportAuthoring';
+import { requireFields, safeJsonString } from '@/lib/airtableSchema';
 
 type DeliverableVisibilityInput = 'draft' | 'internal' | 'client_visible' | 'visibleToClient' | 'internalOnly';
 type DeliverableVisibility = 'draft' | 'internal' | 'client_visible';
-
-function normalizeVisibility(value: unknown): DeliverableVisibility {
-  const visibility = String(value || '').trim();
-  if (visibility === 'draft' || visibility === 'internal' || visibility === 'client_visible') return visibility;
-  if (visibility === 'internalOnly') return 'internal';
-  if (visibility === 'visibleToClient') return 'client_visible';
-  return 'draft';
-}
 
 export async function POST(req: NextRequest) {
   try {
@@ -39,10 +33,22 @@ export async function POST(req: NextRequest) {
       markRelatedRequestSubmitted?: boolean;
     };
 
+    const required = requireFields(body as unknown as Record<string, unknown>, [
+      'storageKey',
+      'filename',
+      'mimeType',
+      'sizeBytes',
+      'category',
+    ]);
+
+    if (!required.ok) {
+      return NextResponse.json({ error: `Missing required fields: ${required.missing.join(', ')}` }, { status: 400 });
+    }
+
     const clientId = user.role === 'admin' ? body.clientId || user.userId : user.userId;
     const clientEmail = body.clientEmail || user.email;
 
-    const visibility = normalizeVisibility(body.visibility);
+    const visibility = normalizeReportPublishState(body.visibility) as DeliverableVisibility;
     const visibleToClient = visibility === 'client_visible' ? body.visibleToClient !== false : false;
     const publishedAt = visibility === 'client_visible' ? new Date().toISOString() : undefined;
 
@@ -62,7 +68,7 @@ export async function POST(req: NextRequest) {
       deliverable_type: body.deliverableType,
       summary_note: body.summaryNote,
       period_covered: body.periodCovered,
-      report_content_json: body.reportContentJson,
+      report_content_json: safeJsonString(body.reportContentJson),
       visible_to_client: visibleToClient,
       deliverable_visibility: visibility,
       report_publish_state: visibility,
