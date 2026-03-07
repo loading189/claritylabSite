@@ -2,22 +2,25 @@ import { NextRequest, NextResponse } from 'next/server';
 import { checkRateLimit } from '@/app/api/_utils/rateLimit';
 import { createScanDiagnostic } from '@/lib/airtable';
 import { sendScanNotifications } from '@/lib/email';
-import { deriveScanSource, scoreScan, type ScanAnswers } from '@/lib/scan';
+import {
+  deriveScanSource,
+  isValidScanAnswers,
+  scoreScan,
+  type ScanAnswers,
+} from '@/lib/scan';
 
-const readIp = (request: NextRequest) => request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
-
-function isValidAnswers(input: unknown): input is ScanAnswers {
-  if (!input || typeof input !== 'object') return false;
-  const candidate = input as Record<string, string>;
-  return Boolean(candidate.cashFlow && candidate.capacity && candidate.systems && candidate.urgency && candidate.teamReadiness);
-}
+const readIp = (request: NextRequest) =>
+  request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
 
 export async function POST(request: NextRequest) {
   try {
     const ip = readIp(request);
     const rateLimit = checkRateLimit(ip, 'scan_submit');
     if (rateLimit.limited) {
-      return NextResponse.json({ ok: false, error: 'Too many requests. Please try again shortly.' }, { status: 429 });
+      return NextResponse.json(
+        { ok: false, error: 'Too many requests. Please try again shortly.' },
+        { status: 429 },
+      );
     }
 
     const payload = (await request.json()) as {
@@ -31,18 +34,28 @@ export async function POST(request: NextRequest) {
 
     const email = (payload.email || '').trim().toLowerCase();
     if (!email || !email.includes('@')) {
-      return NextResponse.json({ ok: false, error: 'Valid email is required.' }, { status: 400 });
+      return NextResponse.json(
+        { ok: false, error: 'Valid email is required.' },
+        { status: 400 },
+      );
     }
 
     if (!payload.consent) {
-      return NextResponse.json({ ok: false, error: 'Consent is required.' }, { status: 400 });
+      return NextResponse.json(
+        { ok: false, error: 'Consent is required.' },
+        { status: 400 },
+      );
     }
 
-    if (!isValidAnswers(payload.answers)) {
-      return NextResponse.json({ ok: false, error: 'Invalid diagnostic answers.' }, { status: 400 });
+    if (!isValidScanAnswers(payload.answers)) {
+      return NextResponse.json(
+        { ok: false, error: 'Invalid diagnostic answers.' },
+        { status: 400 },
+      );
     }
 
-    const result = scoreScan(payload.answers);
+    const answers = payload.answers as ScanAnswers;
+    const result = scoreScan(answers);
     const source = deriveScanSource(payload.utmSource || payload.source);
 
     const createdAt = new Date().toISOString();
@@ -56,11 +69,13 @@ export async function POST(request: NextRequest) {
       score: result.score,
       tier: result.tier,
       primary_signal: result.primarySignal,
+      secondary_signal: result.secondarySignal,
       qualified: result.qualified,
-      answers_json: JSON.stringify(payload.answers),
+      insights: result.insights,
+      answers_json: JSON.stringify(answers),
     };
 
-    await Promise.allSettled([
+    const [created, emailResult] = await Promise.all([
       createScanDiagnostic(record),
       sendScanNotifications({
         userEmail: email,
@@ -72,7 +87,11 @@ export async function POST(request: NextRequest) {
       }),
     ]);
 
-    return NextResponse.json({ ok: true, result });
+    if (!emailResult.owner.delivered || !emailResult.user.delivered) {
+      console.warn('[scan:submit] notification delivery issue', emailResult);
+    }
+
+    return NextResponse.json({ ok: true, result, diagnosticId: created?.id });
   } catch (error) {
     console.error('Scan submission error', error);
     return NextResponse.json({ ok: true, fallback: true });

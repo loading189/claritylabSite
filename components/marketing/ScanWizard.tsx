@@ -1,128 +1,23 @@
 'use client';
 
+import Link from 'next/link';
 import { FormEvent, useMemo, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { track } from '@/lib/track';
-import { deriveScanSource, scoreScan, type ScanAnswers } from '@/lib/scan';
+import {
+  deriveScanSource,
+  isValidScanAnswers,
+  scanQuestions,
+  scoreScan,
+  totalScanSteps,
+  type ScanAnswers,
+} from '@/lib/scan';
+import { buildDiagnosticBookingUrl } from '@/lib/bookingUrl';
 import { OptionCard } from './OptionCard';
 import { ResultCard } from './ResultCard';
 import { ScanProgress } from './ScanProgress';
 
-const totalSteps = 6;
-
 type StepKey = keyof ScanAnswers;
-
-const stepConfig: Array<{
-  key: StepKey;
-  title: string;
-  options: Array<{ value: string; label: string; description: string }>;
-}> = [
-  {
-    key: 'cashFlow',
-    title: 'How would you describe cash flow right now?',
-    options: [
-      {
-        value: 'stable',
-        label: 'Stable',
-        description: 'Predictable and manageable.',
-      },
-      {
-        value: 'some_delays',
-        label: 'Some delays',
-        description: 'Occasional pressure windows.',
-      },
-      {
-        value: 'frequent_crunch',
-        label: 'Frequent crunch',
-        description: 'Regular stress around pay cycles.',
-      },
-    ],
-  },
-  {
-    key: 'capacity',
-    title: 'How consistent is your team capacity?',
-    options: [
-      {
-        value: 'predictable',
-        label: 'Predictable',
-        description: 'Workload is balanced most weeks.',
-      },
-      {
-        value: 'inconsistent',
-        label: 'Inconsistent',
-        description: 'Frequent spikes and dips.',
-      },
-      {
-        value: 'chaotic',
-        label: 'Chaotic',
-        description: 'Daily firefighting and rework.',
-      },
-    ],
-  },
-  {
-    key: 'systems',
-    title: 'How documented are your core workflows?',
-    options: [
-      {
-        value: 'documented',
-        label: 'Documented',
-        description: 'Team can run without bottlenecks.',
-      },
-      {
-        value: 'partial',
-        label: 'Partial',
-        description: 'Some SOPs, uneven adoption.',
-      },
-      {
-        value: 'owner_dependent',
-        label: 'Owner dependent',
-        description: 'Key work depends on one person.',
-      },
-    ],
-  },
-  {
-    key: 'urgency',
-    title: 'What is your urgency level?',
-    options: [
-      {
-        value: 'exploring',
-        label: 'Exploring',
-        description: 'Learning options.',
-      },
-      {
-        value: 'this_quarter',
-        label: 'This quarter',
-        description: 'Need plan in 90 days.',
-      },
-      {
-        value: 'immediate',
-        label: 'Immediate',
-        description: 'Need action now.',
-      },
-    ],
-  },
-  {
-    key: 'teamReadiness',
-    title: 'How ready is your team to execute changes?',
-    options: [
-      {
-        value: 'aligned',
-        label: 'Aligned',
-        description: 'Clear ownership and capacity.',
-      },
-      {
-        value: 'mixed',
-        label: 'Mixed',
-        description: 'Some buy-in, uneven follow-through.',
-      },
-      {
-        value: 'stretched',
-        label: 'Stretched',
-        description: 'Limited bandwidth.',
-      },
-    ],
-  },
-];
 
 export function ScanWizard() {
   const params = useSearchParams();
@@ -133,6 +28,7 @@ export function ScanWizard() {
   const [consent, setConsent] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [diagnosticId, setDiagnosticId] = useState<string | null>(null);
 
   const source = useMemo(
     () => deriveScanSource(params.get('utm_source') || undefined),
@@ -140,20 +36,13 @@ export function ScanWizard() {
   );
 
   const result = useMemo(() => {
-    if (
-      step < totalSteps ||
-      !answers.cashFlow ||
-      !answers.capacity ||
-      !answers.systems ||
-      !answers.urgency ||
-      !answers.teamReadiness
-    ) {
+    if (step < totalScanSteps || !isValidScanAnswers(answers)) {
       return null;
     }
-    return scoreScan(answers as ScanAnswers);
+    return scoreScan(answers);
   }, [answers, step]);
 
-  const current = stepConfig[step - 1];
+  const current = scanQuestions[step - 1];
 
   function choose(value: string) {
     if (!current) return;
@@ -168,7 +57,7 @@ export function ScanWizard() {
 
   async function submit(event: FormEvent) {
     event.preventDefault();
-    if (!result || !email || !consent) return;
+    if (!result || !email || !consent || !isValidScanAnswers(answers)) return;
 
     setSubmitting(true);
     track('scan_submit_attempt', { tier: result.tier, source });
@@ -181,7 +70,6 @@ export function ScanWizard() {
         email,
         consent,
         answers,
-        result,
         source,
         utmSource: params.get('utm_source') || '',
       }),
@@ -189,6 +77,10 @@ export function ScanWizard() {
 
     setSubmitting(false);
     if (response.ok) {
+      const payload = (await response.json()) as {
+        diagnosticId?: string;
+      };
+      setDiagnosticId(payload.diagnosticId || null);
       setSubmitted(true);
       track('scan_submitted', {
         tier: result.tier,
@@ -197,13 +89,27 @@ export function ScanWizard() {
     }
   }
 
+  const bookingBase = process.env.NEXT_PUBLIC_CALENDLY_URL || '/contact';
+  const bookingHref =
+    submitted && result
+      ? buildDiagnosticBookingUrl(bookingBase, {
+          id: diagnosticId || 'pending_diagnostic',
+          primarySignal: result.primarySignal,
+          score: result.score,
+          tier: result.tier,
+        })
+      : null;
+
   return (
     <div className="space-y-6">
-      <ScanProgress step={Math.min(step, totalSteps)} total={totalSteps} />
+      <ScanProgress step={Math.min(step, totalScanSteps)} total={totalScanSteps} />
 
       {current ? (
         <div>
-          <h2 className="text-2xl font-semibold text-text">{current.title}</h2>
+          <p className="text-xs uppercase tracking-[0.13em] text-muted">
+            {current.category.replaceAll('_', ' ')}
+          </p>
+          <h2 className="mt-2 text-2xl font-semibold text-text">{current.title}</h2>
           <div className="mt-4 grid gap-3">
             {current.options.map((option) => (
               <OptionCard
@@ -231,7 +137,7 @@ export function ScanWizard() {
         </div>
       ) : null}
 
-      {step === totalSteps && result ? (
+      {step === totalScanSteps && result ? (
         <form onSubmit={submit} className="space-y-4">
           <ResultCard result={result} />
           <div>
@@ -272,6 +178,14 @@ export function ScanWizard() {
                 ? 'Submitting...'
                 : 'Get My Diagnostic Summary'}
           </button>
+          {bookingHref ? (
+            <div className="rounded-card border border-border bg-surfaceRaised p-4">
+              <p className="text-sm text-muted">Ready for a practical walkthrough of this result?</p>
+              <Link href={bookingHref} className="mt-2 inline-flex font-semibold text-accent underline-offset-2 hover:underline">
+                Book your call
+              </Link>
+            </div>
+          ) : null}
         </form>
       ) : null}
     </div>

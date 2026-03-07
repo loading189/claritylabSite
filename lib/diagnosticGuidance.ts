@@ -129,6 +129,94 @@ const signalProfiles: Record<string, SignalProfile> = {
     ],
     resources: [{ title: 'Cash-Flow Snapshot Template', href: '/resources/cash-flow-snapshot' }],
   },
+
+  pricing: {
+    shortSummary: 'Pricing decisions likely feel inconsistent, which is putting pressure on margin and confidence.',
+    whatMayBeHappening: [
+      'Discounting or one-off deals may be hiding true delivery costs.',
+      'The team may not have a shared pricing guardrail for tougher conversations.',
+      'Good work may still feel unprofitable because pricing logic is uneven.',
+    ],
+    whereToStart: [
+      'Review your last 10 jobs and flag where price changed late in the process.',
+      'Define one simple floor price or minimum margin rule for common work types.',
+      'Track when discounts are used and what reason triggered them.',
+    ],
+    watchFor: [
+      'Deals close, but cash and margin still feel tight.',
+      'Price exceptions are common but not reviewed in one place.',
+      'Different team members quote similar work at very different rates.',
+    ],
+    prepItems: [
+      'A sample of recent estimates or invoices for similar work.',
+      'One example where pricing changed after work began.',
+      'Any current rule of thumb for discounting or approvals.',
+    ],
+    discussionPoints: [
+      'Where does pricing pressure show up first: sales, operations, or delivery?',
+      'What would make your pricing decisions easier and faster?',
+      'Which service type should be priced more consistently first?',
+    ],
+    resources: [{ title: 'Cash-Flow Snapshot Template', href: '/resources/cash-flow-snapshot' }],
+  },
+  visibility: {
+    shortSummary: 'Decision visibility is likely too fragmented, making it hard to act quickly with confidence.',
+    whatMayBeHappening: [
+      'Data may exist, but key numbers are spread across tools and spreadsheets.',
+      'Important decisions may wait because the team is unsure which numbers to trust.',
+      'Small issues become bigger because they are spotted late.',
+    ],
+    whereToStart: [
+      'Pick three weekly numbers: cash runway, work in progress, and overdue items.',
+      'Use one shared review rhythm so leaders see the same data at the same time.',
+      'Drop extra reporting for now and focus on the few numbers that drive decisions.',
+    ],
+    watchFor: [
+      'Different reports show conflicting versions of performance.',
+      'Decisions are delayed while teams manually reconcile numbers.',
+      'Operational problems are discovered only after customer impact.',
+    ],
+    prepItems: [
+      'Your current weekly or monthly report (even if rough).',
+      'A list of numbers you currently rely on for decisions.',
+      'One example where unclear reporting delayed action.',
+    ],
+    discussionPoints: [
+      'Which numbers are critical every week?',
+      'Which report causes the most confusion today?',
+      'How do we simplify reporting without losing useful detail?',
+    ],
+    resources: [{ title: 'Cash-Flow Snapshot Template', href: '/resources/cash-flow-snapshot' }],
+  },
+  founder: {
+    shortSummary: 'Founder load appears high, so key decisions and follow-through depend too heavily on you.',
+    whatMayBeHappening: [
+      'Important execution may pause when you are unavailable.',
+      'The team may be waiting for approvals that could be delegated safely.',
+      'Daily urgency may be crowding out strategic work.',
+    ],
+    whereToStart: [
+      'List recurring decisions only you currently make.',
+      'Delegate one recurring decision with a clear rule and owner this week.',
+      'Create a short weekly leadership check-in to remove blockers early.',
+    ],
+    watchFor: [
+      'Team velocity drops during your busy periods or time away.',
+      'Escalations come to you before basic ownership is attempted.',
+      'Strategic tasks are repeatedly postponed due to operational noise.',
+    ],
+    prepItems: [
+      'A short list of tasks that only you currently handle.',
+      'One recent week where overload reduced follow-through.',
+      'Current roles/ownership notes for your leadership team.',
+    ],
+    discussionPoints: [
+      'Which decisions truly require founder involvement?',
+      'What can be delegated now with low risk?',
+      'What operating rhythm would reduce escalation volume?',
+    ],
+    resources: [{ title: 'Cash-Flow Snapshot Template', href: '/resources/cash-flow-snapshot' }],
+  },
 };
 
 function normalizeSignal(primarySignal: string) {
@@ -136,15 +224,18 @@ function normalizeSignal(primarySignal: string) {
   if (normalized.includes('cash')) return 'cashflow';
   if (normalized.includes('cap')) return 'capacity';
   if (normalized.includes('system') || normalized.includes('workflow')) return 'systems';
+  if (normalized.includes('pric')) return 'pricing';
+  if (normalized.includes('vis')) return 'visibility';
+  if (normalized.includes('found')) return 'founder';
   return normalized;
 }
 
 function getTierLead(tier: string) {
   const normalized = tier.trim().toLowerCase();
-  if (normalized === 'hot') {
+  if (normalized === 'critical' || normalized === 'hot') {
     return 'You do not need to fix everything at once. We should start with the one issue that reduces pressure fastest.';
   }
-  if (normalized === 'warm') {
+  if (normalized === 'priority' || normalized === 'warm') {
     return 'You have room to make steady progress. A short, focused plan should create quick wins.';
   }
   return 'This looks manageable right now. Small fixes now can prevent bigger slowdowns later.';
@@ -165,6 +256,10 @@ export function getAdvisoryBriefFromDiagnostic(diagnostic: DiagnosticRecord): Ad
     .filter((answer) => answer.value !== 'Not answered')
     .slice(0, 3)
     .map((answer) => `${answer.step}: ${answer.value}`);
+  const fallbackResponses = Object.entries(diagnostic.answers)
+    .filter(([, value]) => value !== undefined && value !== null && String(value).trim() !== '')
+    .slice(0, 3)
+    .map(([key, value]) => `${key}: ${String(value)}`);
 
   const plan = toActionPlanSteps(profile.whereToStart);
 
@@ -178,7 +273,7 @@ export function getAdvisoryBriefFromDiagnostic(diagnostic: DiagnosticRecord): Ad
     prepItems: profile.prepItems,
     discussionPoints: profile.discussionPoints,
     resources: profile.resources,
-    keyResponses,
+    keyResponses: keyResponses.length ? keyResponses : fallbackResponses,
   };
 }
 

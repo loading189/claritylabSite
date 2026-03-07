@@ -12,7 +12,7 @@ type PageProps = {
 
 const filterValues = {
   tiers: ['monitor', 'priority', 'critical'],
-  primarySignals: ['cash', 'capacity', 'workflow'],
+  primarySignals: ['cashflow', 'capacity', 'pricing', 'visibility', 'founder'],
   sources: ['direct', 'business_card_qr', 'linkedin', 'google', 'local'],
 };
 
