@@ -11,6 +11,7 @@ import {
 import { getLatestDiagnosticByEmail } from '@/lib/diagnosticsData';
 import { getDiagnosticInsights } from '@/lib/diagnosticsPresentation';
 import { sendClientBookedConfirm, sendOwnerBookedBrief } from '@/lib/email';
+import { deriveBookingDiagnosticContext } from '@/lib/bookingContext';
 
 type CalendlyPayload = {
   event?: string;
@@ -20,6 +21,7 @@ type CalendlyPayload = {
     event_type?: string;
     tracking?: {
       utm_source?: string;
+      utm_campaign?: string;
     };
     invitee?: {
       uri?: string;
@@ -66,6 +68,7 @@ function deriveBookingId(payload: CalendlyPayload) {
     .filter(Boolean)
     .join('|');
 }
+
 
 export async function POST(req: Request) {
   const signingKey = process.env.CALENDLY_WEBHOOK_SIGNING_KEY;
@@ -127,6 +130,21 @@ export async function POST(req: Request) {
   }
 
   const diagnostic = await getLatestDiagnosticByEmail(email);
+  const context = deriveBookingDiagnosticContext(
+    {
+      trackingCampaign: body.payload?.tracking?.utm_campaign,
+      eventUri: body.payload?.scheduled_event?.uri,
+    },
+    diagnostic
+      ? {
+          diagnosticId: diagnostic.id,
+          signal: diagnostic.primarySignal,
+          score: diagnostic.score,
+          tier: diagnostic.tier,
+        }
+      : undefined,
+  );
+
   const source = normalizeSource(
     body.payload?.tracking?.utm_source || diagnostic?.source,
   );
@@ -156,6 +174,10 @@ export async function POST(req: Request) {
     calendly_event_uri: body.payload?.scheduled_event?.uri || '',
     calendly_invitee_uri: body.payload?.invitee?.uri || '',
     source,
+    diagnostic_id: context.diagnosticId || undefined,
+    diagnostic_signal: context.signal || undefined,
+    diagnostic_score: context.score,
+    diagnostic_tier: context.tier || undefined,
     created_at: new Date().toISOString(),
   });
 
@@ -181,6 +203,8 @@ export async function POST(req: Request) {
           .map(([key, value]) => `${key}: ${String(value ?? '')}`)
       : [];
 
+    const confirmationUrl = `${siteUrl}/booking/confirmed?diagnosticId=${encodeURIComponent(context.diagnosticId || '')}&signal=${encodeURIComponent(context.signal || '')}&score=${encodeURIComponent(String(context.score || ''))}&tier=${encodeURIComponent(context.tier || '')}`;
+
     const [ownerEmailResult, clientEmailResult] = await Promise.all([
       sendOwnerBookedBrief({
         booking: {
@@ -192,12 +216,12 @@ export async function POST(req: Request) {
           endTime,
           timezone,
           source,
-          diagnosticId: diagnostic?.id,
+          diagnosticId: context.diagnosticId || diagnostic?.id,
         },
         diagnosticSummary: {
-          score: diagnostic?.score,
-          tier: diagnostic?.tier,
-          primarySignal: diagnostic?.primarySignal,
+          score: context.score ?? diagnostic?.score,
+          tier: context.tier || diagnostic?.tier,
+          primarySignal: context.signal || diagnostic?.primarySignal,
           keyAnswers: summaryPairs,
           insights: diagnosticInsights,
         },
@@ -209,7 +233,7 @@ export async function POST(req: Request) {
           timezone,
         },
         portalUrl: `${siteUrl}/client?booked=1`,
-        prepUrl: `${siteUrl}/client/prep`,
+        prepUrl: confirmationUrl,
         to: email,
       }),
     ]);

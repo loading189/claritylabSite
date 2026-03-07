@@ -9,7 +9,7 @@ import styles from './page.module.css';
 export const metadata: Metadata = {
   title: 'Clarity Scan',
   description:
-    'Use the 6-step Clarity Scan when you want a deeper read before booking a call.',
+    'Use the Clarity Scan to get a fast operational read before booking a call.',
 };
 
 export default function ScanPage() {
@@ -20,8 +20,7 @@ export default function ScanPage() {
           Clarity Scan
         </h1>
         <p className={styles.lead}>
-          In about two minutes, identify your strongest operational signal and
-          decide whether a call is the right next step.
+          In about three minutes, spot your strongest pressure signals and get a practical starting point before you book.
         </p>
         <ScanShell>
           <Suspense

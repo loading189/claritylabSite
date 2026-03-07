@@ -63,12 +63,14 @@ export async function createScanDiagnostic(record: Record<string, unknown>) {
   const config = getLeadConfig();
   if (!config.hasLeadTable) {
     console.log('Scan capture fallback (no Airtable configured):', record);
-    return;
+    return { id: undefined as string | undefined };
   }
 
-  await airtableRequest({
+  const created = await airtableRequest<{ id?: string }>({
     table: config.diagnosticsTable,
     method: 'POST',
     body: { fields: record },
   });
+
+  return { id: created.id };
 }

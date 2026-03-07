@@ -17,6 +17,10 @@ export type BookingRecord = {
   calendly_event_uri?: string;
   calendly_invitee_uri?: string;
   source: 'direct' | 'business_card_qr' | 'linkedin' | 'google' | 'local';
+  diagnostic_id?: string;
+  diagnostic_signal?: string;
+  diagnostic_score?: number;
+  diagnostic_tier?: string;
   created_at: string;
 };
 

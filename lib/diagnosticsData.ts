@@ -26,6 +26,7 @@ export type DiagnosticRecord = {
   score: number;
   tier: string;
   primarySignal: string;
+  secondarySignal?: string;
   source: string;
   utm_source?: string;
   utm_medium?: string;
@@ -97,8 +98,9 @@ function toDiagnosticRecord(record: AirtableRecord): DiagnosticRecord {
     score: toNumber(fields.score),
     tier: String(fields.tier ?? 'monitor'),
     primarySignal: String(
-      fields.primary_signal ?? fields.primarySignal ?? 'workflow',
+      fields.primary_signal ?? fields.primarySignal ?? 'visibility',
     ),
+    secondarySignal: String(fields.secondary_signal ?? fields.secondarySignal ?? '').trim() || undefined,
     source: String(fields.source ?? 'direct'),
     utm_source: String(fields.utm_source ?? '').trim() || undefined,
     utm_medium: String(fields.utm_medium ?? '').trim() || undefined,

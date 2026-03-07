@@ -4,6 +4,8 @@ import { PortalPageHeader } from '@/components/portal/PortalPageHeader';
 import { shouldShowUnavailableRecordsState } from '@/lib/clientPortalState';
 import { getAdvisoryBriefFromDiagnostic } from '@/lib/diagnosticGuidance';
 import { getLatestDiagnosticByEmailWithStatus } from '@/lib/diagnosticsData';
+import { buildDiagnosticBookingUrl } from '@/lib/bookingUrl';
+import { isValidScanAnswers, scoreScan } from '@/lib/scan';
 import { getServerUser } from '@/lib/serverAuth';
 
 export default async function ClientScanPage() {
@@ -37,6 +39,13 @@ export default async function ClientScanPage() {
   }
 
   const brief = getAdvisoryBriefFromDiagnostic(diagnostic);
+  const scored = isValidScanAnswers(diagnostic.answers) ? scoreScan(diagnostic.answers) : null;
+  const bookingUrl = buildDiagnosticBookingUrl(calendlyUrl, {
+    id: diagnostic.id,
+    primarySignal: diagnostic.primarySignal,
+    score: diagnostic.score,
+    tier: diagnostic.tier,
+  });
 
   return (
     <div className="space-y-6">
@@ -60,11 +69,15 @@ export default async function ClientScanPage() {
             <p className="text-xs uppercase tracking-[0.14em] text-muted">Primary signal</p>
             <p className="mt-2 text-lg font-semibold capitalize text-text">{diagnostic.primarySignal}</p>
           </div>
+          <div>
+            <p className="text-xs uppercase tracking-[0.14em] text-muted">Secondary signal</p>
+            <p className="mt-2 text-lg font-semibold capitalize text-text">{diagnostic.secondarySignal || scored?.secondarySignal || "—"}</p>
+          </div>
           <div className="space-y-2">
             <Button href="/client/prep" className="w-full justify-center">
               Continue to prep
             </Button>
-            <Button href={calendlyUrl} variant="ghost" className="w-full justify-center">
+            <Button href={bookingUrl} variant="ghost" className="w-full justify-center">
               Book your call
             </Button>
           </div>
@@ -73,7 +86,7 @@ export default async function ClientScanPage() {
 
       <section className="rounded-card border border-border bg-surface p-6 shadow-soft">
         <h2 className="text-lg font-semibold text-text">Quick summary</h2>
-        <p className="mt-3 text-sm text-muted">{brief.shortSummary}</p>
+        <p className="mt-3 text-sm text-muted">{scored?.explanation || brief.shortSummary}</p>
       </section>
 
       <section className="rounded-card border border-border bg-surface p-6 shadow-soft">
@@ -89,6 +102,7 @@ export default async function ClientScanPage() {
 
       <section className="rounded-card border border-border bg-surface p-6 shadow-soft">
         <h2 className="text-lg font-semibold text-text">Here’s where we would start</h2>
+        {scored ? <p className="mt-2 text-sm text-muted">{scored.whereToStart}</p> : null}
         <ul className="mt-3 space-y-2 text-sm text-muted">
           {brief.whereToStart.map((step) => (
             <li key={step} className="rounded-input border border-border/70 bg-surfaceRaised px-3 py-2">
@@ -127,7 +141,7 @@ export default async function ClientScanPage() {
           <Button href="/client/prep" variant="secondary">
             Open prep page
           </Button>
-          <Button href={calendlyUrl}>Book your call</Button>
+          <Button href={bookingUrl}>Book your call</Button>
           <Button href="/client/files" variant="ghost">
             Upload files now
           </Button>
