@@ -38,8 +38,13 @@ test('mapFileToDeliverable reads richer metadata when present', () => {
 });
 
 test('listRecentDeliverables excludes records hidden from clients', () => {
-  const visible = makeFile({ filename: 'Visible.pdf', visible_to_client: 'true' });
-  const hidden = makeFile({ filename: 'Hidden.pdf', visible_to_client: 'false', storage_key: 'clients/client_1/reports/y.pdf' });
+  const visible = makeFile({ filename: 'Visible.pdf', visible_to_client: 'true', report_publish_state: 'client_visible' });
+  const hidden = makeFile({
+    filename: 'Hidden.pdf',
+    visible_to_client: 'false',
+    report_publish_state: 'internal',
+    storage_key: 'clients/client_1/reports/y.pdf',
+  });
 
   const deliverables = listRecentDeliverables([hidden, visible]);
 
@@ -47,9 +52,9 @@ test('listRecentDeliverables excludes records hidden from clients', () => {
   assert.equal(deliverables[0]?.title, 'Visible.pdf');
 });
 
-test('mapFileToDeliverable keeps draft and internal-only deliverables out of portal visibility', () => {
-  const draft = mapFileToDeliverable(makeFile({ deliverable_visibility: 'draft', visible_to_client: true }));
-  const internalOnly = mapFileToDeliverable(makeFile({ deliverable_visibility: 'internalOnly', visible_to_client: true }));
+test('mapFileToDeliverable keeps draft and internal deliverables out of portal visibility', () => {
+  const draft = mapFileToDeliverable(makeFile({ report_publish_state: 'draft', visible_to_client: true }));
+  const internalOnly = mapFileToDeliverable(makeFile({ report_publish_state: 'internal', visible_to_client: true }));
 
   assert.equal(draft.visibleToClient, false);
   assert.equal(internalOnly.visibleToClient, false);

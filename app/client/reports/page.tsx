@@ -36,6 +36,7 @@ export default async function ClientReportsPage() {
                   <p className="text-xs text-muted">
                     {formatDate(report.createdAt)} · {report.periodCovered || 'Current engagement'}
                   </p>
+                  {report.subtitle ? <p className="mt-1 text-xs text-muted">{report.subtitle}</p> : null}
                 </div>
                 <Link href={`/client/reports/${report.id}`} className="rounded-input border border-border px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.08em] text-text">
                   Open summary

@@ -27,7 +27,7 @@ export function FileUploader({
   const [summaryNote, setSummaryNote] = useState('');
   const [periodCovered, setPeriodCovered] = useState('');
   const [deliverableStatus, setDeliverableStatus] = useState('draft');
-  const [visibility, setVisibility] = useState<'draft' | 'visibleToClient' | 'internalOnly'>('visibleToClient');
+  const [visibility, setVisibility] = useState<'draft' | 'internal' | 'client_visible'>('draft');
   const [relatedRequestId, setRelatedRequestId] = useState('');
   const [markRelatedRequestSubmitted, setMarkRelatedRequestSubmitted] = useState(false);
 
@@ -63,7 +63,7 @@ export function FileUploader({
         summaryNote,
         periodCovered,
         visibility,
-        visibleToClient: visibility === 'visibleToClient',
+        visibleToClient: visibility === 'client_visible',
         status: deliverableStatus,
         relatedRequestId: relatedRequestId || undefined,
         markRelatedRequestSubmitted,
@@ -124,8 +124,8 @@ export function FileUploader({
             Visibility
             <select className="rounded border border-border px-2 py-1 text-sm text-text" value={visibility} onChange={(e) => setVisibility(e.target.value as typeof visibility)}>
               <option value="draft">draft</option>
-              <option value="visibleToClient">visibleToClient</option>
-              <option value="internalOnly">internalOnly</option>
+              <option value="internal">internal</option>
+              <option value="client_visible">client_visible</option>
             </select>
           </label>
           <label className="flex flex-col gap-1">
