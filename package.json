@@ -10,7 +10,7 @@
     "format": "prettier --ignore-unknown --write \"app/**/*.{ts,tsx,css,md,mdx}\" \"components/**/*.{ts,tsx,css,md,mdx}\" \"content/**/*.{ts,tsx,md,mdx,json}\" \"lib/**/*.{ts,tsx}\" middleware.ts tailwind.config.* next.config.* postcss.config.* README.md .env.example .eslintrc.json .prettierrc",
     "format:check": "prettier --ignore-unknown --check \"app/**/*.{ts,tsx,css,md,mdx}\" \"components/**/*.{ts,tsx,css,md,mdx}\" \"content/**/*.{ts,tsx,md,mdx,json}\" \"lib/**/*.{ts,tsx}\" middleware.ts tailwind.config.* next.config.* postcss.config.* README.md .env.example .eslintrc.json .prettierrc",
     "typecheck": "tsc --noEmit",
-    "test": "node --loader ./lib/test/alias-loader.mjs --experimental-strip-types --test lib/clientPortalState.test.ts lib/diagnosticGuidance.test.ts lib/engagementRequestsData.test.ts lib/deliverablesData.test.ts lib/clientEngagementReadModel.test.ts lib/scan.test.ts lib/bookingUrl.test.ts lib/bookingConfirmation.test.ts app/api/webhooks/calendly/context.test.ts"
+    "test": "node --loader ./lib/test/alias-loader.mjs --experimental-strip-types --test lib/clientPortalState.test.ts lib/diagnosticGuidance.test.ts lib/engagementRequestsData.test.ts lib/deliverablesData.test.ts lib/clientEngagementReadModel.test.ts lib/scan.test.ts lib/bookingUrl.test.ts lib/bookingConfirmation.test.ts app/api/webhooks/calendly/context.test.ts lib/airtable.test.ts"
   },
   "dependencies": {
     "next": "14.2.26",

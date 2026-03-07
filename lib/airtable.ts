@@ -1,5 +1,5 @@
 import 'server-only';
-import { NormalizedLead } from './leads';
+import type { NormalizedLead } from './leads';
 import { airtableRequest } from '@/lib/airtableClient';
 import { getAirtableConfig } from '@/lib/airtableConfig';
 
@@ -10,6 +10,16 @@ function getLeadConfig() {
   return {
     ...config,
     hasLeadTable: Boolean(config.apiKey && config.baseId && config.leadsTable),
+  };
+}
+
+function getDiagnosticsConfig() {
+  const config = getAirtableConfig();
+  return {
+    ...config,
+    hasDiagnosticsTable: Boolean(
+      config.apiKey && config.baseId && config.diagnosticsTable,
+    ),
   };
 }
 
@@ -60,9 +70,12 @@ export async function upsertLead(lead: NormalizedLead) {
 }
 
 export async function createScanDiagnostic(record: Record<string, unknown>) {
-  const config = getLeadConfig();
-  if (!config.hasLeadTable) {
-    console.log('Scan capture fallback (no Airtable configured):', record);
+  const config = getDiagnosticsConfig();
+  if (!config.hasDiagnosticsTable) {
+    console.warn(
+      'Scan diagnostics fallback (diagnostics Airtable table not configured):',
+      record,
+    );
     return { id: undefined as string | undefined };
   }
 
