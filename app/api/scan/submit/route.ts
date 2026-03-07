@@ -71,7 +71,9 @@ export async function POST(request: NextRequest) {
       primary_signal: result.primarySignal,
       secondary_signal: result.secondarySignal,
       qualified: result.qualified,
-      insights: result.insights,
+      insights: Array.isArray(result.insights)
+      ? result.insights.join('\n• ')
+      : '',
       answers_json: JSON.stringify(answers),
     };
 
